@@ -10,8 +10,7 @@ It uses [Public Sans](https://fonts.google.com/specimen/Public+Sans) as the font
 
 Feel free to submit issues, create PRs and fork!
 
-![Comparison between Luma and LightOS](art/comparison.png)
-
 ## Installation
-1. Grab the .apk from [latest release](https://github.com/vandamd/Luma/releases/latest).
-2. Install the apk how you like! I like to use [Obtanium](https://github.com/ImranR98/Obtainium)
+You can grab the .apk from [latest release](https://github.com/vandamd/Luma/releases/latest), or you can copy the repo link and use [Obtanium](https://github.com/ImranR98/Obtainium).
+
+![Comparison between Luma and LightOS](art/comparison.png)
