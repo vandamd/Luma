@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -55,6 +56,9 @@ import app.luma.ui.compose.SettingsComposable.SettingsTopView
 import app.luma.ui.compose.SettingsComposable.SimpleTextButton
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import app.luma.ui.compose.SettingsComposable.ContentContainer
+import app.luma.ui.compose.SettingsComposable.ToggleTextButton
+import androidx.compose.ui.unit.dp
+import androidx.navigation.fragment.findNavController
 
 class SettingsFragment : Fragment() {
 
@@ -104,7 +108,28 @@ class SettingsFragment : Fragment() {
                 title = "Luma Settings",
                 onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
             )
-            ContentContainer {
+            val isDark = when (prefs.appTheme) {
+                Light -> false
+                Dark -> true
+                System -> isSystemInDarkTheme()
+            }
+            val themeState = remember { mutableStateOf(!isDark) }
+            
+            ContentContainer(verticalArrangement = Arrangement.spacedBy(49.dp)) {
+                ToggleTextButton(
+                    title = "Invert Colours",
+                    checked = themeState.value,
+                    onCheckedChange = { 
+                        themeState.value = it
+                        setTheme(if (it) Light else Dark)
+                    },
+                    onClick = { 
+                        themeState.value = !themeState.value
+                        setTheme(if (themeState.value) Light else Dark)
+                    }
+                )
+                SimpleTextButton("Pages") { findNavController().navigate(R.id.action_settingsFragment_to_pagesFragment) }
+                SimpleTextButton("Gestures") { findNavController().navigate(R.id.action_settingsFragment_to_gesturesFragment) }
                 SimpleTextButton("Hidden Apps") { showHiddenApps() }
             }
             // SettingsTopView(
@@ -125,13 +150,6 @@ class SettingsFragment : Fragment() {
             //                 values = arrayOf(System, Light, Dark),
             //                 onSelect = { j -> setTheme(j) }
             //             )
-            //         },
-            //         { _, onChange ->
-            //             SettingsToggle(
-            //                 title = stringResource(R.string.auto_show_keyboard),
-            //                 onChange = onChange,
-            //                 state = remember { mutableStateOf(prefs.autoShowKeyboard) },
-            //             ) { toggleKeyboardText() }
             //         },
             //         { open, onChange ->
             //             SettingsNumberItem(
@@ -238,16 +256,11 @@ class SettingsFragment : Fragment() {
         viewModel.homeAppsCount.value = homeAppsNum
     }
 
-    private fun toggleKeyboardText() {
-        prefs.autoShowKeyboard = !prefs.autoShowKeyboard
-    }
-
     private fun toggleAutoOpenApp() {
         prefs.autoOpenApp = !prefs.autoOpenApp
     }
 
     private fun setTheme(appTheme: Constants.Theme) {
-        // if (AppCompatDelegate.getDefaultNightMode() == appTheme) return // TODO find out what this did
         prefs.appTheme = appTheme
         requireActivity().recreate()
     }

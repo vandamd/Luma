@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -43,7 +44,6 @@ object SettingsComposable {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                // .background(androidx.compose.ui.graphics.Color.Red)
                 .background(SettingsTheme.color.settings, SettingsTheme.shapes.settings)
                 .padding(horizontal = 7.dp, vertical = 0.dp),
         ) {
@@ -85,7 +85,6 @@ object SettingsComposable {
         }
     }
 
-    // Most basic settings background tile
     @Composable
     fun SettingsTile(content: @Composable () -> Unit) {
         Column(
@@ -336,6 +335,61 @@ object SettingsComposable {
     }
 
     @Composable
+    fun ToggleTextButton(title: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit, onClick: () -> Unit, fontSize: TextUnit = TextUnit.Unspecified) {
+        Row(modifier = Modifier
+            .padding(top = 8.dp, bottom = 0.dp)
+            .fillMaxWidth(), 
+            verticalAlignment = Alignment.CenterVertically) {
+            CustomToggleSwitch(checked = checked, onCheckedChange = onCheckedChange)
+            Spacer(modifier = Modifier.width(12.dp))
+            SimpleTextButton(title = title, fontSize = fontSize, onClick = onClick)
+        }
+    }
+
+    @Composable
+    fun CustomToggleSwitch(checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+        val circleDiameter = 9.8.dp
+        val circleBorder = 2.5.dp
+        val lineWidth = 14.5.dp
+        val lineHeight = 2.22.dp
+
+        val switchColor = SettingsTheme.typography.title.color
+
+        Row(
+            modifier = Modifier
+                .clickable { onCheckedChange(!checked) }
+                .padding(8.5.dp, 10.dp, 20.dp, 0.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (!checked) {
+                Box(
+                    modifier = Modifier
+                        .size(circleDiameter)
+                        .border(circleBorder, switchColor, CircleShape)
+                )
+                Box(
+                    modifier = Modifier
+                        .width(lineWidth)
+                        .height(lineHeight)
+                        .background(switchColor)
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .width(lineWidth)
+                        .height(lineHeight)
+                        .background(switchColor)
+                )
+                Box(
+                    modifier = Modifier
+                        .size(circleDiameter)
+                        .background(switchColor, CircleShape)
+                )
+            }
+        }
+    }
+
+    @Composable
     private fun <T: EnumOption> SettingsSelector(options: Array<T>, fontSize: TextUnit = TextUnit.Unspecified, onSelect: (T) -> Unit) {
         Box(
             modifier = Modifier
@@ -440,11 +494,15 @@ object SettingsComposable {
     }
 
     @Composable
-    fun ContentContainer(content: @Composable ColumnScope.() -> Unit) {
+    fun ContentContainer(
+        verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+        content: @Composable ColumnScope.() -> Unit
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 37.dp, vertical = 0.dp)
+                .padding(horizontal = 37.dp, vertical = 0.dp),
+            verticalArrangement = verticalArrangement
         ) {
             content()
         }

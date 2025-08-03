@@ -43,7 +43,6 @@
         \nOnce you double-tap, screen will go dark and the phone will lock itself in 5 seconds.
         \n\nDuring this time, you can double-tap to <b>unlock</b> or triple-tap anytime to fully lock the phone immediately.
         \n\nNote: Turn this OFF first if you decide to delete Olauncher. Thank you.</string>
-    <string name="auto_show_keyboard">Auto show keyboard</string>
     <string name="hide">Hide</string>
     <string name="status_bar">Show status bar</string>
     <string name="rename">Rename</string>
