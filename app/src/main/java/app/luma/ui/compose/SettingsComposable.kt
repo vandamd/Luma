@@ -38,6 +38,42 @@ import app.luma.style.CORNER_RADIUS
 
 object SettingsComposable {
 
+    @Composable
+    fun SettingsHeader(title: String, onBack: () -> Unit) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                // .background(androidx.compose.ui.graphics.Color.Red)
+                .background(SettingsTheme.color.settings, SettingsTheme.shapes.settings)
+                .padding(horizontal = 12.dp, vertical = 0.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.arrow_back_ios_new_24px),
+                contentDescription = "Back",
+                modifier = Modifier
+                    .size(26.dp)
+                    .padding(bottom = 3.dp)
+                    .clickable { onBack() },
+                colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(SettingsTheme.typography.title.color)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                Text(text = title, style = SettingsTheme.typography.title, modifier = Modifier.padding(top = 10.dp, bottom = 20.dp))
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Image(
+                painter = painterResource(id = R.drawable.arrow_back_ios_new_24px),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(26.dp)
+                    .padding(bottom = 3.dp),
+                alpha = 0f,
+                colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(SettingsTheme.typography.title.color)
+            )
+        }
+    }
+
     // Most basic settings background tile
     @Composable
     fun SettingsTile(content: @Composable () -> Unit) {

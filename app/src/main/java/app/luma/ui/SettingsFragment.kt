@@ -53,6 +53,7 @@ import app.luma.ui.compose.SettingsComposable.SettingsNumberItem
 import app.luma.ui.compose.SettingsComposable.SettingsToggle
 import app.luma.ui.compose.SettingsComposable.SettingsTopView
 import app.luma.ui.compose.SettingsComposable.SimpleTextButton
+import app.luma.ui.compose.SettingsComposable.SettingsHeader
 
 class SettingsFragment : Fragment() {
 
@@ -98,95 +99,99 @@ class SettingsFragment : Fragment() {
         val selected = remember { mutableStateOf("") }
 
         Column {
-            SettingsTopView(
-                stringResource(R.string.app_name) + " " + requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName,
-                onClick = { requireActivity().onBackPressedDispatcher.onBackPressed() },
-            ) {
-                SimpleTextButton(stringResource(R.string.hidden_apps)) { showHiddenApps() }
-            }
-            SettingsArea(title = "Customise",
-                selected = selected,
-                items = arrayOf(
-                    { open, onChange ->
-                        SettingsItem(
-                            title = stringResource(R.string.theme_mode),
-                            open = open,
-                            onChange = onChange,
-                            currentSelection = remember { mutableStateOf(prefs.appTheme) },
-                            values = arrayOf(System, Light, Dark),
-                            onSelect = { j -> setTheme(j) }
-                        )
-                    },
-                    { _, onChange ->
-                        SettingsToggle(
-                            title = stringResource(R.string.auto_show_keyboard),
-                            onChange = onChange,
-                            state = remember { mutableStateOf(prefs.autoShowKeyboard) },
-                        ) { toggleKeyboardText() }
-                    },
-                    { open, onChange ->
-                        SettingsNumberItem(
-                            title = stringResource(R.string.apps_on_home_screen),
-                            open = open,
-                            onChange = onChange,
-                            currentSelection = remember { mutableStateOf(prefs.homeAppsNum) },
-                            min = 0,
-                            max = Constants.MAX_HOME_APPS,
-                            onSelect = { j -> updateHomeAppsNum(j) }
-                        )
-                    },
-                    { open, onChange ->
-                        SettingsGestureItem(
-                            title = stringResource(R.string.swipe_left_app),
-                            open = open,
-                            onChange = onChange,
-                            currentAction = prefs.swipeLeftAction,
-                            onSelect = { j -> updateGesture(AppDrawerFlag.SetSwipeLeft, j) },
-                            appLabel = prefs.appSwipeLeft.appLabel.ifEmpty { "Camera" },
-                        )
-                    },
-                    { open, onChange ->
-                        SettingsGestureItem(
-                            title = stringResource(R.string.swipe_right_app),
-                            open = open,
-                            onChange = onChange,
-                            currentAction = prefs.swipeRightAction,
-                            onSelect = { j -> updateGesture(AppDrawerFlag.SetSwipeRight, j) },
-                            appLabel = prefs.appSwipeRight.appLabel.ifEmpty { "Phone" },
-                        )
-                    },
-                    { open, onChange ->
-                        SettingsGestureItem(
-                            title = stringResource(R.string.swipe_up_app),
-                            open = open,
-                            onChange = onChange,
-                            currentAction = prefs.swipeUpAction,
-                            onSelect = { j -> updateGesture(AppDrawerFlag.SetSwipeUp, j) },
-                            appLabel = prefs.appSwipeUp.appLabel,
-                        )
-                    },
-                    { open, onChange ->
-                        SettingsGestureItem(
-                            title = stringResource(R.string.swipe_down_app),
-                            open = open,
-                            onChange = onChange,
-                            currentAction = prefs.swipeDownAction,
-                            onSelect = { j -> updateGesture(AppDrawerFlag.SetSwipeDown, j) },
-                            appLabel = prefs.appSwipeDown.appLabel,
-                        )
-                    },
-                    { open, onChange ->
-                        SettingsGestureItem(
-                            title = stringResource(R.string.double_tap),
-                            open = open,
-                            onChange = onChange,
-                            currentAction = prefs.doubleTapAction,
-                            onSelect = { j -> updateGesture(AppDrawerFlag.SetDoubleTap, j) },
-                            appLabel = prefs.appDoubleTap.appLabel
-                        )
-                    }
-                )
+            SettingsHeader(
+                title = "Luma Settings",
+                onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
             )
+            // SettingsTopView(
+            //     stringResource(R.string.app_name) + " " + requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName,
+            //     onClick = { requireActivity().onBackPressedDispatcher.onBackPressed() },
+            // ) {
+            //     SimpleTextButton(stringResource(R.string.hidden_apps)) { showHiddenApps() }
+            // }
+            // SettingsArea(title = "Customise",
+            //     selected = selected,
+            //     items = arrayOf(
+            //         { open, onChange ->
+            //             SettingsItem(
+            //                 title = stringResource(R.string.theme_mode),
+            //                 open = open,
+            //                 onChange = onChange,
+            //                 currentSelection = remember { mutableStateOf(prefs.appTheme) },
+            //                 values = arrayOf(System, Light, Dark),
+            //                 onSelect = { j -> setTheme(j) }
+            //             )
+            //         },
+            //         { _, onChange ->
+            //             SettingsToggle(
+            //                 title = stringResource(R.string.auto_show_keyboard),
+            //                 onChange = onChange,
+            //                 state = remember { mutableStateOf(prefs.autoShowKeyboard) },
+            //             ) { toggleKeyboardText() }
+            //         },
+            //         { open, onChange ->
+            //             SettingsNumberItem(
+            //                 title = stringResource(R.string.apps_on_home_screen),
+            //                 open = open,
+            //                 onChange = onChange,
+            //                 currentSelection = remember { mutableStateOf(prefs.homeAppsNum) },
+            //                 min = 0,
+            //                 max = Constants.MAX_HOME_APPS,
+            //                 onSelect = { j -> updateHomeAppsNum(j) }
+            //             )
+            //         },
+            //         { open, onChange ->
+            //             SettingsGestureItem(
+            //                 title = stringResource(R.string.swipe_left_app),
+            //                 open = open,
+            //                 onChange = onChange,
+            //                 currentAction = prefs.swipeLeftAction,
+            //                 onSelect = { j -> updateGesture(AppDrawerFlag.SetSwipeLeft, j) },
+            //                 appLabel = prefs.appSwipeLeft.appLabel.ifEmpty { "Camera" },
+            //             )
+            //         },
+            //         { open, onChange ->
+            //             SettingsGestureItem(
+            //                 title = stringResource(R.string.swipe_right_app),
+            //                 open = open,
+            //                 onChange = onChange,
+            //                 currentAction = prefs.swipeRightAction,
+            //                 onSelect = { j -> updateGesture(AppDrawerFlag.SetSwipeRight, j) },
+            //                 appLabel = prefs.appSwipeRight.appLabel.ifEmpty { "Phone" },
+            //             )
+            //         },
+            //         { open, onChange ->
+            //             SettingsGestureItem(
+            //                 title = stringResource(R.string.swipe_up_app),
+            //                 open = open,
+            //                 onChange = onChange,
+            //                 currentAction = prefs.swipeUpAction,
+            //                 onSelect = { j -> updateGesture(AppDrawerFlag.SetSwipeUp, j) },
+            //                 appLabel = prefs.appSwipeUp.appLabel,
+            //             )
+            //         },
+            //         { open, onChange ->
+            //             SettingsGestureItem(
+            //                 title = stringResource(R.string.swipe_down_app),
+            //                 open = open,
+            //                 onChange = onChange,
+            //                 currentAction = prefs.swipeDownAction,
+            //                 onSelect = { j -> updateGesture(AppDrawerFlag.SetSwipeDown, j) },
+            //                 appLabel = prefs.appSwipeDown.appLabel,
+            //             )
+            //         },
+            //         { open, onChange ->
+            //             SettingsGestureItem(
+            //                 title = stringResource(R.string.double_tap),
+            //                 open = open,
+            //                 onChange = onChange,
+            //                 currentAction = prefs.doubleTapAction,
+            //                 onSelect = { j -> updateGesture(AppDrawerFlag.SetDoubleTap, j) },
+            //                 appLabel = prefs.appDoubleTap.appLabel
+            //             )
+            //         }
+            //     )
+            // )
 
         }
     }

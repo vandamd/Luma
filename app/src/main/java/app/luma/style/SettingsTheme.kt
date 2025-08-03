@@ -68,7 +68,7 @@ fun SettingsTheme(
     val replacementTypography = ReplacementTypography(
         body = TextStyle(fontSize = 16.sp),
         title = TextStyle(
-            fontSize = 32.sp,
+            fontSize = 20.sp,
             color = if (isDark) textLight else textDark,
         ),
          item = TextStyle(
