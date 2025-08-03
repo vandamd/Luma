@@ -75,12 +75,13 @@ class RenameFragment : Fragment() {
         fun saveAndReturn(newName: String, homePosition: Int) {
             val prefs = Prefs(requireContext())
             
-            // Update only the home app model with the new alias (for home screen display only)
+            // Update the home app model - for consistency, update both appLabel and appAlias
+            // This ensures the rename works regardless of which renaming method was used
             val homeAppModel = prefs.getHomeAppModel(homePosition)
             val updatedAppModel = AppModel(
-                appLabel = newName,  // Use the new name as the label for home screen
+                appLabel = newName,
                 appPackage = homeAppModel.appPackage,
-                appAlias = homeAppModel.appAlias,  // Keep original alias unchanged
+                appAlias = newName,  // Also update the alias to ensure consistency
                 appActivityName = homeAppModel.appActivityName,
                 user = homeAppModel.user,
                 key = homeAppModel.key

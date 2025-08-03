@@ -358,7 +358,8 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                 view.apply {
                     textSize = prefs.textSize.toFloat()
                     id = i
-                    text = prefs.getHomeAppModel(i).appLabel
+                    val appModel = prefs.getHomeAppModel(i)
+                text = if (appModel.appAlias.isNotEmpty()) appModel.appAlias else appModel.appLabel
                     setOnTouchListener(getHomeAppsGestureListener(context, this))
                     if (!prefs.extendHomeAppsArea) {
                         layoutParams = ViewGroup.LayoutParams(
@@ -382,7 +383,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
             val view = binding.homeAppsLayout.getChildAt(i)
             if (view is TextView) {
                 val appModel = prefs.getHomeAppModel(i)
-                view.text = appModel.appLabel  // Use appLabel which contains the home screen name
+                view.text = if (appModel.appAlias.isNotEmpty()) appModel.appAlias else appModel.appLabel
             }
         }
     }

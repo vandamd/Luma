@@ -66,7 +66,11 @@ override fun onCreateView(
                 app.luma.data.Constants.Theme.Dark -> true
                 app.luma.data.Constants.Theme.System -> isSystemInDarkTheme()
             }
-            val headerTitle = if (flag == AppDrawerFlag.SetHomeApp) "Select/Rename App" else "App Drawer"
+            val headerTitle = when (flag) {
+            AppDrawerFlag.SetHomeApp -> "Select/Rename App"
+            AppDrawerFlag.HiddenApps -> "Hidden Apps"
+            else -> "App Drawer"
+        }
             SettingsTheme(isDark) {
                 SettingsHeader(title = headerTitle, onBack = { findNavController().popBackStack() })
             }
