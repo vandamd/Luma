@@ -12,6 +12,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.unit.sp
 import app.luma.R
 import app.luma.style.CORNER_RADIUS
@@ -24,6 +26,7 @@ data class ReplacementTypography(
     val body: TextStyle,
     val title: TextStyle,
     val item: TextStyle,
+    val pageButton: TextStyle,
     val button: TextStyle,
     val buttonDisabled: TextStyle,
 )
@@ -44,6 +47,7 @@ val LocalReplacementTypography = staticCompositionLocalOf {
         body = TextStyle.Default,
         title = TextStyle.Default,
         item = TextStyle.Default,
+        pageButton = TextStyle.Default,
         button = TextStyle.Default,
         buttonDisabled = TextStyle.Default,
     )
@@ -60,6 +64,7 @@ val LocalReplacementColor = staticCompositionLocalOf {
     )
 }
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
 fun SettingsTheme(
     isDark: Boolean,
@@ -71,11 +76,17 @@ fun SettingsTheme(
             fontSize = 20.sp,
             color = if (isDark) textLight else textDark,
         ),
-         item = TextStyle(
+        item = TextStyle(
             fontFamily = FontFamily(Font(R.font.public_sans)),
             fontWeight = FontWeight.Light,
             fontSize = 16.sp,
             color = if (isDark) textLight else textDark,
+        ),
+        pageButton = TextStyle(
+            fontFamily = FontFamily(Font(R.font.public_sans)),
+            fontSize = 32.sp,
+            color = if (isDark) textLight else textDark,
+            platformStyle = PlatformTextStyle(includeFontPadding = false),
         ),
         button = TextStyle(
             fontFamily = FontFamily(Font(R.font.public_sans)),

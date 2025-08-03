@@ -45,29 +45,28 @@ object SettingsComposable {
                 .fillMaxWidth()
                 // .background(androidx.compose.ui.graphics.Color.Red)
                 .background(SettingsTheme.color.settings, SettingsTheme.shapes.settings)
-                .padding(horizontal = 12.dp, vertical = 0.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(horizontal = 7.dp, vertical = 0.dp),
         ) {
             Image(
                 painter = painterResource(id = R.drawable.arrow_back_ios_new_24px),
                 contentDescription = "Back",
                 modifier = Modifier
-                    .size(26.dp)
-                    .padding(bottom = 3.dp)
+                    .size(38.dp)
+                    .padding(top = 10.dp, bottom = 0.dp)
                     .clickable { onBack() },
                 colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(SettingsTheme.typography.title.color)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                Text(text = title, style = SettingsTheme.typography.title, modifier = Modifier.padding(top = 10.dp, bottom = 20.dp))
+                Text(text = title, style = SettingsTheme.typography.title, modifier = Modifier.padding(top = 10.dp, bottom = 25.dp))
             }
             Spacer(modifier = Modifier.width(16.dp))
             Image(
                 painter = painterResource(id = R.drawable.arrow_back_ios_new_24px),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(26.dp)
-                    .padding(bottom = 3.dp),
+                    .size(38.dp)
+                    .padding(top = 10.dp, bottom = 0.dp),
                 alpha = 0f,
                 colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(SettingsTheme.typography.title.color)
             )
@@ -100,7 +99,7 @@ object SettingsComposable {
          items: Array<@Composable (MutableState<Boolean>, (Boolean) -> Unit ) -> Unit>
      ) {        SettingsTile {
              SettingsTitle(text = title)
-             items.forEachIndexed { i, item ->                item(mutableStateOf("$title-$i" == selected.value)) { b ->
+             items.forEachIndexed { i, item -> item(mutableStateOf("$title-$i" == selected.value)) { b ->
                     val number = if (b) i else -1
                     selected.value = "$title-$number"
                 }
@@ -429,13 +428,26 @@ object SettingsComposable {
     }
 
     @Composable
+    fun ContentContainer(content: @Composable ColumnScope.() -> Unit) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 37.dp, vertical = 0.dp)
+        ) {
+            content()
+        }
+    }
+
+    @Composable
     fun SimpleTextButton(title: String, fontSize: TextUnit = TextUnit.Unspecified, onClick: () -> Unit) {
-        Box(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+        Box(modifier = Modifier.fillMaxWidth().padding(vertical = 0.dp)) {
             Text(
                 title,
-                style = SettingsTheme.typography.item,
+                style = SettingsTheme.typography.pageButton,
                 fontSize = fontSize,
-                modifier = Modifier.align(Alignment.CenterStart).clickable { onClick() }
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .clickable { onClick() }
             )
         }
     }

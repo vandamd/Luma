@@ -54,6 +54,7 @@ import app.luma.ui.compose.SettingsComposable.SettingsToggle
 import app.luma.ui.compose.SettingsComposable.SettingsTopView
 import app.luma.ui.compose.SettingsComposable.SimpleTextButton
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
+import app.luma.ui.compose.SettingsComposable.ContentContainer
 
 class SettingsFragment : Fragment() {
 
@@ -103,6 +104,9 @@ class SettingsFragment : Fragment() {
                 title = "Luma Settings",
                 onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
             )
+            ContentContainer {
+                SimpleTextButton("Hidden Apps") { showHiddenApps() }
+            }
             // SettingsTopView(
             //     stringResource(R.string.app_name) + " " + requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName,
             //     onClick = { requireActivity().onBackPressedDispatcher.onBackPressed() },
