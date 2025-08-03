@@ -131,7 +131,7 @@ class Prefs(val context: Context) {
         set(value) = prefs.edit().putBoolean(HOME_LOCKED, value).apply()
 
     var swipeLeftAction: Constants.Action
-        get() = loadAction(SWIPE_LEFT_ACTION, Constants.Action.Disabled)
+        get() = loadAction(SWIPE_LEFT_ACTION, Constants.Action.ShowAppList)
         set(value) = storeAction(SWIPE_LEFT_ACTION, value)
 
     var swipeRightAction: Constants.Action
@@ -143,7 +143,7 @@ class Prefs(val context: Context) {
         set(value) = storeAction(SWIPE_DOWN_ACTION, value)
 
     var swipeUpAction: Constants.Action
-        get() = loadAction(SWIPE_UP_ACTION, Constants.Action.ShowAppList)
+        get() = loadAction(SWIPE_UP_ACTION, Constants.Action.Disabled)
         set(value) = storeAction(SWIPE_UP_ACTION, value)
 
     var clickClockAction: Constants.Action

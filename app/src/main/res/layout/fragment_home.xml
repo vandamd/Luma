@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:text="@string/swipe_up_for_apps" />
+            android:text="@string/swipe_left_for_apps" />
 
         <TextView
             style="@style/TextSmall"

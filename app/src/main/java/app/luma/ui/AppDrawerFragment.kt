@@ -48,11 +48,6 @@ override fun onCreateView(
         // return inflater.inflate(R.layout.fragment_app_drawer, container, false)
         _binding = FragmentAppDrawerBinding.inflate(inflater, container, false)
 
-        context?.let{
-            if (Prefs(it).firstOpen()) {
-                binding.appDrawerTip.visibility = View.VISIBLE
-            }
-        }
 
         val flagString = arguments?.getString("flag", AppDrawerFlag.LaunchApp.toString()) ?: AppDrawerFlag.LaunchApp.toString()
         flag = AppDrawerFlag.valueOf(flagString)
@@ -125,7 +120,7 @@ override fun onCreateView(
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = appAdapter
-        binding.recyclerView.addOnScrollListener(getRecyclerViewOnScrollListener())
+
 
 
     }
@@ -222,28 +217,4 @@ override fun onCreateView(
         }
 
     // Removed legacy renameListener function
-
-    private fun getRecyclerViewOnScrollListener(): RecyclerView.OnScrollListener {
-        return object : RecyclerView.OnScrollListener() {
-
-            var onTop = false
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                when (newState) {
-
-                    RecyclerView.SCROLL_STATE_DRAGGING -> {
-                         onTop = !recyclerView.canScrollVertically(-1)
-                         if (onTop && !recyclerView.canScrollVertically(1))
-                             findNavController().popBackStack()                    }
-
-                    RecyclerView.SCROLL_STATE_IDLE -> {
-                        if (!recyclerView.canScrollVertically(1)) {
-                        } else if (!recyclerView.canScrollVertically(-1)) {
-                            if (onTop) findNavController().popBackStack()
-                        }
-                    }
-                }            }
-        }
-    }
 }

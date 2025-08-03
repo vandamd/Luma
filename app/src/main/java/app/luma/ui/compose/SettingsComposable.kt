@@ -20,7 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterStart
 import androidx.compose.ui.Alignment.Companion.TopEnd
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
@@ -509,7 +511,8 @@ object SettingsComposable {
     }
 
     @Composable
-    fun SimpleTextButton(title: String, fontSize: TextUnit = TextUnit.Unspecified, onClick: () -> Unit) {
+    fun SimpleTextButton(title: String, fontSize: TextUnit = TextUnit.Unspecified, underline: Boolean = false, onClick: () -> Unit) {
+        val underlineColor = SettingsTheme.typography.pageButton.color
         Box(modifier = Modifier.fillMaxWidth().padding(vertical = 0.dp)) {
             Text(
                 title,
@@ -518,6 +521,61 @@ object SettingsComposable {
                 modifier = Modifier
                     .align(Alignment.CenterStart)
                     .clickable { onClick() }
+                    .then(
+                        if (underline) Modifier.drawBehind {
+                            val strokeWidth = 2.dp.toPx()
+                            val y = size.height + 2.dp.toPx()
+                            drawLine(
+                                color = underlineColor,
+                                start = Offset(0f, y),
+                                end = Offset(size.width, y),
+                                strokeWidth = strokeWidth
+                            )
+                        } else Modifier
+                    )
+            )
+        }
+    }
+
+    @Composable
+    fun SelectorButton(
+        label: String,
+        value: String,
+        isSelected: Boolean = false,
+        onClick: () -> Unit
+    ) {
+        val selectedColor = SettingsTheme.typography.button.color
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 0.dp)
+                .clickable { onClick() },
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                label,
+                style = SettingsTheme.typography.item,
+                fontSize = 20.sp,
+                modifier = Modifier.padding(top = 7.5.dp)
+            )
+            Text(
+                value,
+                style = if (isSelected) SettingsTheme.typography.button else SettingsTheme.typography.pageButton,
+                fontSize = 30.sp,
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+                    .then(
+                        if (isSelected) Modifier.drawBehind {
+                            val strokeWidth = 2.dp.toPx()
+                            val y = size.height - 5.dp.toPx()
+                            drawLine(
+                                color = selectedColor,
+                                start = Offset(0f, y),
+                                end = Offset(size.width, y),
+                                strokeWidth = strokeWidth
+                            )
+                        } else Modifier
+                    )
             )
         }
     }

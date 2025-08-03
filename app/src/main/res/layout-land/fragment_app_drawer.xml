@@ -45,19 +45,7 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/appDrawerTip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="4dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="@string/app_drawer_tips"
-        android:textColor="?attr/primaryColor"
-        android:textSize="16sp"
-        android:visibility="gone"
-        tools:visibility="visible" />
+    
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
