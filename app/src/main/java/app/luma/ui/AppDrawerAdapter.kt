@@ -138,7 +138,19 @@ class AppDrawerAdapter(
 
     fun setAppList(appsList: MutableList<AppModel>) {
         this.appsList = appsList
-        this.appFilteredList = appsList
+        if (flag == AppDrawerFlag.SetHomeApp && appsList.isNotEmpty()) {
+            val first = appsList[0]
+            val pseudo = AppModel(
+                appLabel = "Rename",
+                key = first.key,
+                appPackage = "__rename__",
+                appActivityName = "",
+                user = first.user,
+                appAlias = ""
+            )
+            this.appsList.add(0, pseudo)
+        }
+        this.appFilteredList = this.appsList
         notifyDataSetChanged()
     }
 
@@ -225,12 +237,18 @@ class AppDrawerAdapter(
                     appTitle.setCompoundDrawables(null, null, null, null)
                 }
 
-                appTitleFrame.setOnClickListener { listener(appModel) }
-                appTitleFrame.setOnLongClickListener {
-                    appHideLayout.visibility = View.VISIBLE
-                    true
-                }
-
+appTitleFrame.setOnClickListener {
+                     listener(appModel)
+                  }
+                  appTitleFrame.setOnLongClickListener {
+                     // Don't allow long press on pseudo rename app
+                     if (appModel.appPackage == "__rename__") {
+                         false
+                     } else {
+                         appHideLayout.visibility = View.VISIBLE
+                         true
+                     }
+                 }
                 appInfo.apply {
                     setOnClickListener { appInfoListener(appModel) }
                     setOnLongClickListener {

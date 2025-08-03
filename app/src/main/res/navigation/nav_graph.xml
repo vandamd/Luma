@@ -33,6 +33,27 @@
             app:destination="@id/settingsFragment"
             app:popUpTo="@+id/appListFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_appListFragment_to_renameFragment"
+            app:destination="@id/renameFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/renameFragment"
+        android:name="app.luma.ui.RenameFragment"
+        android:label="RenameFragment">
+        <argument
+            android:name="appPackage"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="appLabel"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="homePosition"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

@@ -39,7 +39,7 @@ import app.luma.style.CORNER_RADIUS
 object SettingsComposable {
 
     @Composable
-    fun SettingsHeader(title: String, onBack: () -> Unit) {
+    fun SettingsHeader(title: String, onBack: () -> Unit = {}, onAction: (() -> Unit)? = null) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -61,15 +61,27 @@ object SettingsComposable {
                 Text(text = title, style = SettingsTheme.typography.title, modifier = Modifier.padding(top = 10.dp, bottom = 25.dp))
             }
             Spacer(modifier = Modifier.width(16.dp))
-            Image(
-                painter = painterResource(id = R.drawable.arrow_back_ios_new_24px),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(38.dp)
-                    .padding(top = 10.dp, bottom = 0.dp),
-                alpha = 0f,
-                colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(SettingsTheme.typography.title.color)
-            )
+            if (onAction != null) {
+                Image(
+                    painter = painterResource(id = R.drawable.check_24px),
+                    contentDescription = "Save",
+                    modifier = Modifier
+                        .size(38.dp)
+                        .padding(top = 10.dp, bottom = 0.dp)
+                        .clickable { onAction() },
+                    colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(SettingsTheme.typography.title.color)
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.arrow_back_ios_new_24px),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(38.dp)
+                        .padding(top = 10.dp, bottom = 0.dp),
+                    alpha = 0f,
+                    colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(SettingsTheme.typography.title.color)
+                )
+            }
         }
     }
 

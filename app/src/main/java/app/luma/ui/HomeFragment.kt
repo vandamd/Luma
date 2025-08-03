@@ -80,6 +80,8 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
 
     override fun onResume() {
         super.onResume()
+        // Refresh app names when returning to home screen (e.g., after renaming)
+        refreshAppNames()
     }
 
     override fun onClick(view: View) {
@@ -367,6 +369,20 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                     gravity = alignment
                 }
                 binding.homeAppsLayout.addView(view)
+            }
+        } else {
+            // Refresh existing apps (for renaming)
+            refreshAppNames()
+        }
+    }
+
+    private fun refreshAppNames() {
+        val appCount = prefs.homeAppsNum
+        for (i in 0 until appCount) {
+            val view = binding.homeAppsLayout.getChildAt(i)
+            if (view is TextView) {
+                val appModel = prefs.getHomeAppModel(i)
+                view.text = appModel.appLabel  // Use appLabel which contains the home screen name
             }
         }
     }
