@@ -146,7 +146,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         }
         
         val density = resources.displayMetrics.density
-        val circleSize = (13 * density).toInt()
+        val circleSize = (13.7 * density).toInt()
         val circleMargin = (3.8 * density).toInt()
         val circleVerticalMargin = (9.2 * density).toInt()
         
@@ -171,8 +171,8 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
             LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply {
             gravity = Gravity.END or Gravity.CENTER_VERTICAL
-            marginEnd = (16 * density).toInt()
-            topMargin = (-8 * density).toInt()
+            marginEnd = (15.5 * density).toInt()
+            topMargin = (-8.4 * density).toInt()
         }
         
         binding.mainLayout.addView(newLayout, layoutParams)
