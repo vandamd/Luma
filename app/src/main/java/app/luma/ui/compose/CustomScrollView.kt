@@ -34,8 +34,6 @@ fun CustomScrollView(
     val scrollState = rememberScrollState()
     val density = LocalDensity.current
 
-    val scrollViewHeightDp = with(density) { scrollViewHeightPx.toDp() }
-
     val maxScrollOffset = max(0, contentHeightPx - scrollViewHeightPx)
 
     val scrollIndicatorHeightPx = if (scrollViewHeightPx > 0 && contentHeightPx > scrollViewHeightPx) {
