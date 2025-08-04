@@ -90,6 +90,7 @@ suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): Muta
                             app.componentName.className,
                             profile,
                             appAlias,
+                            false
                         )
                         appList.add(appModel)
                     } else if (!hiddenApps.contains(app.applicationInfo.packageName + "|" + profile.toString())
@@ -102,6 +103,7 @@ suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): Muta
                             app.componentName.className,
                             profile,
                             appAlias,
+                            false
                         )
                         appList.add(appModel)
                     }
@@ -115,6 +117,12 @@ suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): Muta
                 } else {
                     it.appAlias.lowercase()
                 }
+            }
+
+            // Update notification status for all apps
+            val packagesWithNotifications = LumaNotificationListener.getActiveNotificationPackages()
+            appList.forEach { appModel ->
+                appModel.hasNotification = packagesWithNotifications.contains(appModel.appPackage)
             }
 
         } catch (e: java.lang.Exception) {
@@ -147,7 +155,7 @@ suspend fun getHiddenAppsList(context: Context): MutableList<AppModel> {
                 val appName = pm.getApplicationLabel(appInfo).toString()
                 val appKey = collator.getCollationKey(appName)
                 // TODO: hidden apps settings ignore activity name for backward compatibility. Fix it.
-                appList.add(AppModel(appName, appKey, appPackage, "", userHandle, Prefs(context).getAppAlias(appName)))
+                appList.add(AppModel(appName, appKey, appPackage, "", userHandle, Prefs(context).getAppAlias(appName), false))
             } catch (e: NameNotFoundException) {
 
             }

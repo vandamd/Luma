@@ -9,7 +9,8 @@ data class AppModel(
         val appPackage: String,
         val appActivityName: String,
         val user: UserHandle,
-        var appAlias: String
+        var appAlias: String,
+        var hasNotification: Boolean = false
 ) : Comparable<AppModel> {
     override fun compareTo(other: AppModel): Int = when {
         key != null && other.key != null -> key.compareTo(other.key)

@@ -28,6 +28,7 @@ import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.Prefs
 import app.luma.databinding.FragmentHomeBinding
 import app.luma.helper.*
+import app.luma.helper.LumaNotificationListener
 import app.luma.listener.OnSwipeTouchListener
 import app.luma.listener.ViewSwipeTouchListener
 import kotlinx.coroutines.launch
@@ -463,7 +464,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                     textSize = prefs.textSize.toFloat()
                     id = i
                     val appModel = prefs.getHomeAppModel(i)
-                text = if (appModel.appAlias.isNotEmpty()) appModel.appAlias else appModel.appLabel
+                text = getAppDisplayName(appModel)
                     setOnTouchListener(getHomeAppsGestureListener(context, this))
                     if (!prefs.extendHomeAppsArea) {
                         layoutParams = ViewGroup.LayoutParams(
@@ -529,6 +530,16 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         }
     }
 
+    // Helper function to get app display name with notification indicator
+    private fun getAppDisplayName(appModel: AppModel): String {
+        val appName = if (appModel.appAlias.isNotEmpty()) appModel.appAlias else appModel.appLabel
+        if (!prefs.showNotificationIndicator) return appName
+        
+        val packagesWithNotifications = LumaNotificationListener.getActiveNotificationPackages()
+        val hasNotification = packagesWithNotifications.contains(appModel.appPackage)
+        return if (hasNotification) "$appName*" else appName
+    }
+
     private fun refreshAppNames() {
         val appsPerPage = prefs.getAppsPerPage(currentPage + 1) // Page numbers are 1-based
         val startIndex = currentPage * 4 // Still use 4 as base offset
@@ -541,7 +552,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
             val view = binding.homeAppsLayout.getChildAt(i)
             if (view is TextView) {
                 val appModel = prefs.getHomeAppModel(appIndex)
-                view.text = if (appModel.appAlias.isNotEmpty()) appModel.appAlias else appModel.appLabel
+                view.text = getAppDisplayName(appModel)
                 view.id = appIndex
             }
         }
