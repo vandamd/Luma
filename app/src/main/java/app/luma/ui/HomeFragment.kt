@@ -112,8 +112,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         if (prefs.homeLocked) return true
 
         val n = view.id
-        val name = prefs.getHomeAppModel(n).appLabel
-        showAppList(AppDrawerFlag.SetHomeApp, name.isNotEmpty(), n)
+        showAppList(AppDrawerFlag.SetHomeApp, true, n)
         return true
     }
 
