@@ -9,8 +9,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -23,6 +21,7 @@ import app.luma.data.Prefs
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.SimpleTextButton
+import app.luma.ui.compose.CustomScrollView
 
 class SwipeDownFragment : Fragment() {
 
@@ -60,18 +59,20 @@ class SwipeDownFragment : Fragment() {
                 title = "Swipe down",
                 onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
             )
-            ContentContainer(verticalArrangement = Arrangement.spacedBy(26.dp)) {
-                for (action in Constants.Action.values()) {
-                    val isSelected = prefs.swipeDownAction == action
-                    val buttonText = when (action) {
-                        Constants.Action.OpenApp -> "Open ${prefs.appSwipeDown.appLabel}"
-                        else -> action.string()
+            ContentContainer() {
+                CustomScrollView {
+                    for (action in Constants.Action.values()) {
+                        val isSelected = prefs.swipeDownAction == action
+                        val buttonText = when (action) {
+                            Constants.Action.OpenApp -> "Open ${prefs.appSwipeDown.appLabel}"
+                            else -> action.string()
+                        }
+                        SimpleTextButton(
+                            title = buttonText,
+                            underline = isSelected,
+                            onClick = { handleActionSelection(action) }
+                        )
                     }
-                    SimpleTextButton(
-                        title = buttonText,
-                        underline = isSelected,
-                        onClick = { handleActionSelection(action) }
-                    )
                 }
             }
         }

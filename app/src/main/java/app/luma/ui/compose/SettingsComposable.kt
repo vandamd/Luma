@@ -555,15 +555,15 @@ object SettingsComposable {
             Text(
                 label,
                 style = SettingsTheme.typography.item,
-                fontSize = 20.sp,
-                modifier = Modifier.padding(top = 7.5.dp)
+                fontSize = 16.sp,
+                modifier = Modifier.padding(top = 4.dp)
             )
             Text(
                 value,
-                style = if (isSelected) SettingsTheme.typography.button else SettingsTheme.typography.pageButton,
+                style = SettingsTheme.typography.item,
                 fontSize = 30.sp,
                 modifier = Modifier
-                    .padding(bottom = 10.dp)
+                    .padding(bottom = 0.dp)
                     .then(
                         if (isSelected) Modifier.drawBehind {
                             val strokeWidth = 2.dp.toPx()

@@ -135,8 +135,4 @@
             android:id="@+id/action_settingsFragment_to_gesturesFragment"
             app:destination="@id/gesturesFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/customScrollViewFragment"
-        android:name="app.luma.ui.CustomScrollViewFragment"
-        android:label="CustomScrollViewFragment" />
 </navigation>

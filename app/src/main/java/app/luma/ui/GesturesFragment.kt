@@ -20,6 +20,9 @@ import app.luma.data.Prefs
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.SelectorButton
+import app.luma.ui.compose.CustomScrollView
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.unit.dp
 
 class GesturesFragment : Fragment() {
 
@@ -57,32 +60,35 @@ class GesturesFragment : Fragment() {
                 title = "Gestures",
                 onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
             )
+
             ContentContainer {
-                SelectorButton(
-                    label = "Swipe left",
-                    value = getActionText(prefs.swipeLeftAction, prefs.appSwipeLeft.appLabel),
-                    onClick = { findNavController().navigate(R.id.action_gesturesFragment_to_swipeLeftFragment) }
-                )
-                SelectorButton(
-                    label = "Swipe right",
-                    value = getActionText(prefs.swipeRightAction, prefs.appSwipeRight.appLabel),
-                    onClick = { findNavController().navigate(R.id.action_gesturesFragment_to_swipeRightFragment) }
-                )
-                SelectorButton(
-                    label = "Swipe down",
-                    value = getActionText(prefs.swipeDownAction, prefs.appSwipeDown.appLabel),
-                    onClick = { findNavController().navigate(R.id.action_gesturesFragment_to_swipeDownFragment) }
-                )
-                SelectorButton(
-                    label = "Swipe up",
-                    value = getActionText(prefs.swipeUpAction, prefs.appSwipeUp.appLabel),
-                    onClick = { findNavController().navigate(R.id.action_gesturesFragment_to_swipeUpFragment) }
-                )
-                SelectorButton(
-                    label = "Double tap",
-                    value = getActionText(prefs.doubleTapAction, prefs.appDoubleTap.appLabel),
-                    onClick = { findNavController().navigate(R.id.action_gesturesFragment_to_doubleTapFragment) }
-                )
+                CustomScrollView(verticalArrangement = Arrangement.spacedBy(26.dp)) {
+                    SelectorButton(
+                        label = "Swipe left",
+                        value = getActionText(prefs.swipeLeftAction, prefs.appSwipeLeft.appLabel),
+                        onClick = { findNavController().navigate(R.id.action_gesturesFragment_to_swipeLeftFragment) }
+                    )
+                    SelectorButton(
+                        label = "Swipe right",
+                        value = getActionText(prefs.swipeRightAction, prefs.appSwipeRight.appLabel),
+                        onClick = { findNavController().navigate(R.id.action_gesturesFragment_to_swipeRightFragment) }
+                    )
+                    SelectorButton(
+                        label = "Swipe down",
+                        value = getActionText(prefs.swipeDownAction, prefs.appSwipeDown.appLabel),
+                        onClick = { findNavController().navigate(R.id.action_gesturesFragment_to_swipeDownFragment) }
+                    )
+                    SelectorButton(
+                        label = "Swipe up",
+                        value = getActionText(prefs.swipeUpAction, prefs.appSwipeUp.appLabel),
+                        onClick = { findNavController().navigate(R.id.action_gesturesFragment_to_swipeUpFragment) }
+                    )
+                    SelectorButton(
+                        label = "Double tap",
+                        value = getActionText(prefs.doubleTapAction, prefs.appDoubleTap.appLabel),
+                        onClick = { findNavController().navigate(R.id.action_gesturesFragment_to_doubleTapFragment) }
+                    )
+                }
             }
         }
     }

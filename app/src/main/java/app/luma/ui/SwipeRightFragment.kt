@@ -21,9 +21,7 @@ import app.luma.data.Prefs
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.SimpleTextButton
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.ui.unit.dp
-
+import app.luma.ui.compose.CustomScrollView
 
 class SwipeRightFragment : Fragment() {
 
@@ -61,18 +59,21 @@ class SwipeRightFragment : Fragment() {
                 title = "Swipe right",
                 onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
             )
-            ContentContainer(verticalArrangement = Arrangement.spacedBy(26.dp)) {
-                for (action in Constants.Action.values()) {
-                    val isSelected = prefs.swipeRightAction == action
-                    val buttonText = when (action) {
-                        Constants.Action.OpenApp -> "Open ${prefs.appSwipeRight.appLabel}"
-                        else -> action.string()
+
+            ContentContainer() {
+                CustomScrollView {
+                    for (action in Constants.Action.values()) {
+                        val isSelected = prefs.swipeRightAction == action
+                        val buttonText = when (action) {
+                            Constants.Action.OpenApp -> "Open ${prefs.appSwipeRight.appLabel}"
+                            else -> action.string()
+                        }
+                        SimpleTextButton(
+                            title = buttonText,
+                            underline = isSelected,
+                            onClick = { handleActionSelection(action) }
+                        )
                     }
-                    SimpleTextButton(
-                        title = buttonText,
-                        underline = isSelected,
-                        onClick = { handleActionSelection(action) }
-                    )
                 }
             }
         }
