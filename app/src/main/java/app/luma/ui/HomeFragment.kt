@@ -10,6 +10,8 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.core.view.children
@@ -37,6 +39,9 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     private lateinit var viewModel: MainViewModel
     private lateinit var deviceManager: DevicePolicyManager
     private lateinit var vibrator: Vibrator
+    private var currentPage = 0
+    private var totalPages = 1
+    private var pageIndicatorLayout: LinearLayout? = null
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -66,6 +71,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         vibrator = context?.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
         initObservers()
+        initPageNavigation()
 
         initSwipeTouchListener()
         initClickListeners()
@@ -74,12 +80,18 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     override fun onStart() {
         super.onStart()
         hideStatusBar(requireActivity())
-
-
+        totalPages = prefs.homePages
+        if (currentPage >= totalPages) currentPage = totalPages - 1
+        updatePageIndicator()
     }
 
     override fun onResume() {
         super.onResume()
+        totalPages = prefs.homePages
+        if (currentPage >= totalPages) currentPage = totalPages - 1
+        pageIndicatorLayout = null
+        updatePageIndicator()
+        refreshAppNames()
     }
 
     override fun onClick(view: View) {
@@ -109,6 +121,83 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         binding.touchArea.setOnTouchListener(getHomeScreenGestureListener(context))
     }
 
+    private fun initPageNavigation() {
+        totalPages = prefs.homePages
+        if (currentPage >= totalPages) currentPage = totalPages - 1
+        updatePageIndicator()
+        refreshAppNames()
+    }
+
+    private fun updatePageIndicator() {
+        // Remove any existing indicator to avoid duplicates
+        binding.mainLayout.findViewWithTag<View>("pageIndicator")?.let {
+            binding.mainLayout.removeView(it)
+            if (it === pageIndicatorLayout) pageIndicatorLayout = null
+        }
+        
+        // Only show indicator if there are 2 or more pages
+        if (totalPages < 2) {
+            currentPage = 0
+            pageIndicatorLayout = null
+            return
+        }
+        
+        // Always create a fresh indicator layout
+        val newLayout = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            tag = "pageIndicator"
+        }
+        
+        val density = resources.displayMetrics.density
+        val circleSize = (13.7 * density).toInt()
+        val circleMargin = (3.8 * density).toInt()
+        val circleVerticalMargin = (9.2 * density).toInt()
+        
+        // Add circles for each page
+        for (i in 0 until totalPages) {
+            val index = i
+            val circle = View(requireContext()).apply {
+                layoutParams = LinearLayout.LayoutParams(circleSize, circleSize).apply {
+                    setMargins(circleMargin, circleVerticalMargin, circleMargin, circleVerticalMargin)
+                }
+                isClickable = true
+                isFocusable = true
+                setOnClickListener { switchToPage(index) }
+                setBackgroundResource(if (index == currentPage) R.drawable.filled_circle else R.drawable.hollow_circle)
+            }
+            newLayout.addView(circle)
+        }
+        
+        val layoutParams = FrameLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ).apply {
+            when (prefs.pageIndicatorPosition) {
+                Prefs.PageIndicatorPosition.Left -> {
+                    gravity = Gravity.START or Gravity.CENTER_VERTICAL
+                    marginStart = (15.5 * density).toInt()
+                    topMargin = (-8.4 * density).toInt()
+                }
+                Prefs.PageIndicatorPosition.Right -> {
+                    gravity = Gravity.END or Gravity.CENTER_VERTICAL
+                    marginEnd = (15.5 * density).toInt()
+                    topMargin = (-8.4 * density).toInt()
+                }
+            }
+        }
+        
+        binding.mainLayout.addView(newLayout, layoutParams)
+        pageIndicatorLayout = newLayout
+    }
+
+    private fun switchToPage(page: Int) {
+        if (page >= 0 && page < totalPages) {
+            currentPage = page
+            refreshAppNames()
+            updatePageIndicator()
+        }
+    }
+
     private fun initClickListeners() {
         // removed setDefaultLauncher click listener
     }
@@ -127,6 +216,9 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                 updateAppCount(it)
             }
         }
+        
+        // Observe page changes
+        prefs.homePages
     }
 
     private fun homeAppClicked(location: Int) {
@@ -260,6 +352,13 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
 
             override fun onSwipeUp() {
                 super.onSwipeUp()
+                // Handle page navigation (swipe up = next page)
+                if (totalPages > 1 && currentPage < totalPages - 1) {
+                    switchToPage(currentPage + 1)
+                    return
+                }
+                
+                // If no page navigation, handle normal swipe up
                 when(val action = prefs.swipeUpAction) {
                     Action.OpenApp -> openSwipeUpApp()
                     else -> handleOtherAction(action)
@@ -268,6 +367,13 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
 
             override fun onSwipeDown() {
                 super.onSwipeDown()
+                // Handle page navigation (swipe down = previous page)
+                if (totalPages > 1 && currentPage > 0) {
+                    switchToPage(currentPage - 1)
+                    return
+                }
+                
+                // If no page navigation, handle normal swipe down
                 when(val action = prefs.swipeDownAction) {
                     Action.OpenApp -> openSwipeDownApp()
                     else -> handleOtherAction(action)
@@ -356,7 +462,8 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                 view.apply {
                     textSize = prefs.textSize.toFloat()
                     id = i
-                    text = prefs.getHomeAppModel(i).appLabel
+                    val appModel = prefs.getHomeAppModel(i)
+                text = if (appModel.appAlias.isNotEmpty()) appModel.appAlias else appModel.appLabel
                     setOnTouchListener(getHomeAppsGestureListener(context, this))
                     if (!prefs.extendHomeAppsArea) {
                         layoutParams = ViewGroup.LayoutParams(
@@ -368,6 +475,77 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                 }
                 binding.homeAppsLayout.addView(view)
             }
+        } else {
+            // Refresh existing apps (for renaming)
+            refreshAppNames()
         }
+    }
+
+    // Update apps for current page
+    private fun updateAppsForCurrentPage() {
+        val appsPerPage = prefs.getAppsPerPage(currentPage + 1) // Page numbers are 1-based
+        val startIndex = currentPage * 4 // Still use 4 as base offset
+        
+        // Update the number of app buttons if needed
+        updateAppCountForPage(appsPerPage)
+        
+        for (i in 0 until appsPerPage) {
+            val appIndex = startIndex + i
+            val view = binding.homeAppsLayout.getChildAt(i)
+            if (view is TextView) {
+                val appModel = prefs.getHomeAppModel(appIndex)
+                view.text = if (appModel.appAlias.isNotEmpty()) appModel.appAlias else appModel.appLabel
+                view.id = appIndex
+            }
+        }
+    }
+
+    // Update the number of app buttons displayed for the current page
+    private fun updateAppCountForPage(appsCount: Int) {
+        val currentAppCount = binding.homeAppsLayout.childCount
+        
+        if (currentAppCount < appsCount) {
+            // Add more app buttons
+            val alignment = prefs.homeAlignment.value()
+            for (i in currentAppCount until appsCount) {
+                val view = layoutInflater.inflate(R.layout.home_app_button, null) as TextView
+                view.apply {
+                    textSize = prefs.textSize.toFloat()
+                    // id will be set in refreshAppNames
+                    setOnTouchListener(getHomeAppsGestureListener(context, this))
+                    if (!prefs.extendHomeAppsArea) {
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        )
+                    }
+                    gravity = alignment
+                }
+                binding.homeAppsLayout.addView(view)
+            }
+        } else if (currentAppCount > appsCount) {
+            // Remove excess app buttons
+            binding.homeAppsLayout.removeViews(appsCount, currentAppCount - appsCount)
+        }
+    }
+
+    private fun refreshAppNames() {
+        val appsPerPage = prefs.getAppsPerPage(currentPage + 1) // Page numbers are 1-based
+        val startIndex = currentPage * 4 // Still use 4 as base offset
+        
+        // Update the number of app buttons if needed
+        updateAppCountForPage(appsPerPage)
+        
+        for (i in 0 until appsPerPage) {
+            val appIndex = startIndex + i
+            val view = binding.homeAppsLayout.getChildAt(i)
+            if (view is TextView) {
+                val appModel = prefs.getHomeAppModel(appIndex)
+                view.text = if (appModel.appAlias.isNotEmpty()) appModel.appAlias else appModel.appLabel
+                view.id = appIndex
+            }
+        }
+        
+        updatePageIndicator()
     }
 }

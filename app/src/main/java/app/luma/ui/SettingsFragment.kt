@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -53,6 +54,11 @@ import app.luma.ui.compose.SettingsComposable.SettingsNumberItem
 import app.luma.ui.compose.SettingsComposable.SettingsToggle
 import app.luma.ui.compose.SettingsComposable.SettingsTopView
 import app.luma.ui.compose.SettingsComposable.SimpleTextButton
+import app.luma.ui.compose.SettingsComposable.SettingsHeader
+import app.luma.ui.compose.SettingsComposable.ContentContainer
+import app.luma.ui.compose.SettingsComposable.ToggleTextButton
+import androidx.compose.ui.unit.dp
+import androidx.navigation.fragment.findNavController
 
 class SettingsFragment : Fragment() {
 
@@ -95,99 +101,35 @@ class SettingsFragment : Fragment() {
 
     @Composable
     private fun Settings() {
-        val selected = remember { mutableStateOf("") }
-
         Column {
-            SettingsTopView(
-                stringResource(R.string.app_name) + " " + requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName,
-                onClick = { requireActivity().onBackPressedDispatcher.onBackPressed() },
-            ) {
-                SimpleTextButton(stringResource(R.string.hidden_apps)) { showHiddenApps() }
+            SettingsHeader(
+                title = "Luma Settings (" + requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName + ")",
+                onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
+            )
+            val isDark = when (prefs.appTheme) {
+                Light -> false
+                Dark -> true
+                System -> isSystemInDarkTheme()
             }
-            SettingsArea(title = "Customise",
-                selected = selected,
-                items = arrayOf(
-                    { open, onChange ->
-                        SettingsItem(
-                            title = stringResource(R.string.theme_mode),
-                            open = open,
-                            onChange = onChange,
-                            currentSelection = remember { mutableStateOf(prefs.appTheme) },
-                            values = arrayOf(System, Light, Dark),
-                            onSelect = { j -> setTheme(j) }
-                        )
+            val themeState = remember { mutableStateOf(!isDark) }
+            
+            ContentContainer(verticalArrangement = Arrangement.spacedBy(49.dp)) {
+                ToggleTextButton(
+                    title = "Invert Colours",
+                    checked = themeState.value,
+                    onCheckedChange = { 
+                        themeState.value = it
+                        setTheme(if (it) Light else Dark)
                     },
-                    { _, onChange ->
-                        SettingsToggle(
-                            title = stringResource(R.string.auto_show_keyboard),
-                            onChange = onChange,
-                            state = remember { mutableStateOf(prefs.autoShowKeyboard) },
-                        ) { toggleKeyboardText() }
-                    },
-                    { open, onChange ->
-                        SettingsNumberItem(
-                            title = stringResource(R.string.apps_on_home_screen),
-                            open = open,
-                            onChange = onChange,
-                            currentSelection = remember { mutableStateOf(prefs.homeAppsNum) },
-                            min = 0,
-                            max = Constants.MAX_HOME_APPS,
-                            onSelect = { j -> updateHomeAppsNum(j) }
-                        )
-                    },
-                    { open, onChange ->
-                        SettingsGestureItem(
-                            title = stringResource(R.string.swipe_left_app),
-                            open = open,
-                            onChange = onChange,
-                            currentAction = prefs.swipeLeftAction,
-                            onSelect = { j -> updateGesture(AppDrawerFlag.SetSwipeLeft, j) },
-                            appLabel = prefs.appSwipeLeft.appLabel.ifEmpty { "Camera" },
-                        )
-                    },
-                    { open, onChange ->
-                        SettingsGestureItem(
-                            title = stringResource(R.string.swipe_right_app),
-                            open = open,
-                            onChange = onChange,
-                            currentAction = prefs.swipeRightAction,
-                            onSelect = { j -> updateGesture(AppDrawerFlag.SetSwipeRight, j) },
-                            appLabel = prefs.appSwipeRight.appLabel.ifEmpty { "Phone" },
-                        )
-                    },
-                    { open, onChange ->
-                        SettingsGestureItem(
-                            title = stringResource(R.string.swipe_up_app),
-                            open = open,
-                            onChange = onChange,
-                            currentAction = prefs.swipeUpAction,
-                            onSelect = { j -> updateGesture(AppDrawerFlag.SetSwipeUp, j) },
-                            appLabel = prefs.appSwipeUp.appLabel,
-                        )
-                    },
-                    { open, onChange ->
-                        SettingsGestureItem(
-                            title = stringResource(R.string.swipe_down_app),
-                            open = open,
-                            onChange = onChange,
-                            currentAction = prefs.swipeDownAction,
-                            onSelect = { j -> updateGesture(AppDrawerFlag.SetSwipeDown, j) },
-                            appLabel = prefs.appSwipeDown.appLabel,
-                        )
-                    },
-                    { open, onChange ->
-                        SettingsGestureItem(
-                            title = stringResource(R.string.double_tap),
-                            open = open,
-                            onChange = onChange,
-                            currentAction = prefs.doubleTapAction,
-                            onSelect = { j -> updateGesture(AppDrawerFlag.SetDoubleTap, j) },
-                            appLabel = prefs.appDoubleTap.appLabel
-                        )
+                    onClick = { 
+                        themeState.value = !themeState.value
+                        setTheme(if (themeState.value) Light else Dark)
                     }
                 )
-            )
-
+                SimpleTextButton("Pages") { findNavController().navigate(R.id.action_settingsFragment_to_pagesFragment) }
+                SimpleTextButton("Gestures") { findNavController().navigate(R.id.action_settingsFragment_to_gesturesFragment) }
+                SimpleTextButton("Hidden Apps") { showHiddenApps() }
+            }
         }
     }
 
@@ -229,16 +171,11 @@ class SettingsFragment : Fragment() {
         viewModel.homeAppsCount.value = homeAppsNum
     }
 
-    private fun toggleKeyboardText() {
-        prefs.autoShowKeyboard = !prefs.autoShowKeyboard
-    }
-
     private fun toggleAutoOpenApp() {
         prefs.autoOpenApp = !prefs.autoOpenApp
     }
 
     private fun setTheme(appTheme: Constants.Theme) {
-        // if (AppCompatDelegate.getDefaultNightMode() == appTheme) return // TODO find out what this did
         prefs.appTheme = appTheme
         requireActivity().recreate()
     }

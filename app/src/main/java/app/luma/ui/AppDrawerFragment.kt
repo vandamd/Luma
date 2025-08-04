@@ -10,9 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
-import androidx.appcompat.widget.SearchView
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.platform.ComposeView
+import SettingsTheme
+import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -32,8 +36,11 @@ class AppDrawerFragment : Fragment() {
 
     private var _binding: FragmentAppDrawerBinding? = null
     private val binding get() = _binding!!
+    
+    private lateinit var flag: AppDrawerFlag
+    private var n: Int = 0
 
-    override fun onCreateView(
+override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,28 +48,40 @@ class AppDrawerFragment : Fragment() {
         // return inflater.inflate(R.layout.fragment_app_drawer, container, false)
         _binding = FragmentAppDrawerBinding.inflate(inflater, container, false)
 
-        context?.let{
-            if (Prefs(it).firstOpen()) {
-                binding.appDrawerTip.visibility = View.VISIBLE
+
+        val flagString = arguments?.getString("flag", AppDrawerFlag.LaunchApp.toString()) ?: AppDrawerFlag.LaunchApp.toString()
+        flag = AppDrawerFlag.valueOf(flagString)
+        n = arguments?.getInt("n", 0) ?: 0
+        
+        val header: ComposeView? = binding.headerCompose
+        header?.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        header?.setContent {
+            val isDark = when (Prefs(requireContext()).appTheme) {
+                app.luma.data.Constants.Theme.Light -> false
+                app.luma.data.Constants.Theme.Dark -> true
+                app.luma.data.Constants.Theme.System -> isSystemInDarkTheme()
+            }
+            val headerTitle = when (flag) {
+            AppDrawerFlag.SetHomeApp -> "Select/Rename App"
+            AppDrawerFlag.HiddenApps -> "Hidden Apps"
+            else -> "App Drawer"
+        }
+            SettingsTheme(isDark) {
+                SettingsHeader(title = headerTitle, onBack = { findNavController().popBackStack() })
             }
         }
-
         return binding.root
     }
-
     @SuppressLint("RtlHardcoded")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val flagString = arguments?.getString("flag", AppDrawerFlag.LaunchApp.toString()) ?: AppDrawerFlag.LaunchApp.toString()
-        val flag = AppDrawerFlag.valueOf(flagString)
-        val n = arguments?.getInt("n", 0) ?: 0
-
+        // flag, n are now determined in onCreateView
+        
         when (flag) {
             AppDrawerFlag.SetHomeApp -> {
-                binding.drawerButton.text = getString(R.string.rename)
-                binding.drawerButton.isVisible = true
-                binding.drawerButton.setOnClickListener { renameListener(flag, n) }
+                // Remove legacy rename button, keep only the pseudo rename app in the list
+                binding.drawerButton.isVisible = false
             }
             AppDrawerFlag.SetSwipeRight,
             AppDrawerFlag.SetSwipeLeft,
@@ -95,29 +114,15 @@ class AppDrawerFragment : Fragment() {
             appRenameListener()
         )
 
-        val searchTextView = binding.search.findViewById<TextView>(R.id.search_src_text)
-        if (searchTextView != null) searchTextView.gravity = gravity
+
 
         initViewModel(flag, viewModel, appAdapter)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = appAdapter
-        binding.recyclerView.addOnScrollListener(getRecyclerViewOnScrollListener())
 
-        if (flag == AppDrawerFlag.HiddenApps) binding.search.queryHint = getString(R.string.hidden_apps)
-        binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                appAdapter.launchFirstInList()
-                return false
-            }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                newText?.let {
-                    appAdapter.filter.filter(it.trim())
-                }
-                return false
-            }
-        })
+
     }
 
     private fun initViewModel(flag: AppDrawerFlag, viewModel: MainViewModel, appAdapter: AppDrawerAdapter) {
@@ -141,11 +146,9 @@ class AppDrawerFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        binding.search.showKeyboard()
     }
 
     override fun onStop() {
-        binding.search.hideKeyboard()
         super.onStop()
     }
 
@@ -155,18 +158,6 @@ class AppDrawerFragment : Fragment() {
         imm.hideSoftInputFromWindow(windowToken, 0)
     }
 
-    private fun View.showKeyboard() {
-        if (!Prefs(requireContext()).autoShowKeyboard) return
-
-        val searchTextView = binding.search.findViewById<TextView>(R.id.search_src_text)
-        searchTextView.requestFocus()
-        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        searchTextView.postDelayed(Runnable {
-            searchTextView.requestFocus()
-            imm.showSoftInput(searchTextView, InputMethodManager.SHOW_FORCED)
-        }, 100)
-    }
-
     private fun populateAppList(apps: List<AppModel>, appAdapter: AppDrawerAdapter) {
         // layout animation removed
         appAdapter.setAppList(apps.toMutableList())
@@ -174,11 +165,24 @@ class AppDrawerFragment : Fragment() {
 
     private fun appClickListener(viewModel: MainViewModel, flag: AppDrawerFlag, n: Int = 0): (appModel: AppModel) -> Unit =
         { appModel ->
-            viewModel.selectedApp(appModel, flag, n)
-            if (flag == AppDrawerFlag.LaunchApp || flag == AppDrawerFlag.HiddenApps)
-                findNavController().popBackStack(R.id.mainFragment, false)
-            else
-                findNavController().popBackStack()
+            if (flag == AppDrawerFlag.SetHomeApp && appModel.appPackage == "__rename__") {
+                // We need to pass the home app information to rename
+                val homeAppModel = Prefs(requireContext()).getHomeAppModel(n)
+                findNavController().navigate(
+                    R.id.renameFragment,
+                    bundleOf(
+                        "appPackage" to homeAppModel.appPackage,
+                        "appLabel" to homeAppModel.appLabel,
+                        "homePosition" to n
+                    )
+                )
+            } else {
+                viewModel.selectedApp(appModel, flag, n)
+                if (flag == AppDrawerFlag.LaunchApp || flag == AppDrawerFlag.HiddenApps)
+                    findNavController().popBackStack(R.id.mainFragment, false)
+                else
+                    findNavController().popBackStack()
+            }
         }
 
     private fun appInfoListener(): (appModel: AppModel) -> Unit =
@@ -212,42 +216,5 @@ class AppDrawerFragment : Fragment() {
             prefs.setAppAlias(appPackage, appAlias)
         }
 
-    private fun renameListener(flag: AppDrawerFlag, i: Int) {
-        val name = binding.search.query.toString().trim()
-        if (name.isEmpty()) return
-        if (flag == AppDrawerFlag.SetHomeApp) {
-            Prefs(requireContext()).setHomeAppName(i, name)
-        }
-
-        findNavController().popBackStack()
-    }
-
-    private fun getRecyclerViewOnScrollListener(): RecyclerView.OnScrollListener {
-        return object : RecyclerView.OnScrollListener() {
-
-            var onTop = false
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                when (newState) {
-
-                    RecyclerView.SCROLL_STATE_DRAGGING -> {
-                        onTop = !recyclerView.canScrollVertically(-1)
-                        if (onTop) binding.search.hideKeyboard()
-                        if (onTop && !recyclerView.canScrollVertically(1))
-                            findNavController().popBackStack()
-                    }
-
-                    RecyclerView.SCROLL_STATE_IDLE -> {
-                        if (!recyclerView.canScrollVertically(1)) {
-                            binding.search.hideKeyboard()
-                        } else if (!recyclerView.canScrollVertically(-1)) {
-                            if (onTop) findNavController().popBackStack()
-                            else binding.search.showKeyboard()
-                        }
-                    }
-                }
-            }
-        }
-    }
+    // Removed legacy renameListener function
 }

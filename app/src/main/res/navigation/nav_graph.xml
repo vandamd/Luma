@@ -33,6 +33,117 @@
             app:destination="@id/settingsFragment"
             app:popUpTo="@+id/appListFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_appListFragment_to_renameFragment"
+            app:destination="@id/renameFragment" />
+    </fragment>
+
+<fragment
+        android:id="@+id/renameFragment"
+        android:name="app.luma.ui.RenameFragment"
+        android:label="RenameFragment">
+        <argument
+            android:name="appPackage"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="appLabel"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="homePosition"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/pagesFragment"
+        android:name="app.luma.ui.PagesFragment"
+        android:label="PagesFragment">
+        <action
+            android:id="@+id/action_pagesFragment_to_pageCountFragment"
+            app:destination="@id/pageCountFragment" />
+        <action
+            android:id="@+id/action_pagesFragment_to_appCountFragment"
+            app:destination="@id/appCountFragment" />
+        <action
+            android:id="@+id/action_pagesFragment_to_pageIndicatorPositionFragment"
+            app:destination="@id/pageIndicatorPositionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pageCountFragment"
+        android:name="app.luma.ui.PageCountFragment"
+        android:label="PageCountFragment" />
+    <fragment
+        android:id="@+id/pageIndicatorPositionFragment"
+        android:name="app.luma.ui.PageIndicatorPositionFragment"
+        android:label="PageIndicatorPositionFragment" />
+    <fragment
+        android:id="@+id/appCountFragment"
+        android:name="app.luma.ui.AppCountFragment"
+        android:label="AppCountFragment">
+        <argument
+            android:name="pageNumber"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/gesturesFragment"
+        android:name="app.luma.ui.GesturesFragment"
+        android:label="GesturesFragment">
+        <action
+            android:id="@+id/action_gesturesFragment_to_swipeLeftFragment"
+            app:destination="@id/swipeLeftFragment" />
+        <action
+            android:id="@+id/action_gesturesFragment_to_swipeRightFragment"
+            app:destination="@id/swipeRightFragment" />
+        <action
+            android:id="@+id/action_gesturesFragment_to_swipeDownFragment"
+            app:destination="@id/swipeDownFragment" />
+        <action
+            android:id="@+id/action_gesturesFragment_to_swipeUpFragment"
+            app:destination="@id/swipeUpFragment" />
+        <action
+            android:id="@+id/action_gesturesFragment_to_doubleTapFragment"
+            app:destination="@id/doubleTapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/swipeLeftFragment"
+        android:name="app.luma.ui.SwipeLeftFragment"
+        android:label="SwipeLeftFragment">
+        <action
+            android:id="@+id/action_swipeLeftFragment_to_appListFragment"
+            app:destination="@id/appListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/swipeRightFragment"
+        android:name="app.luma.ui.SwipeRightFragment"
+        android:label="SwipeRightFragment">
+        <action
+            android:id="@+id/action_swipeRightFragment_to_appListFragment"
+            app:destination="@id/appListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/swipeDownFragment"
+        android:name="app.luma.ui.SwipeDownFragment"
+        android:label="SwipeDownFragment">
+        <action
+            android:id="@+id/action_swipeDownFragment_to_appListFragment"
+            app:destination="@id/appListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/swipeUpFragment"
+        android:name="app.luma.ui.SwipeUpFragment"
+        android:label="SwipeUpFragment">
+        <action
+            android:id="@+id/action_swipeUpFragment_to_appListFragment"
+            app:destination="@id/appListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/doubleTapFragment"
+        android:name="app.luma.ui.DoubleTapFragment"
+        android:label="DoubleTapFragment">
+        <action
+            android:id="@+id/action_doubleTapFragment_to_appListFragment"
+            app:destination="@id/appListFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -42,7 +153,12 @@
         <action
             android:id="@+id/action_settingsFragment_to_appListFragment"
             app:destination="@id/appListFragment"
- />
+  />
+        <action
+            android:id="@+id/action_settingsFragment_to_pagesFragment"
+            app:destination="@id/pagesFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_gesturesFragment"
+            app:destination="@id/gesturesFragment" />
     </fragment>
-
 </navigation>

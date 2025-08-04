@@ -4,7 +4,7 @@
         android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
+        android:animateLayoutChanges="false"
         android:orientation="vertical"
         android:background="?attr/primaryShadeDarkColor"
         tools:context=".ui.HomeFragment">
@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:text="@string/swipe_up_for_apps" />
+            android:text="@string/swipe_left_for_apps" />
 
         <TextView
             style="@style/TextSmall"

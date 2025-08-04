@@ -15,7 +15,8 @@ private const val FIRST_OPEN = "FIRST_OPEN"
 private const val FIRST_SETTINGS_OPEN = "FIRST_SETTINGS_OPEN"
 private const val LOCK_MODE = "LOCK_MODE"
 private const val HOME_APPS_NUM = "HOME_APPS_NUM"
-private const val AUTO_SHOW_KEYBOARD = "AUTO_SHOW_KEYBOARD"
+private const val HOME_PAGES = "HOME_PAGES"
+private const val HOME_APPS_PER_PAGE = "HOME_APPS_PER_PAGE_"
 private const val AUTO_OPEN_APP = "AUTO_OPEN_APP"
 private const val HOME_ALIGNMENT = "HOME_ALIGNMENT"
 private const val HOME_ALIGNMENT_BOTTOM = "HOME_ALIGNMENT_BOTTOM"
@@ -54,8 +55,11 @@ private const val CLICK_DATE = "CLICK_DATE"
 private const val DOUBLE_TAP = "DOUBLE_TAP"
 
 private const val TEXT_SIZE = "text_size"
+private const val PAGE_INDICATOR_POSITION = "page_indicator_position"
 
 class Prefs(val context: Context) {
+
+    enum class PageIndicatorPosition { Left, Right }
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, 0)
 
@@ -72,7 +76,7 @@ class Prefs(val context: Context) {
                 is String -> editor.putString(key, value)
                 is Boolean -> editor.putBoolean(key, value)
                 is Int -> editor.putInt(key, value)
-                is Double -> editor.putInt(key, value.toInt()) // we store everything as int
+                is Double -> editor.putInt(key, value.toInt())
                 is Float -> editor.putInt(key, value.toInt())
                 is MutableSet<*> -> {
                     val list = value.filterIsInstance<String>().toSet()
@@ -84,14 +88,10 @@ class Prefs(val context: Context) {
         editor.apply()
     }
 
-    // this is a true-once-false-after variable
-    // e.g. it returns on first-ever read, and false everytime afterwards
     fun firstOpen(): Boolean {
         return firstTrueFalseAfter(FIRST_OPEN)
     }
 
-    // this is a true-once-false-after variable
-    // e.g. it returns on first-ever read, and false everytime afterwards
     fun firstSettingsOpen(): Boolean {
         return firstTrueFalseAfter(FIRST_SETTINGS_OPEN)
     }
@@ -99,10 +99,6 @@ class Prefs(val context: Context) {
     var lockModeOn: Boolean
         get() = prefs.getBoolean(LOCK_MODE, false)
         set(value) = prefs.edit().putBoolean(LOCK_MODE, value).apply()
-
-    var autoShowKeyboard: Boolean
-        get() = prefs.getBoolean(AUTO_SHOW_KEYBOARD, false)
-        set(value) = prefs.edit().putBoolean(AUTO_SHOW_KEYBOARD, value).apply()
 
     var autoOpenApp: Boolean
         get() = prefs.getBoolean(AUTO_OPEN_APP, false)
@@ -117,6 +113,28 @@ class Prefs(val context: Context) {
             }
         }
         set(value) = prefs.edit().putInt(HOME_APPS_NUM, value).apply()
+
+    var homePages: Int
+        get() {
+            return try {
+                prefs.getInt(HOME_PAGES, 1)
+            } catch (_: Exception) {
+                1
+            }
+        }
+        set(value) = prefs.edit().putInt(HOME_PAGES, value.coerceIn(1, 3)).apply()
+
+    fun getAppsPerPage(page: Int): Int {
+        return try {
+            prefs.getInt("${HOME_APPS_PER_PAGE}$page", 4)
+        } catch (_: Exception) {
+            4
+        }
+    }
+
+    fun setAppsPerPage(page: Int, count: Int) {
+        prefs.edit().putInt("${HOME_APPS_PER_PAGE}$page", count).apply()
+    }
 
     val homeAlignment: Constants.Gravity
         get() = Constants.Gravity.Center
@@ -136,7 +154,7 @@ class Prefs(val context: Context) {
         set(value) = prefs.edit().putBoolean(HOME_LOCKED, value).apply()
 
     var swipeLeftAction: Constants.Action
-        get() = loadAction(SWIPE_LEFT_ACTION, Constants.Action.Disabled)
+        get() = loadAction(SWIPE_LEFT_ACTION, Constants.Action.ShowAppList)
         set(value) = storeAction(SWIPE_LEFT_ACTION, value)
 
     var swipeRightAction: Constants.Action
@@ -148,7 +166,7 @@ class Prefs(val context: Context) {
         set(value) = storeAction(SWIPE_DOWN_ACTION, value)
 
     var swipeUpAction: Constants.Action
-        get() = loadAction(SWIPE_UP_ACTION, Constants.Action.ShowAppList)
+        get() = loadAction(SWIPE_UP_ACTION, Constants.Action.Disabled)
         set(value) = storeAction(SWIPE_UP_ACTION, value)
 
     var clickClockAction: Constants.Action
@@ -275,8 +293,16 @@ class Prefs(val context: Context) {
         }
         set(value) = prefs.edit().putInt(TEXT_SIZE, value).apply()
 
+    var pageIndicatorPosition: PageIndicatorPosition
+        get() {
+            return try {
+                PageIndicatorPosition.valueOf(prefs.getString(PAGE_INDICATOR_POSITION, PageIndicatorPosition.Left.name).toString())
+            } catch (_: Exception) {
+                PageIndicatorPosition.Left
+            }
+        }
+        set(value) = prefs.edit().putString(PAGE_INDICATOR_POSITION, value.name).apply()
 
-    // return app label
     fun getAppName(location: Int): String {
         return getHomeAppModel(location).appLabel
     }
@@ -289,9 +315,9 @@ class Prefs(val context: Context) {
     }
 
     private fun firstTrueFalseAfter(key: String): Boolean {
-        val first = prefs.getBoolean(key, true)  // this returns true if no value has been saved for `key`
+        val first = prefs.getBoolean(key, true)
         if (first) {
-            prefs.edit().putBoolean(key, false).apply() // save false under `key`
+            prefs.edit().putBoolean(key, false).apply()
         }
         return  first
     }

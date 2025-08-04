@@ -1,5 +1,6 @@
 package app.luma.ui
 
+import android.content.Context
 import android.content.res.Resources
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,6 +8,7 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -68,6 +70,10 @@ class AppDrawerAdapter(
             appModel.appAlias = name
             notifyItemChanged(holder.absoluteAdapterPosition)
             appRenameListener(appModel.appPackage, appModel.appAlias)
+            
+            // Dismiss the keyboard
+            val imm = holder.appRenameEdit.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(holder.appRenameEdit.windowToken, 0)
         }
 
         holder.appRenameButton.setOnClickListener { renameCommit() }
@@ -138,7 +144,19 @@ class AppDrawerAdapter(
 
     fun setAppList(appsList: MutableList<AppModel>) {
         this.appsList = appsList
-        this.appFilteredList = appsList
+        if (flag == AppDrawerFlag.SetHomeApp && appsList.isNotEmpty()) {
+            val first = appsList[0]
+            val pseudo = AppModel(
+                appLabel = "Rename",
+                key = first.key,
+                appPackage = "__rename__",
+                appActivityName = "",
+                user = first.user,
+                appAlias = ""
+            )
+            this.appsList.add(0, pseudo)
+        }
+        this.appFilteredList = this.appsList
         notifyDataSetChanged()
     }
 
@@ -225,12 +243,18 @@ class AppDrawerAdapter(
                     appTitle.setCompoundDrawables(null, null, null, null)
                 }
 
-                appTitleFrame.setOnClickListener { listener(appModel) }
-                appTitleFrame.setOnLongClickListener {
-                    appHideLayout.visibility = View.VISIBLE
-                    true
-                }
-
+appTitleFrame.setOnClickListener {
+                     listener(appModel)
+                  }
+                  appTitleFrame.setOnLongClickListener {
+                     // Don't allow long press on pseudo rename app
+                     if (appModel.appPackage == "__rename__") {
+                         false
+                     } else {
+                         appHideLayout.visibility = View.VISIBLE
+                         true
+                     }
+                 }
                 appInfo.apply {
                     setOnClickListener { appInfoListener(appModel) }
                     setOnLongClickListener {
