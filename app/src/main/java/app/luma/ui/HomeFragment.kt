@@ -80,13 +80,15 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     override fun onStart() {
         super.onStart()
         hideStatusBar(requireActivity())
-
-
+        totalPages = prefs.homePages
+        updatePageIndicator()
     }
 
     override fun onResume() {
         super.onResume()
-        // Refresh app names when returning to home screen (e.g., after renaming)
+        totalPages = prefs.homePages
+        pageIndicatorLayout = null
+        updatePageIndicator()
         refreshAppNames()
     }
 
@@ -119,64 +121,57 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
 
     private fun initPageNavigation() {
         totalPages = prefs.homePages
-        currentPage = 0
+        // Don't reset currentPage, keep the current page
         updatePageIndicator()
         refreshAppNames()
     }
 
     private fun updatePageIndicator() {
+        // Remove any existing indicator to avoid duplicates
+        binding.mainLayout.findViewWithTag<View>("pageIndicator")?.let {
+            binding.mainLayout.removeView(it)
+            if (it === pageIndicatorLayout) pageIndicatorLayout = null
+        }
+        
         // Only show indicator if there are 2 or more pages
         if (totalPages < 2) {
-            pageIndicatorLayout?.let { 
-                binding.root.removeView(it)
-                pageIndicatorLayout = null
-            }
+            pageIndicatorLayout = null
             return
         }
         
-        // Create or reuse indicator layout
-        val indicatorLayout = pageIndicatorLayout ?: run {
-            val newLayout = LinearLayout(requireContext()).apply {
-                orientation = LinearLayout.VERTICAL
-                tag = "pageIndicator"
-            }
-            
-            val density = resources.displayMetrics.density
-            val circleSize = (13 * density).toInt()
-            val circleMargin = (3.8 * density).toInt()
-            val circleVerticalMargin = (9.2 * density).toInt()
-            
-            // Add circles for each page
-            for (i in 0 until totalPages) {
-                val circle = View(requireContext()).apply {
-                    layoutParams = LinearLayout.LayoutParams(circleSize, circleSize).apply {
-                        setMargins(circleMargin, circleVerticalMargin, circleMargin, circleVerticalMargin)
-                    }
-                }
-                newLayout.addView(circle)
-            }
-            
-            // Position indicator on the right side
-            val layoutParams = FrameLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                gravity = Gravity.END or Gravity.CENTER_VERTICAL
-                marginEnd = (16 * density).toInt()
-            }
-            
-            binding.root.addView(newLayout, layoutParams)
-            pageIndicatorLayout = newLayout
-            newLayout
+        // Always create a fresh indicator layout
+        val newLayout = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            tag = "pageIndicator"
         }
         
-        // Update circle states
+        val density = resources.displayMetrics.density
+        val circleSize = (13 * density).toInt()
+        val circleMargin = (3.8 * density).toInt()
+        val circleVerticalMargin = (9.2 * density).toInt()
+        
+        // Add circles for each page
         for (i in 0 until totalPages) {
-            val circle = indicatorLayout.getChildAt(i)
-            circle.setBackgroundResource(
-                if (i == currentPage) R.drawable.filled_circle else R.drawable.hollow_circle
-            )
+            val circle = View(requireContext()).apply {
+                layoutParams = LinearLayout.LayoutParams(circleSize, circleSize).apply {
+                    setMargins(circleMargin, circleVerticalMargin, circleMargin, circleVerticalMargin)
+                }
+                setBackgroundResource(if (i == currentPage) R.drawable.filled_circle else R.drawable.hollow_circle)
+            }
+            newLayout.addView(circle)
         }
+        
+        // Position indicator on the right side
+        val layoutParams = FrameLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ).apply {
+            gravity = Gravity.END or Gravity.CENTER_VERTICAL
+            marginEnd = (16 * density).toInt()
+        }
+        
+        binding.mainLayout.addView(newLayout, layoutParams)
+        pageIndicatorLayout = newLayout
     }
 
     private fun switchToPage(page: Int) {
@@ -472,8 +467,11 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
 
     // Update apps for current page
     private fun updateAppsForCurrentPage() {
-        val appsPerPage = 4 // Fixed number of apps per page
-        val startIndex = currentPage * appsPerPage
+        val appsPerPage = prefs.getAppsPerPage(currentPage + 1) // Page numbers are 1-based
+        val startIndex = currentPage * 4 // Still use 4 as base offset
+        
+        // Update the number of app buttons if needed
+        updateAppCountForPage(appsPerPage)
         
         for (i in 0 until appsPerPage) {
             val appIndex = startIndex + i
@@ -486,9 +484,41 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         }
     }
 
+    // Update the number of app buttons displayed for the current page
+    private fun updateAppCountForPage(appsCount: Int) {
+        val currentAppCount = binding.homeAppsLayout.childCount
+        
+        if (currentAppCount < appsCount) {
+            // Add more app buttons
+            val alignment = prefs.homeAlignment.value()
+            for (i in currentAppCount until appsCount) {
+                val view = layoutInflater.inflate(R.layout.home_app_button, null) as TextView
+                view.apply {
+                    textSize = prefs.textSize.toFloat()
+                    // id will be set in refreshAppNames
+                    setOnTouchListener(getHomeAppsGestureListener(context, this))
+                    if (!prefs.extendHomeAppsArea) {
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        )
+                    }
+                    gravity = alignment
+                }
+                binding.homeAppsLayout.addView(view)
+            }
+        } else if (currentAppCount > appsCount) {
+            // Remove excess app buttons
+            binding.homeAppsLayout.removeViews(appsCount, currentAppCount - appsCount)
+        }
+    }
+
     private fun refreshAppNames() {
-        val appsPerPage = 4 // Fixed number of apps per page
-        val startIndex = currentPage * appsPerPage
+        val appsPerPage = prefs.getAppsPerPage(currentPage + 1) // Page numbers are 1-based
+        val startIndex = currentPage * 4 // Still use 4 as base offset
+        
+        // Update the number of app buttons if needed
+        updateAppCountForPage(appsPerPage)
         
         for (i in 0 until appsPerPage) {
             val appIndex = startIndex + i
