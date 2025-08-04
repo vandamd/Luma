@@ -52,7 +52,7 @@ class AppCountFragment : Fragment() {
     fun AppCountScreen() {
         Column {
             SettingsHeader(
-                title = "Page $pageNumber, Apps per Page",
+                title = "Page $pageNumber, Number of Apps",
                 onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
             )
 

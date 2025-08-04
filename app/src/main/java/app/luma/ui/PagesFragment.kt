@@ -74,7 +74,7 @@ class PagesFragment : Fragment() {
                     for (i in 1..prefs.homePages) {
                         val page = i
                         SelectorButton(
-                            label = "Page $i, Apps per Page",
+                            label = "Page $i, Number of Apps",
                             value = "${prefs.getAppsPerPage(i)} Apps",
                             onClick = { 
                                 val bundle = bundleOf("pageNumber" to page)
