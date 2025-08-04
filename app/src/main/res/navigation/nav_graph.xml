@@ -160,5 +160,12 @@
         <action
             android:id="@+id/action_settingsFragment_to_gesturesFragment"
             app:destination="@id/gesturesFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_notificationsFragment"
+            app:destination="@id/notificationsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="app.luma.ui.NotificationsFragment"
+        android:label="NotificationsFragment" />
 </navigation>

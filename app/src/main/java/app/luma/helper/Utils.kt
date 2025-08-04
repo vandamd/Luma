@@ -82,29 +82,21 @@ suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): Muta
                         prefs.getAppAlias(app.label.toString())
                     }
 
-                    if (showHiddenApps && app.applicationInfo.packageName != BuildConfig.APPLICATION_ID) {
-                        val appModel = AppModel(
-                            app.label.toString(),
-                            collator.getCollationKey(app.label.toString()),
-                            app.applicationInfo.packageName,
-                            app.componentName.className,
-                            profile,
-                            appAlias,
-                        )
-                        appList.add(appModel)
-                    } else if (!hiddenApps.contains(app.applicationInfo.packageName + "|" + profile.toString())
-                        && app.applicationInfo.packageName != BuildConfig.APPLICATION_ID
-                    ) {
-                        val appModel = AppModel(
-                            app.label.toString(),
-                            collator.getCollationKey(app.label.toString()),
-                            app.applicationInfo.packageName,
-                            app.componentName.className,
-                            profile,
-                            appAlias,
-                        )
-                        appList.add(appModel)
+                    if (app.applicationInfo.packageName == BuildConfig.APPLICATION_ID) {
+                        continue
                     }
+
+                    val appModel = AppModel(
+                        app.label.toString(),
+                        collator.getCollationKey(app.label.toString()),
+                        app.applicationInfo.packageName,
+                        app.componentName.className,
+                        profile,
+                        appAlias,
+                        false
+                    )
+
+                    appList.add(appModel)
 
                 }
             }
@@ -115,6 +107,12 @@ suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): Muta
                 } else {
                     it.appAlias.lowercase()
                 }
+            }
+
+            // Update notification status for all apps
+            val packagesWithNotifications = LumaNotificationListener.getActiveNotificationPackages()
+            appList.forEach { appModel ->
+                appModel.hasNotification = packagesWithNotifications.contains(appModel.appPackage)
             }
 
         } catch (e: java.lang.Exception) {
@@ -147,7 +145,7 @@ suspend fun getHiddenAppsList(context: Context): MutableList<AppModel> {
                 val appName = pm.getApplicationLabel(appInfo).toString()
                 val appKey = collator.getCollationKey(appName)
                 // TODO: hidden apps settings ignore activity name for backward compatibility. Fix it.
-                appList.add(AppModel(appName, appKey, appPackage, "", userHandle, Prefs(context).getAppAlias(appName)))
+                appList.add(AppModel(appName, appKey, appPackage, "", userHandle, Prefs(context).getAppAlias(appName), false))
             } catch (e: NameNotFoundException) {
 
             }

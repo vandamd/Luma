@@ -216,7 +216,8 @@ class AppDrawerAdapter(
                     appModel.appLabel
                 }
 
-                appTitle.text = appName
+                val displayName = if (Prefs(context).showNotificationIndicator && appModel.hasNotification) "$appName*" else appName
+                appTitle.text = displayName
 
                 // set current name as default text in EditText
                 appRenameEdit.text = Editable.Factory.getInstance().newEditable(appName)

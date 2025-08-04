@@ -128,6 +128,7 @@ class SettingsFragment : Fragment() {
                 )
                 SimpleTextButton("Pages") { findNavController().navigate(R.id.action_settingsFragment_to_pagesFragment) }
                 SimpleTextButton("Gestures") { findNavController().navigate(R.id.action_settingsFragment_to_gesturesFragment) }
+                SimpleTextButton("Notifications") { findNavController().navigate(R.id.action_settingsFragment_to_notificationsFragment) }
                 SimpleTextButton("Hidden Apps") { showHiddenApps() }
             }
         }

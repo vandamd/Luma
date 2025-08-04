@@ -56,6 +56,7 @@ private const val DOUBLE_TAP = "DOUBLE_TAP"
 
 private const val TEXT_SIZE = "text_size"
 private const val PAGE_INDICATOR_POSITION = "page_indicator_position"
+private const val SHOW_NOTIFICATION_INDICATOR = "show_notification_indicator"
 
 class Prefs(val context: Context) {
 
@@ -302,6 +303,10 @@ class Prefs(val context: Context) {
             }
         }
         set(value) = prefs.edit().putString(PAGE_INDICATOR_POSITION, value.name).apply()
+
+    var showNotificationIndicator: Boolean
+        get() = prefs.getBoolean(SHOW_NOTIFICATION_INDICATOR, true)
+        set(value) = prefs.edit().putBoolean(SHOW_NOTIFICATION_INDICATOR, value).apply()
 
     fun getAppName(location: Int): String {
         return getHomeAppModel(location).appLabel

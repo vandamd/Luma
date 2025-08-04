@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
@@ -349,17 +350,17 @@ object SettingsComposable {
     }
 
     @Composable
-    fun CustomToggleSwitch(checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    fun CustomToggleSwitch(checked: Boolean, onCheckedChange: (Boolean) -> Unit, enabled: Boolean = true) {
         val circleDiameter = 9.8.dp
         val circleBorder = 2.5.dp
         val lineWidth = 14.5.dp
         val lineHeight = 2.22.dp
 
-        val switchColor = SettingsTheme.typography.title.color
+        val switchColor = if (enabled) SettingsTheme.typography.title.color else Color.Gray
 
         Row(
             modifier = Modifier
-                .clickable { onCheckedChange(!checked) }
+                .clickable(enabled = enabled) { onCheckedChange(!checked) }
                 .padding(8.5.dp, 10.dp, 20.dp, 0.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -577,6 +578,50 @@ object SettingsComposable {
                         } else Modifier
                     )
             )
+        }
+    }
+
+    @Composable
+    fun ToggleSelectorButton(
+        label: String,
+        value: String,
+        checked: Boolean,
+        onCheckedChange: (Boolean) -> Unit,
+        onClick: () -> Unit,
+        enabled: Boolean = true
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 0.dp)
+                .clickable(enabled = enabled) { onClick() },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            CustomToggleSwitch(
+                checked = checked, 
+                onCheckedChange = if (enabled) onCheckedChange else { _ -> },
+                enabled = enabled
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    label,
+                    style = SettingsTheme.typography.item,
+                    fontSize = 30.sp,
+                    color = if (enabled) Color.Unspecified else Color.Gray,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                Text(
+                    value,
+                    style = SettingsTheme.typography.item,
+                    fontSize = 16.sp,
+                    color = if (enabled) Color.Unspecified else Color.Gray,
+                    modifier = Modifier.padding(top = 0.dp)
+                )
+            }
         }
     }
 }

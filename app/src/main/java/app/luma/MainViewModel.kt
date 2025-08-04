@@ -19,7 +19,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val appContext by lazy { application.applicationContext }
     private val prefs = Prefs(appContext)
 
-    // setup variables with initial values
     val showMessageDialog = MutableLiveData<String>()
 
     val appList = MutableLiveData<List<AppModel>?>()
@@ -29,6 +28,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val homeAppsAlignment = MutableLiveData(Pair(prefs.homeAlignment, false))
     val homeAppsCount = MutableLiveData(prefs.homeAppsNum)
+    
+    private var lastShowHiddenApps: Boolean? = null
 
     fun selectedApp(appModel: AppModel, flag: AppDrawerFlag, n: Int = 0) {
         when (flag) {
@@ -85,7 +86,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getAppList(showHiddenApps: Boolean = false) {
         viewModelScope.launch {
-            appList.value = getAppsList(appContext, showHiddenApps)
+            appList.value = getAppsList(appContext, true)
         }
     }
 
