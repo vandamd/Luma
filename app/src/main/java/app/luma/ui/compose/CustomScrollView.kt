@@ -71,6 +71,7 @@ fun CustomScrollView(
                         .onSizeChanged { 
                             contentHeightPx = it.height
                         }
+                        .padding(bottom = 4.dp)
                 ) {
                     Column(verticalArrangement = verticalArrangement) {
                         content()

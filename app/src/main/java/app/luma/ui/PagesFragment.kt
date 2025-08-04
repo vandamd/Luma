@@ -63,7 +63,7 @@ class PagesFragment : Fragment() {
                 CustomScrollView(verticalArrangement = Arrangement.spacedBy(26.dp)) {
                     SelectorButton(
                         label = "Number of Pages",
-                        value = "${prefs.homePages} Pages",
+                        value = "${prefs.homePages.coerceIn(1,3)} Pages",
                         onClick = { findNavController().navigate(R.id.action_pagesFragment_to_pageCountFragment) }
                     )
                     
