@@ -81,12 +81,14 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         super.onStart()
         hideStatusBar(requireActivity())
         totalPages = prefs.homePages
+        if (currentPage >= totalPages) currentPage = totalPages - 1
         updatePageIndicator()
     }
 
     override fun onResume() {
         super.onResume()
         totalPages = prefs.homePages
+        if (currentPage >= totalPages) currentPage = totalPages - 1
         pageIndicatorLayout = null
         updatePageIndicator()
         refreshAppNames()
@@ -121,7 +123,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
 
     private fun initPageNavigation() {
         totalPages = prefs.homePages
-        // Don't reset currentPage, keep the current page
+        if (currentPage >= totalPages) currentPage = totalPages - 1
         updatePageIndicator()
         refreshAppNames()
     }
@@ -135,6 +137,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         
         // Only show indicator if there are 2 or more pages
         if (totalPages < 2) {
+            currentPage = 0
             pageIndicatorLayout = null
             return
         }
