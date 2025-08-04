@@ -29,6 +29,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val homeAppsAlignment = MutableLiveData(Pair(prefs.homeAlignment, false))
     val homeAppsCount = MutableLiveData(prefs.homeAppsNum)
+    
+    // Track the current filtering state to prevent caching issues
+    private var lastShowHiddenApps: Boolean? = null
 
     fun selectedApp(appModel: AppModel, flag: AppDrawerFlag, n: Int = 0) {
         when (flag) {
@@ -85,7 +88,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getAppList(showHiddenApps: Boolean = false) {
         viewModelScope.launch {
-            appList.value = getAppsList(appContext, showHiddenApps)
+            // Always load all apps - filtering will be done at UI level to prevent flickering
+            appList.value = getAppsList(appContext, true)
         }
     }
 

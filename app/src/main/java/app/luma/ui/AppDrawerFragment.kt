@@ -136,10 +136,22 @@ override fun onCreateView(
 
         viewModel.appList.observe(viewLifecycleOwner, Observer {
             if (flag == AppDrawerFlag.HiddenApps) return@Observer
-            if (it == appAdapter.appsList) return@Observer
             it?.let { appList ->
-                binding.listEmptyHint.visibility = if (appList.isEmpty()) View.VISIBLE else View.GONE
-                populateAppList(appList, appAdapter)
+                // Apply immediate filtering based on flag to prevent flickering
+                val filteredList = if (flag == AppDrawerFlag.SetHomeApp) {
+                    // Show all apps for selection (long-press behavior)
+                    appList
+                } else {
+                    // Filter out hidden apps for normal app drawer access
+                    val prefs = Prefs(requireContext())
+                    val hiddenApps = prefs.hiddenApps
+                    appList.filter { app ->
+                        !hiddenApps.contains(app.appPackage + "|" + app.user.toString())
+                    }
+                }
+                
+                binding.listEmptyHint.visibility = if (filteredList.isEmpty()) View.VISIBLE else View.GONE
+                populateAppList(filteredList, appAdapter)
             }
         })
     }

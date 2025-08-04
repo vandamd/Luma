@@ -82,31 +82,23 @@ suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): Muta
                         prefs.getAppAlias(app.label.toString())
                     }
 
-                    if (showHiddenApps && app.applicationInfo.packageName != BuildConfig.APPLICATION_ID) {
-                        val appModel = AppModel(
-                            app.label.toString(),
-                            collator.getCollationKey(app.label.toString()),
-                            app.applicationInfo.packageName,
-                            app.componentName.className,
-                            profile,
-                            appAlias,
-                            false
-                        )
-                        appList.add(appModel)
-                    } else if (!hiddenApps.contains(app.applicationInfo.packageName + "|" + profile.toString())
-                        && app.applicationInfo.packageName != BuildConfig.APPLICATION_ID
-                    ) {
-                        val appModel = AppModel(
-                            app.label.toString(),
-                            collator.getCollationKey(app.label.toString()),
-                            app.applicationInfo.packageName,
-                            app.componentName.className,
-                            profile,
-                            appAlias,
-                            false
-                        )
-                        appList.add(appModel)
+                    if (app.applicationInfo.packageName == BuildConfig.APPLICATION_ID) {
+                        // Skip Luma app itself
+                        continue
                     }
+
+                    val appModel = AppModel(
+                        app.label.toString(),
+                        collator.getCollationKey(app.label.toString()),
+                        app.applicationInfo.packageName,
+                        app.componentName.className,
+                        profile,
+                        appAlias,
+                        false
+                    )
+
+                    // Always add all apps - filtering will be done at UI level
+                    appList.add(appModel)
 
                 }
             }
