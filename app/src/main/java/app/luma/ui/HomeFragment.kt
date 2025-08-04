@@ -152,11 +152,15 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         
         // Add circles for each page
         for (i in 0 until totalPages) {
+            val index = i
             val circle = View(requireContext()).apply {
                 layoutParams = LinearLayout.LayoutParams(circleSize, circleSize).apply {
                     setMargins(circleMargin, circleVerticalMargin, circleMargin, circleVerticalMargin)
                 }
-                setBackgroundResource(if (i == currentPage) R.drawable.filled_circle else R.drawable.hollow_circle)
+                isClickable = true
+                isFocusable = true
+                setOnClickListener { switchToPage(index) }
+                setBackgroundResource(if (index == currentPage) R.drawable.filled_circle else R.drawable.hollow_circle)
             }
             newLayout.addView(circle)
         }
@@ -168,6 +172,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         ).apply {
             gravity = Gravity.END or Gravity.CENTER_VERTICAL
             marginEnd = (16 * density).toInt()
+            topMargin = (-8 * density).toInt()
         }
         
         binding.mainLayout.addView(newLayout, layoutParams)
