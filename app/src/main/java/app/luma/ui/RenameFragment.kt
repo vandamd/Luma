@@ -16,7 +16,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -26,6 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
 import app.luma.R
@@ -102,8 +105,9 @@ class RenameFragment : Fragment() {
                     value = textState.value,
                     onValueChange = { textState.value = it },
                     modifier = Modifier
+                        .focusRequester(focusRequester)
                         .fillMaxWidth()
-                        .focusRequester(focusRequester),
+                        .padding(end = 37.dp),
                     textStyle = androidx.compose.ui.text.TextStyle(
                         fontSize = 24.sp,
                         color = SettingsTheme.typography.item.color
