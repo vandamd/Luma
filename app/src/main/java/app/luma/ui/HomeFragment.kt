@@ -165,14 +165,22 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
             newLayout.addView(circle)
         }
         
-        // Position indicator on the right side
         val layoutParams = FrameLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply {
-            gravity = Gravity.END or Gravity.CENTER_VERTICAL
-            marginEnd = (15.5 * density).toInt()
-            topMargin = (-8.4 * density).toInt()
+            when (prefs.pageIndicatorPosition) {
+                Prefs.PageIndicatorPosition.Left -> {
+                    gravity = Gravity.START or Gravity.CENTER_VERTICAL
+                    marginStart = (15.5 * density).toInt()
+                    topMargin = (-8.4 * density).toInt()
+                }
+                Prefs.PageIndicatorPosition.Right -> {
+                    gravity = Gravity.END or Gravity.CENTER_VERTICAL
+                    marginEnd = (15.5 * density).toInt()
+                    topMargin = (-8.4 * density).toInt()
+                }
+            }
         }
         
         binding.mainLayout.addView(newLayout, layoutParams)

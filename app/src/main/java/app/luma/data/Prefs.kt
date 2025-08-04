@@ -55,8 +55,11 @@ private const val CLICK_DATE = "CLICK_DATE"
 private const val DOUBLE_TAP = "DOUBLE_TAP"
 
 private const val TEXT_SIZE = "text_size"
+private const val PAGE_INDICATOR_POSITION = "page_indicator_position"
 
 class Prefs(val context: Context) {
+
+    enum class PageIndicatorPosition { Left, Right }
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, 0)
 
@@ -73,7 +76,7 @@ class Prefs(val context: Context) {
                 is String -> editor.putString(key, value)
                 is Boolean -> editor.putBoolean(key, value)
                 is Int -> editor.putInt(key, value)
-                is Double -> editor.putInt(key, value.toInt()) // we store everything as int
+                is Double -> editor.putInt(key, value.toInt())
                 is Float -> editor.putInt(key, value.toInt())
                 is MutableSet<*> -> {
                     val list = value.filterIsInstance<String>().toSet()
@@ -85,14 +88,10 @@ class Prefs(val context: Context) {
         editor.apply()
     }
 
-    // this is a true-once-false-after variable
-    // e.g. it returns on first-ever read, and false everytime afterwards
     fun firstOpen(): Boolean {
         return firstTrueFalseAfter(FIRST_OPEN)
     }
 
-    // this is a true-once-false-after variable
-    // e.g. it returns on first-ever read, and false everytime afterwards
     fun firstSettingsOpen(): Boolean {
         return firstTrueFalseAfter(FIRST_SETTINGS_OPEN)
     }
@@ -294,8 +293,16 @@ class Prefs(val context: Context) {
         }
         set(value) = prefs.edit().putInt(TEXT_SIZE, value).apply()
 
+    var pageIndicatorPosition: PageIndicatorPosition
+        get() {
+            return try {
+                PageIndicatorPosition.valueOf(prefs.getString(PAGE_INDICATOR_POSITION, PageIndicatorPosition.Left.name).toString())
+            } catch (_: Exception) {
+                PageIndicatorPosition.Left
+            }
+        }
+        set(value) = prefs.edit().putString(PAGE_INDICATOR_POSITION, value.name).apply()
 
-    // return app label
     fun getAppName(location: Int): String {
         return getHomeAppModel(location).appLabel
     }
@@ -308,9 +315,9 @@ class Prefs(val context: Context) {
     }
 
     private fun firstTrueFalseAfter(key: String): Boolean {
-        val first = prefs.getBoolean(key, true)  // this returns true if no value has been saved for `key`
+        val first = prefs.getBoolean(key, true)
         if (first) {
-            prefs.edit().putBoolean(key, false).apply() // save false under `key`
+            prefs.edit().putBoolean(key, false).apply()
         }
         return  first
     }

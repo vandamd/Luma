@@ -65,11 +65,18 @@
         <action
             android:id="@+id/action_pagesFragment_to_appCountFragment"
             app:destination="@id/appCountFragment" />
+        <action
+            android:id="@+id/action_pagesFragment_to_pageIndicatorPositionFragment"
+            app:destination="@id/pageIndicatorPositionFragment" />
     </fragment>
     <fragment
         android:id="@+id/pageCountFragment"
         android:name="app.luma.ui.PageCountFragment"
         android:label="PageCountFragment" />
+    <fragment
+        android:id="@+id/pageIndicatorPositionFragment"
+        android:name="app.luma.ui.PageIndicatorPositionFragment"
+        android:label="PageIndicatorPositionFragment" />
     <fragment
         android:id="@+id/appCountFragment"
         android:name="app.luma.ui.AppCountFragment"

@@ -12,17 +12,13 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.core.os.bundleOf
-import app.luma.R
 import app.luma.data.Prefs
-import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import app.luma.ui.compose.SettingsComposable.ContentContainer
-import app.luma.ui.compose.SettingsComposable.SelectorButton
+import app.luma.ui.compose.SettingsComposable.SettingsHeader
+import app.luma.ui.compose.SettingsComposable.SimpleTextButton
 import app.luma.ui.compose.CustomScrollView
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.ui.unit.dp
 
-class PagesFragment : Fragment() {
+class PageIndicatorPositionFragment : Fragment() {
 
     private lateinit var prefs: Prefs
 
@@ -45,43 +41,37 @@ class PagesFragment : Fragment() {
                 app.luma.data.Constants.Theme.System -> isSystemInDarkTheme()
             }
             SettingsTheme(isDark) {
-                PagesScreen()
+                Screen()
             }
         }
         return compose
     }
 
     @Composable
-    fun PagesScreen() {
+    fun Screen() {
         Column {
             SettingsHeader(
-                title = "Pages",
+                title = "Page Indicator Position",
                 onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
             )
-
             ContentContainer {
-                CustomScrollView(verticalArrangement = Arrangement.spacedBy(26.dp)) {
-                    SelectorButton(
-                        label = "Page Indicator Position",
-                        value = prefs.pageIndicatorPosition.name,
-                        onClick = { findNavController().navigate(R.id.action_pagesFragment_to_pageIndicatorPositionFragment) }
+                CustomScrollView {
+                    SimpleTextButton(
+                        title = "Left",
+                        underline = prefs.pageIndicatorPosition == Prefs.PageIndicatorPosition.Left,
+                        onClick = {
+                            prefs.pageIndicatorPosition = Prefs.PageIndicatorPosition.Left
+                            requireActivity().onBackPressedDispatcher.onBackPressed()
+                        }
                     )
-                    SelectorButton(
-                        label = "Number of Pages",
-                        value = "${prefs.homePages.coerceIn(1,3)} Pages",
-                        onClick = { findNavController().navigate(R.id.action_pagesFragment_to_pageCountFragment) }
+                    SimpleTextButton(
+                        title = "Right",
+                        underline = prefs.pageIndicatorPosition == Prefs.PageIndicatorPosition.Right,
+                        onClick = {
+                            prefs.pageIndicatorPosition = Prefs.PageIndicatorPosition.Right
+                            requireActivity().onBackPressedDispatcher.onBackPressed()
+                        }
                     )
-                    for (i in 1..prefs.homePages) {
-                        val page = i
-                        SelectorButton(
-                            label = "Page $i, Apps per Page",
-                            value = "${prefs.getAppsPerPage(i)} Apps",
-                            onClick = { 
-                                val bundle = bundleOf("pageNumber" to page)
-                                findNavController().navigate(R.id.action_pagesFragment_to_appCountFragment, bundle)
-                            }
-                        )
-                    }
                 }
             }
         }
