@@ -11,24 +11,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import androidx.core.os.bundleOf
-import app.luma.R
+import androidx.lifecycle.ViewModelProvider
+import app.luma.MainViewModel
 import app.luma.data.Prefs
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import app.luma.ui.compose.SettingsComposable.ContentContainer
-import app.luma.ui.compose.SettingsComposable.SelectorButton
+import app.luma.ui.compose.SettingsComposable.SimpleTextButton
 import app.luma.ui.compose.CustomScrollView
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.ui.unit.dp
 
-class PagesFragment : Fragment() {
+class PageCountFragment : Fragment() {
 
     private lateinit var prefs: Prefs
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         prefs = Prefs(requireContext())
+        viewModel = activity?.run {
+            ViewModelProvider(this).get(MainViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
     }
 
     override fun onCreateView(
@@ -45,42 +46,37 @@ class PagesFragment : Fragment() {
                 app.luma.data.Constants.Theme.System -> isSystemInDarkTheme()
             }
             SettingsTheme(isDark) {
-                PagesScreen()
+                PageCountScreen()
             }
         }
         return compose
     }
 
     @Composable
-    fun PagesScreen() {
+    fun PageCountScreen() {
         Column {
             SettingsHeader(
-                title = "Pages",
+                title = "Number of Pages",
                 onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
             )
 
             ContentContainer {
-                CustomScrollView(verticalArrangement = Arrangement.spacedBy(26.dp)) {
-                    SelectorButton(
-                        label = "Number of Pages",
-                        value = "${prefs.homePages} Pages",
-                        onClick = { findNavController().navigate(R.id.action_pagesFragment_to_pageCountFragment) }
-                    )
-                    
-                    // Add selector buttons for each page
-                    for (i in 1..prefs.homePages) {
-                        val page = i
-                        SelectorButton(
-                            label = "Number of Apps, Page $i",
-                            value = "${prefs.getAppsPerPage(i)} Apps",
-                            onClick = { 
-                                val bundle = bundleOf("pageNumber" to page)
-                                findNavController().navigate(R.id.action_pagesFragment_to_appCountFragment, bundle)
-                            }
+                CustomScrollView {
+                    for (i in 1..4) {
+                        val isSelected = prefs.homePages == i
+                        SimpleTextButton(
+                            title = "$i Page${if (i > 1) "s" else ""}",
+                            underline = isSelected,
+                            onClick = { updateHomePages(i) }
                         )
                     }
                 }
             }
         }
+    }
+
+    private fun updateHomePages(homePages: Int) {
+        prefs.homePages = homePages
+        requireActivity().onBackPressedDispatcher.onBackPressed()
     }
 }

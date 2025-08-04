@@ -58,7 +58,26 @@
     <fragment
         android:id="@+id/pagesFragment"
         android:name="app.luma.ui.PagesFragment"
-        android:label="PagesFragment" />
+        android:label="PagesFragment">
+        <action
+            android:id="@+id/action_pagesFragment_to_pageCountFragment"
+            app:destination="@id/pageCountFragment" />
+        <action
+            android:id="@+id/action_pagesFragment_to_appCountFragment"
+            app:destination="@id/appCountFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pageCountFragment"
+        android:name="app.luma.ui.PageCountFragment"
+        android:label="PageCountFragment" />
+    <fragment
+        android:id="@+id/appCountFragment"
+        android:name="app.luma.ui.AppCountFragment"
+        android:label="AppCountFragment">
+        <argument
+            android:name="pageNumber"
+            app:argType="integer" />
+    </fragment>
     <fragment
         android:id="@+id/gesturesFragment"
         android:name="app.luma.ui.GesturesFragment"

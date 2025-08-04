@@ -15,6 +15,8 @@ private const val FIRST_OPEN = "FIRST_OPEN"
 private const val FIRST_SETTINGS_OPEN = "FIRST_SETTINGS_OPEN"
 private const val LOCK_MODE = "LOCK_MODE"
 private const val HOME_APPS_NUM = "HOME_APPS_NUM"
+private const val HOME_PAGES = "HOME_PAGES"
+private const val HOME_APPS_PER_PAGE = "HOME_APPS_PER_PAGE_"
 private const val AUTO_OPEN_APP = "AUTO_OPEN_APP"
 private const val HOME_ALIGNMENT = "HOME_ALIGNMENT"
 private const val HOME_ALIGNMENT_BOTTOM = "HOME_ALIGNMENT_BOTTOM"
@@ -112,6 +114,28 @@ class Prefs(val context: Context) {
             }
         }
         set(value) = prefs.edit().putInt(HOME_APPS_NUM, value).apply()
+
+    var homePages: Int
+        get() {
+            return try {
+                prefs.getInt(HOME_PAGES, 1)
+            } catch (_: Exception) {
+                1
+            }
+        }
+        set(value) = prefs.edit().putInt(HOME_PAGES, value).apply()
+
+    fun getAppsPerPage(page: Int): Int {
+        return try {
+            prefs.getInt("${HOME_APPS_PER_PAGE}$page", 4)
+        } catch (_: Exception) {
+            4
+        }
+    }
+
+    fun setAppsPerPage(page: Int, count: Int) {
+        prefs.edit().putInt("${HOME_APPS_PER_PAGE}$page", count).apply()
+    }
 
     val homeAlignment: Constants.Gravity
         get() = Constants.Gravity.Center
