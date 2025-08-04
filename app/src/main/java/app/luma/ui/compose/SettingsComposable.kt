@@ -503,7 +503,7 @@ object SettingsComposable {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 37.dp, vertical = 0.dp),
+                .padding(top = 0.dp, bottom = 20.dp, start = 37.dp, end = 0.dp),
             verticalArrangement = verticalArrangement
         ) {
             content()

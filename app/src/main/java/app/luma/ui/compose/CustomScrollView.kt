@@ -1,0 +1,102 @@
+package app.luma.ui.compose
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.unit.dp
+import kotlin.math.max
+
+@Composable
+fun CustomScrollView(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    var contentHeightPx by remember { mutableStateOf(0) }
+    var scrollViewHeightPx by remember { mutableStateOf(0) }
+    val scrollState = rememberScrollState()
+    val density = LocalDensity.current
+    
+    // Convert px to dp for calculations
+    val scrollViewHeightDp = with(density) { scrollViewHeightPx.toDp() }
+    
+    val maxScrollOffset = max(0, contentHeightPx - scrollViewHeightPx)
+    
+    // Calculate scroll indicator dimensions
+    val scrollIndicatorHeightPx = if (scrollViewHeightPx > 0 && contentHeightPx > scrollViewHeightPx) {
+        max((scrollViewHeightPx * scrollViewHeightPx) / contentHeightPx, 20)
+    } else {
+        0
+    }
+    
+    val scrollIndicatorPositionPx = if (contentHeightPx > scrollViewHeightPx && scrollIndicatorHeightPx > 0) {
+        val progress = if (maxScrollOffset > 0) scrollState.value.toFloat() / maxScrollOffset else 0f
+        max(0, (progress * (scrollViewHeightPx - scrollIndicatorHeightPx)).toInt())
+    } else {
+        0
+    }
+    
+    Box(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .onSizeChanged { 
+                    scrollViewHeightPx = it.height
+                }
+                .verticalScroll(scrollState)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onSizeChanged { 
+                        contentHeightPx = it.height
+                    }
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(46.dp)) {
+                    content()
+                }
+            }
+        }
+        
+        // Custom scroll indicator
+        if (scrollIndicatorHeightPx > 0) {
+             Box(
+                 modifier = Modifier
+                 .width(0.8.dp)
+                 .fillMaxHeight()
+                 .align(Alignment.TopEnd)
+                 .offset(x = -17.7.dp)
+                 .background(Color.White)
+             )
+            Box(
+                modifier = Modifier
+                .width(4.5.dp)
+                .height(with(density) { scrollIndicatorHeightPx.toDp() })
+                .align(Alignment.TopEnd)
+                .offset { 
+                     IntOffset(
+                         x = 0,
+                         y = scrollIndicatorPositionPx
+                     ) 
+                 }
+                 .offset(x = -16.dp)
+                 .background(Color.White)
+             )
+         }
+    }
+}

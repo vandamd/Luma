@@ -101,8 +101,6 @@ class SettingsFragment : Fragment() {
 
     @Composable
     private fun Settings() {
-        val selected = remember { mutableStateOf("") }
-
         Column {
             SettingsHeader(
                 title = "Luma Settings",
@@ -131,6 +129,7 @@ class SettingsFragment : Fragment() {
                 SimpleTextButton("Pages") { findNavController().navigate(R.id.action_settingsFragment_to_pagesFragment) }
                 SimpleTextButton("Gestures") { findNavController().navigate(R.id.action_settingsFragment_to_gesturesFragment) }
                 SimpleTextButton("Hidden Apps") { showHiddenApps() }
+                SimpleTextButton("Custom Scroll View Demo") { findNavController().navigate(R.id.customScrollViewFragment) }
             }
             // SettingsTopView(
             //     stringResource(R.string.app_name) + " " + requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName,
