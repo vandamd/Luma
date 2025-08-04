@@ -83,7 +83,6 @@ suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): Muta
                     }
 
                     if (app.applicationInfo.packageName == BuildConfig.APPLICATION_ID) {
-                        // Skip Luma app itself
                         continue
                     }
 
@@ -97,7 +96,6 @@ suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): Muta
                         false
                     )
 
-                    // Always add all apps - filtering will be done at UI level
                     appList.add(appModel)
 
                 }
