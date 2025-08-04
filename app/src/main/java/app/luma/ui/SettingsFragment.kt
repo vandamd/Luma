@@ -103,7 +103,7 @@ class SettingsFragment : Fragment() {
     private fun Settings() {
         Column {
             SettingsHeader(
-                title = "Luma Settings",
+                title = "Luma Settings (" + requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName + ")",
                 onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
             )
             val isDark = when (prefs.appTheme) {
