@@ -483,8 +483,8 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
 
     // Update apps for current page
     private fun updateAppsForCurrentPage() {
-        val appsPerPage = prefs.getAppsPerPage(currentPage + 1) // Page numbers are 1-based
-        val startIndex = currentPage * 4 // Still use 4 as base offset
+        val appsPerPage = prefs.getAppsPerPage(currentPage + 1)
+        val startIndex = currentPage * 6
         
         // Update the number of app buttons if needed
         updateAppCountForPage(appsPerPage)
@@ -540,8 +540,8 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     }
 
     private fun refreshAppNames() {
-        val appsPerPage = prefs.getAppsPerPage(currentPage + 1) // Page numbers are 1-based
-        val startIndex = currentPage * 4 // Still use 4 as base offset
+        val appsPerPage = prefs.getAppsPerPage(currentPage + 1)
+        val startIndex = currentPage * 6
         
         // Update the number of app buttons if needed
         updateAppCountForPage(appsPerPage)
