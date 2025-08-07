@@ -21,6 +21,7 @@ import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.Prefs
 import app.luma.databinding.AdapterAppDrawerBinding
 import app.luma.helper.dp2px
+import app.luma.helper.performHapticFeedback
 import app.luma.helper.uninstallApp
 import java.text.Normalizer
 
@@ -244,18 +245,24 @@ class AppDrawerAdapter(
                     appTitle.setCompoundDrawables(null, null, null, null)
                 }
 
-appTitleFrame.setOnClickListener {
+                appTitleFrame.setOnClickListener {
+                     performHapticFeedback(context)
                      listener(appModel)
-                  }
-                  appTitleFrame.setOnLongClickListener {
+                }
+
+                appTitleFrame.setOnLongClickListener {
                      // Don't allow long press on pseudo rename app
                      if (appModel.appPackage == "__rename__") {
                          false
                      } else {
+                         performHapticFeedback(context)
                          appHideLayout.visibility = View.VISIBLE
                          true
                      }
-                 }
+                }
+
+                // Disable system haptic feedback for this view
+                appTitleFrame.isHapticFeedbackEnabled = false
                 appInfo.apply {
                     setOnClickListener { appInfoListener(appModel) }
                     setOnLongClickListener {

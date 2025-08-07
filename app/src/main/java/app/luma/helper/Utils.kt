@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.UserHandle
 import android.os.UserManager
+import android.os.Vibrator
 import android.provider.AlarmClock
 import android.provider.CalendarContract
 import android.provider.MediaStore
@@ -44,6 +45,16 @@ import java.text.Collator
 import java.util.*
 import kotlin.math.pow
 import kotlin.math.sqrt
+
+
+fun performHapticFeedback(context: Context) {
+    try {
+        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        vibrator.vibrate(42)
+    } catch (e: Exception) {
+        // Continue if haptic feedback fails
+    }
+}
 
 
 fun showToastLong(context: Context, message: String) {

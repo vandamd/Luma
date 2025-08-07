@@ -25,6 +25,7 @@ import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -35,15 +36,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import android.content.Context
 import app.luma.R
 import app.luma.data.Constants
 import app.luma.data.EnumOption
+import app.luma.helper.performHapticFeedback
 import app.luma.style.CORNER_RADIUS
 
 object SettingsComposable {
 
     @Composable
     fun SettingsHeader(title: String, onBack: () -> Unit = {}, onAction: (() -> Unit)? = null) {
+        val context = LocalContext.current
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -56,7 +60,10 @@ object SettingsComposable {
                 modifier = Modifier
                     .size(38.dp)
                     .padding(top = 10.dp, bottom = 0.dp)
-                    .clickable { onBack() },
+                    .clickable { 
+                        performHapticFeedback(context)
+                        onBack() 
+                    },
                 colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(SettingsTheme.typography.title.color)
             )
             Spacer(modifier = Modifier.width(16.dp))
@@ -71,7 +78,10 @@ object SettingsComposable {
                     modifier = Modifier
                         .size(38.dp)
                         .padding(top = 10.dp, bottom = 0.dp)
-                        .clickable { onAction() },
+                        .clickable { 
+                            performHapticFeedback(context)
+                            onAction() 
+                        },
                     colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(SettingsTheme.typography.title.color)
                 )
             } else {
@@ -351,6 +361,7 @@ object SettingsComposable {
 
     @Composable
     fun CustomToggleSwitch(checked: Boolean, onCheckedChange: (Boolean) -> Unit, enabled: Boolean = true) {
+        val context = LocalContext.current
         val circleDiameter = 9.8.dp
         val circleBorder = 2.5.dp
         val lineWidth = 14.5.dp
@@ -360,7 +371,10 @@ object SettingsComposable {
 
         Row(
             modifier = Modifier
-                .clickable(enabled = enabled) { onCheckedChange(!checked) }
+                .clickable(enabled = enabled) { 
+                    performHapticFeedback(context)
+                    onCheckedChange(!checked) 
+                }
                 .padding(8.5.dp, 10.dp, 20.dp, 0.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -513,6 +527,7 @@ object SettingsComposable {
 
     @Composable
     fun SimpleTextButton(title: String, fontSize: TextUnit = TextUnit.Unspecified, underline: Boolean = false, onClick: () -> Unit) {
+        val context = LocalContext.current
         val underlineColor = SettingsTheme.typography.pageButton.color
         Box(modifier = Modifier.fillMaxWidth().padding(vertical = 0.dp)) {
             Text(
@@ -521,7 +536,10 @@ object SettingsComposable {
                 fontSize = fontSize,
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .clickable { onClick() }
+                    .clickable { 
+                        performHapticFeedback(context)
+                        onClick() 
+                    }
                     .then(
                         if (underline) Modifier.drawBehind {
                             val strokeWidth = 2.dp.toPx()
@@ -545,12 +563,16 @@ object SettingsComposable {
         isSelected: Boolean = false,
         onClick: () -> Unit
     ) {
+        val context = LocalContext.current
         val selectedColor = SettingsTheme.typography.button.color
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 0.dp)
-                .clickable { onClick() },
+                .clickable { 
+                    performHapticFeedback(context)
+                    onClick() 
+                },
             horizontalAlignment = Alignment.Start
         ) {
             Text(
@@ -590,11 +612,15 @@ object SettingsComposable {
         onClick: () -> Unit,
         enabled: Boolean = true
     ) {
+        val context = LocalContext.current
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 0.dp)
-                .clickable(enabled = enabled) { onClick() },
+                .clickable(enabled = enabled) { 
+                    performHapticFeedback(context)
+                    onClick() 
+                },
             verticalAlignment = Alignment.CenterVertically
         ) {
             CustomToggleSwitch(
