@@ -5,7 +5,6 @@ import android.app.admin.DevicePolicyManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.os.Vibrator
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -39,7 +38,6 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     private lateinit var prefs: Prefs
     private lateinit var viewModel: MainViewModel
     private lateinit var deviceManager: DevicePolicyManager
-    private lateinit var vibrator: Vibrator
     private var currentPage = 0
     private var totalPages = 1
     private var pageIndicatorLayout: LinearLayout? = null
@@ -69,8 +67,6 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         } ?: throw Exception("Invalid Activity")
 
         deviceManager = context?.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
-        vibrator = context?.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-
         initObservers()
         initPageNavigation()
 
@@ -100,6 +96,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
             else -> {
                 try { // Launch app
                     val appLocation = view.id.toString().toInt()
+                    performHapticFeedback(requireContext())
                     homeAppClicked(appLocation)
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -111,6 +108,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     override fun onLongClick(view: View): Boolean {
         if (prefs.homeLocked) return true
 
+        performHapticFeedback(requireContext())
         val n = view.id
         showAppList(AppDrawerFlag.SetHomeApp, true, n)
         return true
