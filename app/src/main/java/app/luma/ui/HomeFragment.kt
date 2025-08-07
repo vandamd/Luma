@@ -429,6 +429,13 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
 
             override fun onSwipeUp() {
                 super.onSwipeUp()
+                // Handle page navigation (swipe up = next page)
+                if (totalPages > 1 && currentPage < totalPages - 1) {
+                    switchToPage(currentPage + 1)
+                    return
+                }
+                
+                // If no page navigation, handle normal swipe up
                 when(val action = prefs.swipeUpAction) {
                     Action.OpenApp -> openSwipeUpApp()
                     else -> handleOtherAction(action)
@@ -437,6 +444,13 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
 
             override fun onSwipeDown() {
                 super.onSwipeDown()
+                // Handle page navigation (swipe down = previous page)
+                if (totalPages > 1 && currentPage > 0) {
+                    switchToPage(currentPage - 1)
+                    return
+                }
+                
+                // If no page navigation, handle normal swipe down
                 when(val action = prefs.swipeDownAction) {
                     Action.OpenApp -> openSwipeDownApp()
                     else -> handleOtherAction(action)
