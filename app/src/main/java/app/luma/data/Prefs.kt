@@ -60,7 +60,7 @@ private const val SHOW_NOTIFICATION_INDICATOR = "show_notification_indicator"
 
 class Prefs(val context: Context) {
 
-    enum class PageIndicatorPosition { Left, Right }
+    enum class PageIndicatorPosition { Left, Right, Hidden }
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, 0)
 

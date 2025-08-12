@@ -133,9 +133,15 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
             if (it === pageIndicatorLayout) pageIndicatorLayout = null
         }
         
-        // Only show indicator if there are 2 or more pages
+        // Only show indicator if there are 2 or more pages and not hidden
         if (totalPages < 2) {
             currentPage = 0
+            pageIndicatorLayout = null
+            return
+        }
+        
+        // If hidden, just return without creating indicators but keep page logic
+        if (prefs.pageIndicatorPosition == Prefs.PageIndicatorPosition.Hidden) {
             pageIndicatorLayout = null
             return
         }
@@ -180,6 +186,9 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                     gravity = Gravity.END or Gravity.CENTER_VERTICAL
                     marginEnd = (15.5 * density).toInt()
                     topMargin = (-8.4 * density).toInt()
+                }
+                Prefs.PageIndicatorPosition.Hidden -> {
+                    // This case shouldn't be reached as we return early above
                 }
             }
         }
