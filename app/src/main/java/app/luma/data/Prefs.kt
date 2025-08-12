@@ -60,7 +60,7 @@ private const val SHOW_NOTIFICATION_INDICATOR = "show_notification_indicator"
 
 class Prefs(val context: Context) {
 
-    enum class PageIndicatorPosition { Left, Right }
+    enum class PageIndicatorPosition { Left, Right, Hidden }
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, 0)
 
@@ -123,7 +123,7 @@ class Prefs(val context: Context) {
                 1
             }
         }
-        set(value) = prefs.edit().putInt(HOME_PAGES, value.coerceIn(1, 3)).apply()
+        set(value) = prefs.edit().putInt(HOME_PAGES, value.coerceIn(1, 5)).apply()
 
     fun getAppsPerPage(page: Int): Int {
         return try {

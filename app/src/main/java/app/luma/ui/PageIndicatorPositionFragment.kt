@@ -72,6 +72,14 @@ class PageIndicatorPositionFragment : Fragment() {
                             requireActivity().onBackPressedDispatcher.onBackPressed()
                         }
                     )
+                    SimpleTextButton(
+                        title = "Hidden",
+                        underline = prefs.pageIndicatorPosition == Prefs.PageIndicatorPosition.Hidden,
+                        onClick = {
+                            prefs.pageIndicatorPosition = Prefs.PageIndicatorPosition.Hidden
+                            requireActivity().onBackPressedDispatcher.onBackPressed()
+                        }
+                    )
                 }
             }
         }
