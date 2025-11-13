@@ -100,7 +100,7 @@ class SettingsFragment : Fragment() {
             val themeState = remember { mutableStateOf(!isDark) }
             
             ContentContainer {
-                CustomScrollView(verticalArrangement = Arrangement.spacedBy(45.dp)) {
+                CustomScrollView(verticalArrangement = Arrangement.spacedBy(40.dp)) {
                     ToggleTextButton(
                         title = "Invert Colours",
                         checked = themeState.value,
@@ -115,7 +115,6 @@ class SettingsFragment : Fragment() {
                     )
                     SimpleTextButton("Pages") { findNavController().navigate(R.id.action_settingsFragment_to_pagesFragment) }
                     SimpleTextButton("Gestures") { findNavController().navigate(R.id.action_settingsFragment_to_gesturesFragment) }
-                    SimpleTextButton("Font Size") { findNavController().navigate(R.id.action_settingsFragment_to_fontSizeFragment) }
                     SimpleTextButton("Notifications") { findNavController().navigate(R.id.action_settingsFragment_to_notificationsFragment) }
                     SimpleTextButton("Hidden Apps") { showHiddenApps() }
                 }

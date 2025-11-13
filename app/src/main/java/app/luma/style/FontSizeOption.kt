@@ -6,11 +6,11 @@ enum class FontSizeOption(
 ) {
     Small(
         title = "Small",
-        fontScale = 0.72f
+        fontScale = 0.72f,
     ),
     Medium(
         title = "Medium (Default)",
-        fontScale = 0.86f
+        fontScale = 0.86f,
     );
 
     companion object {

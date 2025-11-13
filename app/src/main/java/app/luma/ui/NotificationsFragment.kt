@@ -70,7 +70,7 @@ class NotificationsFragment : Fragment() {
                 val hasNotificationPermission = NotificationManagerCompat.getEnabledListenerPackages(requireContext()).contains(requireContext().packageName)
                 
                 ToggleSelectorButton(
-                    label = "Notification Indicator (*)",
+                    label = "Indicator (*)",
                     value = if (hasNotificationPermission) {
                         if (notificationIndicatorState.value) "visible next to apps" else "not visible"
                     } else {

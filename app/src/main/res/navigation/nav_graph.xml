@@ -163,16 +163,9 @@
         <action
             android:id="@+id/action_settingsFragment_to_notificationsFragment"
             app:destination="@id/notificationsFragment" />
-        <action
-            android:id="@+id/action_settingsFragment_to_fontSizeFragment"
-            app:destination="@id/fontSizeFragment" />
     </fragment>
     <fragment
         android:id="@+id/notificationsFragment"
         android:name="app.luma.ui.NotificationsFragment"
         android:label="NotificationsFragment" />
-    <fragment
-        android:id="@+id/fontSizeFragment"
-        android:name="app.luma.ui.FontSizeFragment"
-        android:label="FontSizeFragment" />
 </navigation>

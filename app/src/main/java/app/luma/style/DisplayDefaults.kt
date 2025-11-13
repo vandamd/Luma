@@ -6,6 +6,7 @@ import android.content.res.Resources
 import android.os.Build
 import android.util.DisplayMetrics
 import app.luma.data.Prefs
+import app.luma.style.SystemFontScale.resolveOption
 import kotlin.math.abs
 
 /**
@@ -17,7 +18,10 @@ object DisplayDefaults {
 
     fun Context.withDisplayDefaults(): Context {
         val configuration = Configuration(resources.configuration)
-        val option = Prefs(this).fontSizeOption
+        val prefs = Prefs(this)
+        val option = resolveOption(this).also {
+            if (prefs.fontSizeOption != it) prefs.fontSizeOption = it
+        }
         return if (configuration.applyDisplayDefaults(option)) {
             createConfigurationContext(configuration)
         } else {
@@ -27,7 +31,10 @@ object DisplayDefaults {
 
     fun Configuration?.withDisplayDefaults(context: Context): Configuration? {
         this ?: return null
-        val option = Prefs(context).fontSizeOption
+        val prefs = Prefs(context)
+        val option = resolveOption(context).also {
+            if (prefs.fontSizeOption != it) prefs.fontSizeOption = it
+        }
         applyDisplayDefaults(option)
         return this
     }
