@@ -109,7 +109,7 @@ class RenameFragment : Fragment() {
                         .fillMaxWidth()
                         .padding(end = 37.dp),
                     textStyle = androidx.compose.ui.text.TextStyle(
-                        fontSize = 24.sp,
+                        fontSize = 27.sp,
                         color = SettingsTheme.typography.item.color
                     ),
                     singleLine = true,

@@ -180,12 +180,12 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                 Prefs.PageIndicatorPosition.Left -> {
                     gravity = Gravity.START or Gravity.CENTER_VERTICAL
                     marginStart = (15.5 * density).toInt()
-                    topMargin = (-8.4 * density).toInt()
+                    topMargin = (-7.0 * density).toInt()
                 }
                 Prefs.PageIndicatorPosition.Right -> {
                     gravity = Gravity.END or Gravity.CENTER_VERTICAL
                     marginEnd = (15.5 * density).toInt()
-                    topMargin = (-8.4 * density).toInt()
+                    topMargin = (-7.0 * density).toInt()
                 }
                 Prefs.PageIndicatorPosition.Hidden -> {
                     // This case shouldn't be reached as we return early above
