@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.UserHandle
 import android.util.Log
 import app.luma.helper.getUserHandleFromString
+import app.luma.style.FontSizeOption
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -57,6 +58,7 @@ private const val DOUBLE_TAP = "DOUBLE_TAP"
 private const val TEXT_SIZE = "text_size"
 private const val PAGE_INDICATOR_POSITION = "page_indicator_position"
 private const val SHOW_NOTIFICATION_INDICATOR = "show_notification_indicator"
+private const val FONT_SIZE_OPTION = "font_size_option"
 
 class Prefs(val context: Context) {
 
@@ -293,6 +295,13 @@ class Prefs(val context: Context) {
             }
         }
         set(value) = prefs.edit().putInt(TEXT_SIZE, value).apply()
+
+    var fontSizeOption: FontSizeOption
+        get() {
+            val key = prefs.getString(FONT_SIZE_OPTION, FontSizeOption.Medium.name)
+            return FontSizeOption.fromKey(key)
+        }
+        set(value) = prefs.edit().putString(FONT_SIZE_OPTION, value.name).apply()
 
     var pageIndicatorPosition: PageIndicatorPosition
         get() {

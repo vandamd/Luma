@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun applyOverrideConfiguration(overrideConfiguration: Configuration?) {
-        super.applyOverrideConfiguration(overrideConfiguration.withDisplayDefaults())
+        super.applyOverrideConfiguration(overrideConfiguration.withDisplayDefaults(this))
     }
 
     override fun onBackPressed() {

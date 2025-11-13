@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Build
 import android.util.DisplayMetrics
+import app.luma.data.Prefs
 import kotlin.math.abs
 
 /**
@@ -12,29 +13,30 @@ import kotlin.math.abs
  * both font scale and display density stay pinned to those expectations.
  */
 object DisplayDefaults {
-    private const val TARGET_FONT_SCALE = 0.72f
     private const val EPSILON = 0.01f
 
     fun Context.withDisplayDefaults(): Context {
         val configuration = Configuration(resources.configuration)
-        return if (configuration.applyDisplayDefaults()) {
+        val option = Prefs(this).fontSizeOption
+        return if (configuration.applyDisplayDefaults(option)) {
             createConfigurationContext(configuration)
         } else {
             this
         }
     }
 
-    fun Configuration?.withDisplayDefaults(): Configuration? {
+    fun Configuration?.withDisplayDefaults(context: Context): Configuration? {
         this ?: return null
-        applyDisplayDefaults()
+        val option = Prefs(context).fontSizeOption
+        applyDisplayDefaults(option)
         return this
     }
 
-    private fun Configuration.applyDisplayDefaults(): Boolean {
+    private fun Configuration.applyDisplayDefaults(option: FontSizeOption): Boolean {
         var changed = false
 
-        if (abs(fontScale - TARGET_FONT_SCALE) >= EPSILON) {
-            fontScale = TARGET_FONT_SCALE
+        if (abs(fontScale - option.fontScale) >= EPSILON) {
+            fontScale = option.fontScale
             changed = true
         }
 

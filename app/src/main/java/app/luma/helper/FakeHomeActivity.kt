@@ -13,7 +13,7 @@ class FakeHomeActivity : AppCompatActivity() {
     }
 
     override fun applyOverrideConfiguration(overrideConfiguration: Configuration?) {
-        super.applyOverrideConfiguration(overrideConfiguration.withDisplayDefaults())
+        super.applyOverrideConfiguration(overrideConfiguration.withDisplayDefaults(this))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
