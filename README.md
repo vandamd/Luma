@@ -14,6 +14,4 @@ Feel free to submit issues, create PRs and fork!
 You can grab the .apk from [latest release](https://github.com/vandamd/Luma/releases/latest), or you can copy the repo link and use [Obtanium](https://github.com/ImranR98/Obtainium).
 
 ## Recommended Settings
-Luma still locks most layout metrics to the Light Phone sizing, but it now mirrors Android's Display → Font size slider. Set the slider to 1 for the "Small" layout or 2 for the default Light Phone size (any other slider value falls back to 2). Display size continues to be ignored so the rest of the UI stays proportional.
-
-![Comparison between Luma and LightOS](art/comparison.png)
+The font size of the launcher follows the system font size and matches LightOS.
