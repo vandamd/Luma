@@ -61,7 +61,7 @@ class NotificationsFragment : Fragment() {
                 onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
             )
 
-            ContentContainer(verticalArrangement = Arrangement.spacedBy(49.dp)) {
+            ContentContainer(verticalArrangement = Arrangement.spacedBy(45.dp)) {
                 SimpleTextButton("Grant Permissions") { 
                     openNotificationListenerSettings() 
                 }

@@ -113,7 +113,7 @@ class SettingsFragment : Fragment() {
             }
             val themeState = remember { mutableStateOf(!isDark) }
             
-            ContentContainer(verticalArrangement = Arrangement.spacedBy(49.dp)) {
+            ContentContainer(verticalArrangement = Arrangement.spacedBy(45.dp)) {
                 ToggleTextButton(
                     title = "Invert Colours",
                     checked = themeState.value,
