@@ -2,6 +2,7 @@ package app.luma
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import app.luma.style.DisplayDefaults.withDisplayDefaults
 import app.luma.data.Constants
 import app.luma.data.Prefs
 import app.luma.databinding.ActivityMainBinding
@@ -32,6 +34,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: ActivityMainBinding
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(newBase.withDisplayDefaults())
+    }
+
+    override fun applyOverrideConfiguration(overrideConfiguration: Configuration?) {
+        super.applyOverrideConfiguration(overrideConfiguration.withDisplayDefaults(this))
+    }
 
     override fun onBackPressed() {
         if (navController.currentDestination?.id != R.id.mainFragment)

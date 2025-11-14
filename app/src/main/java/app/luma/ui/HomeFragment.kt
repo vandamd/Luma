@@ -153,9 +153,9 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         }
         
         val density = resources.displayMetrics.density
-        val circleSize = (13.7 * density).toInt()
-        val circleMargin = (3.8 * density).toInt()
-        val circleVerticalMargin = (9.2 * density).toInt()
+        val circleSize = (11.6 * density).toInt()
+        val circleMargin = (0.8 * density).toInt()
+        val circleVerticalMargin = (7.8 * density).toInt()
         
         // Add circles for each page
         for (i in 0 until totalPages) {
@@ -180,12 +180,12 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                 Prefs.PageIndicatorPosition.Left -> {
                     gravity = Gravity.START or Gravity.CENTER_VERTICAL
                     marginStart = (15.5 * density).toInt()
-                    topMargin = (-8.4 * density).toInt()
+                    topMargin = (-7.0 * density).toInt()
                 }
                 Prefs.PageIndicatorPosition.Right -> {
                     gravity = Gravity.END or Gravity.CENTER_VERTICAL
                     marginEnd = (15.5 * density).toInt()
-                    topMargin = (-8.4 * density).toInt()
+                    topMargin = (-7.0 * density).toInt()
                 }
                 Prefs.PageIndicatorPosition.Hidden -> {
                     // This case shouldn't be reached as we return early above

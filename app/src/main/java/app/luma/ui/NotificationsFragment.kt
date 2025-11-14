@@ -61,7 +61,7 @@ class NotificationsFragment : Fragment() {
                 onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
             )
 
-            ContentContainer(verticalArrangement = Arrangement.spacedBy(49.dp)) {
+            ContentContainer(verticalArrangement = Arrangement.spacedBy(45.dp)) {
                 SimpleTextButton("Grant Permissions") { 
                     openNotificationListenerSettings() 
                 }
@@ -70,7 +70,7 @@ class NotificationsFragment : Fragment() {
                 val hasNotificationPermission = NotificationManagerCompat.getEnabledListenerPackages(requireContext()).contains(requireContext().packageName)
                 
                 ToggleSelectorButton(
-                    label = "Notification Indicator (*)",
+                    label = "Indicator (*)",
                     value = if (hasNotificationPermission) {
                         if (notificationIndicatorState.value) "visible next to apps" else "not visible"
                     } else {

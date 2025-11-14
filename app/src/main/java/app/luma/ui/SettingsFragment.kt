@@ -18,20 +18,12 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -47,17 +39,11 @@ import app.luma.data.Prefs
 import app.luma.databinding.FragmentSettingsBinding
 import app.luma.helper.*
 import app.luma.listener.DeviceAdmin
-import app.luma.ui.compose.SettingsComposable.SettingsArea
-import app.luma.ui.compose.SettingsComposable.SettingsGestureItem
-import app.luma.ui.compose.SettingsComposable.SettingsItem
-import app.luma.ui.compose.SettingsComposable.SettingsNumberItem
-import app.luma.ui.compose.SettingsComposable.SettingsToggle
-import app.luma.ui.compose.SettingsComposable.SettingsTopView
+import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.SimpleTextButton
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.ToggleTextButton
-import androidx.compose.ui.unit.dp
 import androidx.navigation.fragment.findNavController
 
 class SettingsFragment : Fragment() {
@@ -113,23 +99,25 @@ class SettingsFragment : Fragment() {
             }
             val themeState = remember { mutableStateOf(!isDark) }
             
-            ContentContainer(verticalArrangement = Arrangement.spacedBy(49.dp)) {
-                ToggleTextButton(
-                    title = "Invert Colours",
-                    checked = themeState.value,
-                    onCheckedChange = { 
-                        themeState.value = it
-                        setTheme(if (it) Light else Dark)
-                    },
-                    onClick = { 
-                        themeState.value = !themeState.value
-                        setTheme(if (themeState.value) Light else Dark)
-                    }
-                )
-                SimpleTextButton("Pages") { findNavController().navigate(R.id.action_settingsFragment_to_pagesFragment) }
-                SimpleTextButton("Gestures") { findNavController().navigate(R.id.action_settingsFragment_to_gesturesFragment) }
-                SimpleTextButton("Notifications") { findNavController().navigate(R.id.action_settingsFragment_to_notificationsFragment) }
-                SimpleTextButton("Hidden Apps") { showHiddenApps() }
+            ContentContainer {
+                CustomScrollView(verticalArrangement = Arrangement.spacedBy(40.dp)) {
+                    ToggleTextButton(
+                        title = "Invert Colours",
+                        checked = themeState.value,
+                        onCheckedChange = {
+                            themeState.value = it
+                            setTheme(if (it) Light else Dark)
+                        },
+                        onClick = {
+                            themeState.value = !themeState.value
+                            setTheme(if (themeState.value) Light else Dark)
+                        }
+                    )
+                    SimpleTextButton("Pages") { findNavController().navigate(R.id.action_settingsFragment_to_pagesFragment) }
+                    SimpleTextButton("Gestures") { findNavController().navigate(R.id.action_settingsFragment_to_gesturesFragment) }
+                    SimpleTextButton("Notifications") { findNavController().navigate(R.id.action_settingsFragment_to_notificationsFragment) }
+                    SimpleTextButton("Hidden Apps") { showHiddenApps() }
+                }
             }
         }
     }

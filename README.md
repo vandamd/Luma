@@ -14,6 +14,4 @@ Feel free to submit issues, create PRs and fork!
 You can grab the .apk from [latest release](https://github.com/vandamd/Luma/releases/latest), or you can copy the repo link and use [Obtanium](https://github.com/ImranR98/Obtainium).
 
 ## Recommended Settings
-The app currently adapts to the display/font size. This might change in the future, but I recommend changing some settings in Android. In Settings > Display > Display size and text, set Font size and Display size to the smallest.
-
-![Comparison between Luma and LightOS](art/comparison.png)
+The font size of the launcher follows the system font size and matches LightOS.
