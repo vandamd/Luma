@@ -18,16 +18,8 @@ private const val LOCK_MODE = "LOCK_MODE"
 private const val HOME_APPS_NUM = "HOME_APPS_NUM"
 private const val HOME_PAGES = "HOME_PAGES"
 private const val HOME_APPS_PER_PAGE = "HOME_APPS_PER_PAGE_"
-private const val AUTO_OPEN_APP = "AUTO_OPEN_APP"
-private const val HOME_ALIGNMENT = "HOME_ALIGNMENT"
-private const val HOME_ALIGNMENT_BOTTOM = "HOME_ALIGNMENT_BOTTOM"
 private const val HOME_CLICK_AREA = "HOME_CLICK_AREA"
-private const val DRAWER_ALIGNMENT = "DRAWER_ALIGNMENT"
-private const val TIME_ALIGNMENT = "TIME_ALIGNMENT"
-private const val STATUS_BAR = "STATUS_BAR"
-private const val SHOW_DATE = "SHOW_DATE"
 private const val HOME_LOCKED = "HOME_LOCKED"
-private const val SHOW_TIME = "SHOW_TIME"
 private const val SWIPE_DOWN_ACTION = "SWIPE_DOWN_ACTION"
 private const val SWIPE_UP_ACTION = "SWIPE_UP_ACTION"
 private const val SWIPE_RIGHT_ACTION = "SWIPE_RIGHT_ACTION"
@@ -35,10 +27,8 @@ private const val SWIPE_LEFT_ACTION = "SWIPE_LEFT_ACTION"
 private const val CLICK_CLOCK_ACTION = "CLICK_CLOCK_ACTION"
 private const val CLICK_DATE_ACTION = "CLICK_DATE_ACTION"
 private const val DOUBLE_TAP_ACTION = "DOUBLE_TAP_ACTION"
-private const val SCREEN_TIMEOUT = "SCREEN_TIMEOUT"
 private const val HIDDEN_APPS = "HIDDEN_APPS"
 private const val HIDDEN_APPS_UPDATED = "HIDDEN_APPS_UPDATED"
-private const val SHOW_HINT_COUNTER = "SHOW_HINT_COUNTER"
 private const val APP_THEME = "APP_THEME"
 
 private const val APP_NAME = "APP_NAME"
@@ -103,10 +93,6 @@ class Prefs(val context: Context) {
         get() = prefs.getBoolean(LOCK_MODE, false)
         set(value) = prefs.edit().putBoolean(LOCK_MODE, value).apply()
 
-    var autoOpenApp: Boolean
-        get() = prefs.getBoolean(AUTO_OPEN_APP, false)
-        set(value) = prefs.edit().putBoolean(AUTO_OPEN_APP, value).apply()
-
     var homeAppsNum: Int
         get() {
             return try {
@@ -139,18 +125,9 @@ class Prefs(val context: Context) {
         prefs.edit().putInt("${HOME_APPS_PER_PAGE}$page", count).apply()
     }
 
-    val homeAlignment: Constants.Gravity
-        get() = Constants.Gravity.Center
-
-    val homeAlignmentBottom: Boolean
-        get() = false
-
     var extendHomeAppsArea: Boolean
         get() = prefs.getBoolean(HOME_CLICK_AREA, false)
         set(value) = prefs.edit().putBoolean(HOME_CLICK_AREA, value).apply()
-
-    val drawerAlignment: Constants.Gravity
-        get() = Constants.Gravity.Center
 
     var homeLocked: Boolean
         get() = prefs.getBoolean(HOME_LOCKED, false)
@@ -222,11 +199,6 @@ class Prefs(val context: Context) {
 
     fun setHomeAppModel(i: Int, appModel: AppModel) {
         storeApp("$i", appModel)
-    }
-
-    fun setHomeAppName(i: Int, name: String) {
-        val nameId = "${APP_NAME}_$i"
-        prefs.edit().putString(nameId, name).apply()
     }
 
     var appSwipeRight: AppModel

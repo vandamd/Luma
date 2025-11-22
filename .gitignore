@@ -17,3 +17,4 @@
 .cxx
 google-services.json
 release.properties
+*.md

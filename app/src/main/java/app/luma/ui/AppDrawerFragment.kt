@@ -3,7 +3,6 @@ package app.luma.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -45,7 +44,6 @@ override fun onCreateView(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // return inflater.inflate(R.layout.fragment_app_drawer, container, false)
         _binding = FragmentAppDrawerBinding.inflate(inflater, container, false)
 
 
@@ -99,11 +97,7 @@ override fun onCreateView(
             ViewModelProvider(this)[MainViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
 
-        val gravity = when(Prefs(requireContext()).drawerAlignment) {
-            Constants.Gravity.Left -> Gravity.LEFT
-            Constants.Gravity.Center -> Gravity.CENTER
-            Constants.Gravity.Right -> Gravity.RIGHT
-        }
+        val gravity = Gravity.CENTER
 
         val appAdapter = AppDrawerAdapter(
             flag,
@@ -153,14 +147,6 @@ override fun onCreateView(
         })
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
-
-    override fun onStop() {
-        super.onStop()
-    }
-
     private fun View.hideKeyboard() {
         view?.clearFocus()
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -168,7 +154,6 @@ override fun onCreateView(
     }
 
     private fun populateAppList(apps: List<AppModel>, appAdapter: AppDrawerAdapter) {
-        // layout animation removed
         appAdapter.setAppList(apps.toMutableList())
     }
 
@@ -224,6 +209,4 @@ override fun onCreateView(
             val prefs = Prefs(requireContext())
             prefs.setAppAlias(appPackage, appAlias)
         }
-
-    // Removed legacy renameListener function
 }

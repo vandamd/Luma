@@ -9,7 +9,6 @@ import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 import androidx.appcompat.app.AppCompatActivity
@@ -56,8 +55,6 @@ class MainActivity : AppCompatActivity() {
             Constants.Theme.System -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
         }
         AppCompatDelegate.setDefaultNightMode(themeMode)
-        //super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_main)
 
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)

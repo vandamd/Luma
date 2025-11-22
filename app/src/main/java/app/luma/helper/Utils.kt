@@ -69,7 +69,7 @@ fun showToastShort(context: Context, message: String) {
     toast.show()
 }
 
-suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): MutableList<AppModel> {
+suspend fun getAppsList(context: Context): MutableList<AppModel> {
     return withContext(Dispatchers.IO) {
         val appList: MutableList<AppModel> = mutableListOf()
 
@@ -319,16 +319,6 @@ fun openAccessibilitySettings(context: Context) {
         putExtra(":settings:show_fragment_args", bundle)
     }
     context.startActivity(intent)
-}
-
-fun showStatusBar(activity: Activity) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-        activity.window.insetsController?.show(WindowInsets.Type.statusBars())
-    else
-        @Suppress("DEPRECATION", "InlinedApi")
-        activity.window.decorView.apply {
-            systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        }
 }
 
 fun hideStatusBar(activity: Activity) {

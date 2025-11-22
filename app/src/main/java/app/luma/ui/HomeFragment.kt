@@ -71,7 +71,6 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         initPageNavigation()
 
         initSwipeTouchListener()
-        initClickListeners()
     }
 
     override fun onStart() {
@@ -110,7 +109,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
 
         performHapticFeedback(requireContext())
         val n = view.id
-        showAppList(AppDrawerFlag.SetHomeApp, true, n)
+        showAppList(AppDrawerFlag.SetHomeApp, n)
         return true
     }
 
@@ -205,10 +204,6 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         }
     }
 
-    private fun initClickListeners() {
-        // removed setDefaultLauncher click listener
-    }
-
     private fun initObservers() {
         with(viewModel) {
             homeAppsAlignment.observe(viewLifecycleOwner) { (gravity, onBottom) ->
@@ -237,8 +232,8 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         viewModel.selectedApp(appModel, AppDrawerFlag.LaunchApp)
     }
 
-    private fun showAppList(flag: AppDrawerFlag, showHiddenApps: Boolean = false, n: Int = 0) {
-        viewModel.getAppList(showHiddenApps)
+    private fun showAppList(flag: AppDrawerFlag, n: Int = 0) {
+        viewModel.getAppList()
         lifecycleScope.launch {
             try {
                 findNavController().navigate(
@@ -391,7 +386,6 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                 super.onLongClick()
                 try {
                     findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
-                    // viewModel.firstOpen(false)
                 } catch (e: java.lang.Exception) {
                 }
             }
@@ -475,7 +469,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         if (diff in 1 until oldAppsNum) { // 1 <= diff <= oldNumApps
             binding.homeAppsLayout.children.drop(diff)
         } else if (diff < 0) {
-            val alignment = prefs.homeAlignment.value() // make only one call to prefs and store here
+            val alignment = android.view.Gravity.CENTER
 
             // add all missing apps to list
             for (i in oldAppsNum until newAppsNum) {
@@ -527,7 +521,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         
         if (currentAppCount < appsCount) {
             // Add more app buttons
-            val alignment = prefs.homeAlignment.value()
+            val alignment = android.view.Gravity.CENTER
             for (i in currentAppCount until appsCount) {
                 val view = layoutInflater.inflate(R.layout.home_app_button, null) as TextView
                 view.apply {

@@ -1,19 +1,15 @@
 package app.luma.ui
 
 import android.content.Context
-import android.content.res.Resources
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat.startActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import app.luma.R
 import app.luma.data.AppModel
@@ -23,7 +19,6 @@ import app.luma.databinding.AdapterAppDrawerBinding
 import app.luma.helper.dp2px
 import app.luma.helper.performHapticFeedback
 import app.luma.helper.uninstallApp
-import java.text.Normalizer
 
 
 class AppDrawerAdapter(
@@ -33,20 +28,15 @@ class AppDrawerAdapter(
     private val appInfoListener: (AppModel) -> Unit,
     private val appHideListener: (AppDrawerFlag, AppModel) -> Unit,
     private val appRenameListener: (String, String) -> Unit
-) : RecyclerView.Adapter<AppDrawerAdapter.ViewHolder>(), Filterable {
+) : RecyclerView.Adapter<AppDrawerAdapter.ViewHolder>() {
 
     private lateinit var prefs: Prefs
-    private var appFilter = createAppFilter()
     var appsList: MutableList<AppModel> = mutableListOf()
     var appFilteredList: MutableList<AppModel> = mutableListOf()
     private lateinit var binding: AdapterAppDrawerBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        //val view = LayoutInflater.from(parent.context)
-        //    .inflate(R.layout.adapter_app_drawer, parent, false)
-
         binding = AdapterAppDrawerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        //val view = binding.root
         prefs = Prefs(parent.context)
         binding.appTitle.textSize = prefs.textSize.toFloat()
 
@@ -89,59 +79,9 @@ class AppDrawerAdapter(
             false
         }
 
-        // open app if only one app matches
-        val lastMatch = itemCount == 1
-        val openApp = flag == AppDrawerFlag.LaunchApp
-        val autoOpenApp = prefs.autoOpenApp
-        if (lastMatch && openApp && autoOpenApp) {
-            try {
-                clickListener(appFilteredList[position])
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
     }
 
     override fun getItemCount(): Int = appFilteredList.size
-
-    override fun getFilter(): Filter = this.appFilter
-
-    private fun createAppFilter(): Filter {
-        return object : Filter() {
-            override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val searchChars = constraint.toString()
-/*                 val appFilteredList = (if (searchChars.isEmpty()) appsList
- *                 else appsList.filter { app -> appLabelMatches(app.appLabel, searchChars) } as MutableList<AppModel>)
- *  */
-                val appFilteredList = (if (searchChars.isEmpty()) appsList
-                else appsList.filter { app ->
-                    if (app.appAlias.isEmpty()) {
-                        appLabelMatches(app.appLabel, searchChars)
-                    } else {
-                        appLabelMatches(app.appAlias, searchChars)
-                    }
-                } as MutableList<AppModel>)
-
-                val filterResults = FilterResults()
-                filterResults.values = appFilteredList
-                return filterResults
-            }
-
-            @Suppress("UNCHECKED_CAST")
-            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                appFilteredList = results?.values as MutableList<AppModel>
-                notifyDataSetChanged()
-            }
-        }
-    }
-
-    private fun appLabelMatches(appLabel: String, searchChars: String): Boolean {
-        return (appLabel.contains(searchChars, true) or
-                Normalizer.normalize(appLabel, Normalizer.Form.NFD)
-                    .replace(Regex("\\p{InCombiningDiacriticalMarks}+"), "")
-                    .replace(Regex("[-_+,. ]"), "")
-                    .contains(searchChars, true))
-    }
 
     fun setAppList(appsList: MutableList<AppModel>) {
         this.appsList = appsList
@@ -159,11 +99,6 @@ class AppDrawerAdapter(
         }
         this.appFilteredList = this.appsList
         notifyDataSetChanged()
-    }
-
-    fun launchFirstInList() {
-        if (appFilteredList.size > 0)
-            clickListener(appFilteredList[0])
     }
 
     class ViewHolder(itemView: AdapterAppDrawerBinding) : RecyclerView.ViewHolder(itemView.root) {

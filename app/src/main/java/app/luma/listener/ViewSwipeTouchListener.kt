@@ -32,11 +32,6 @@ internal open class ViewSwipeTouchListener(c: Context?, v: View) : OnTouchListen
             return super.onSingleTapUp(e)
         }
 
-        override fun onDoubleTap(e: MotionEvent): Boolean {
-            onDoubleClick()
-            return super.onDoubleTap(e)
-        }
-
         override fun onLongPress(e: MotionEvent) {
             onLongClick(view)
             super.onLongPress(e)
@@ -72,7 +67,6 @@ internal open class ViewSwipeTouchListener(c: Context?, v: View) : OnTouchListen
     open fun onSwipeUp() {}
     open fun onSwipeDown() {}
     open fun onLongClick(view: View) {}
-    private fun onDoubleClick() {}
     open fun onClick(view: View) {}
 
     init {
