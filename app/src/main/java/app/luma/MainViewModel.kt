@@ -97,12 +97,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         isLumaDefault.value = isLumaDefault(appContext)
     }
 
-    fun resetDefaultLauncherApp(context: Context) {
-        resetDefaultLauncher(context)
-        launcherResetFailed.value = getDefaultLauncherPackage(
-            appContext
-        ).contains(".")
-    }
+
 
 
     fun updateHomeAppsAlignment(gravity: Constants.Gravity, onBottom: Boolean) {
