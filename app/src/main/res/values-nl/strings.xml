@@ -1,0 +1,85 @@
+<resources>
+    <string name="app_name">Luma</string>
+    <string name="accessibility_service_name">Luma Acties-service</string>
+    <string name="app">App</string>
+    <string name="app_text_color">Tekstkleur</string>
+    <string name="double_tap_to_lock_screen">Dubbel tikken om te vergrendelen</string>
+    <string name="experimental_">(experimenteel)</string>
+    <string name="admin_permission_message">Luma belooft de vergrendelingsmachtiging verantwoordelijk te gebruiken.</string>
+    <string name="about">Over</string>
+    <string name="off">Uit</string>
+    <string name="on">Aan</string>
+    <string name="black">Zwart</string>
+    <string name="white">Wit</string>
+    <string name="change_default_launcher">Standaard launcher wijzigen</string>
+    <string name="long_press_for_settings">Lang indrukken ergens voor instellingen</string>
+    <string name="swipe_left_for_apps">Veeg naar links voor alle apps</string>
+    <string name="apps_on_home_screen">Aantal snelkoppelingen</string>
+    <string name="left">Links</string>
+    <string name="right">Rechts</string>
+    <string name="center">Midden</string>
+    <string name="home_alignment">Apps startscherm</string>
+    <string name="home_alignment_bottom">Apps startscherm onderaan</string>
+    <string name="drawer_alignment">Apps in app-lade</string>
+    <string name="swipe_left_app">Veeg naar links</string>
+    <string name="swipe_right_app">Veeg naar rechts</string>
+    <string name="swipe_down_app">Veeg omlaag</string>
+    <string name="swipe_up_app">Veeg omhoog</string>
+    <string name="double_tap">Dubbel tik</string>
+    <string name="_0" translatable="false">0</string>
+    <string name="_1" translatable="false">1</string>
+    <string name="_2" translatable="false">2</string>
+    <string name="_3" translatable="false">3</string>
+    <string name="_4" translatable="false">4</string>
+    <string name="_5" translatable="false">5</string>
+    <string name="_6" translatable="false">6</string>
+    <string name="_7" translatable="false">7</string>
+    <string name="_8" translatable="false">8</string>
+    <string name="save">Opslaan</string>
+    <string name="okay">Oké</string>
+    <string name="double_tap_lock_is_enabled_message">Als dubbel-tik vergrendeling vingerafdruk- of gezichtsontgrendeling uitschakelt, open Luma-instellingen, tik op \'experimental\' en volg de instructies. Bedankt.</string>
+    <string name="triple_tap_lock_message">Hoe het werkt:
+        \nZodra je dubbel tikt, wordt het scherm donker en vergrendelt de telefoon zichzelf over 5 seconden.
+        \n\nGedurende deze tijd kun je dubbel tikken om <b>ontgrendelen</b> of op elk moment drie keer tikken om de telefoon direct volledig te vergrendelen.
+        \n\nOpmerking: Schakel dit eerst UIT als je besluit Luma te verwijderen. Bedankt.</string>
+    <string name="hide">Verbergen</string>
+    <string name="status_bar">Statusbalk weergeven</string>
+    <string name="rename">Naam wijzigen</string>
+    <string name="appearance">Uiterlijk</string>
+    <string name="gestures">Gebaren</string>
+    <string name="behavior">Gedrag</string>
+    <string name="homescreen">Startscherm</string>
+    <string name="alignment">Uitlijning</string>
+    <string name="theme_mode">Thema-modus</string>
+    <string name="system_default">Systeem</string>
+    <string name="dark">Donker</string>
+    <string name="light">Licht</string>
+    <string name="double_tap_lock_uninstall_message">Dubbel tik om te vergrendelen ingeschakeld.
+        \n\nOpmerking: Schakel dit eerst UIT als je besluit Luma te verwijderen.</string>
+    <string name="accessibility_service_description">Deze toegankelijkheidsservice stelt Luma in staat bepaalde acties uit te voeren, zoals het vergrendelen van het scherm of het openen van de snelle instellingen.</string>
+    <string name="open">Link openen</string>
+    <string name="copy">Kopiëren</string>
+    <string name="close">Sluiten</string>
+
+    <string name="drawer_list_empty_hint">Geen apps gevonden</string>
+
+    <string name="hidden_apps">Verborgen apps</string>
+
+    <string name="show">Tonen</string>
+    <string name="reset">Resetten</string>
+    <string name="cancel">Annuleren</string>
+
+    <string name="enable">Inschakelen</string>
+    <string name="disable">Uitschakelen</string>
+    <string name="enabled">Ingeschakeld</string>
+    <string name="disabled">Uitgeschakeld</string>
+
+    <string name="show_notifications">Melding tonen</string>
+    <string name="show_app_list">App-lijst tonen</string>
+    <string name="open_app">App openen</string>
+    <string name="lock_screen">Scherm vergrendelen</string>
+    <string name="open_quick_settings">Snelle instellingen openen</string>
+    <string name="show_recents">Recente apps tonen</string>
+
+
+</resources>
