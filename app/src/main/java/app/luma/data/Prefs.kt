@@ -125,7 +125,7 @@ class Prefs(val context: Context) {
                 1
             }
         }
-        set(value) = prefs.edit().putInt(HOME_PAGES, value.coerceIn(1, 5)).apply()
+        set(value) = prefs.edit().putInt(HOME_PAGES, value.coerceIn(1, 6)).apply()
 
     fun getAppsPerPage(page: Int): Int {
         return try {

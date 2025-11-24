@@ -62,7 +62,7 @@ class PageCountFragment : Fragment() {
 
             ContentContainer {
                 CustomScrollView {
-                    for (i in 1..5) {
+                    for (i in 1..6) {
                         val isSelected = prefs.homePages == i
                         SimpleTextButton(
                             title = "$i Page${if (i > 1) "s" else ""}",
