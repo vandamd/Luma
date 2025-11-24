@@ -68,7 +68,7 @@ class PagesFragment : Fragment() {
                     )
                     SelectorButton(
                         label = "Number of Pages",
-                        value = "${prefs.homePages.coerceIn(1,5)} Pages",
+                        value = "${prefs.homePages.coerceIn(1,6)} Pages",
                         onClick = { findNavController().navigate(R.id.action_pagesFragment_to_pageCountFragment) }
                     )
                     for (i in 1..prefs.homePages) {
