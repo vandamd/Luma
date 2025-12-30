@@ -13,8 +13,6 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.os.bundleOf
-import androidx.core.view.children
-import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -106,8 +104,6 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     }
 
     override fun onLongClick(view: View): Boolean {
-        if (prefs.homeLocked) return true
-
         performHapticFeedback(requireContext())
         val n = view.id
         showAppList(AppDrawerFlag.SetHomeApp, true, n)
@@ -210,22 +206,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     }
 
     private fun initObservers() {
-        with(viewModel) {
-            homeAppsAlignment.observe(viewLifecycleOwner) { (gravity, onBottom) ->
-                val horizontalAlignment = if (onBottom) Gravity.BOTTOM else Gravity.CENTER_VERTICAL
-                binding.homeAppsLayout.gravity = gravity.value() or horizontalAlignment
-
-                binding.homeAppsLayout.children.forEach { view ->
-                    (view as TextView).gravity = gravity.value()
-                }
-            }
-            homeAppsCount.observe(viewLifecycleOwner) {
-                updateAppCount(it)
-            }
-        }
-        
-        // Observe page changes
-        prefs.homePages
+        binding.homeAppsLayout.gravity = android.view.Gravity.CENTER
     }
 
     private fun homeAppClicked(location: Int) {
@@ -238,7 +219,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     }
 
     private fun showAppList(flag: AppDrawerFlag, showHiddenApps: Boolean = false, n: Int = 0) {
-        viewModel.getAppList(showHiddenApps)
+        viewModel.getAppList()
         lifecycleScope.launch {
             try {
                 findNavController().navigate(
@@ -271,18 +252,6 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         if (prefs.appSwipeUp.appPackage.isNotEmpty())
             launchApp(prefs.appSwipeUp)
         else showAppList(AppDrawerFlag.LaunchApp)
-    }
-
-    private fun openClickClockApp() {
-        if (prefs.appClickClock.appPackage.isNotEmpty())
-            launchApp(prefs.appClickClock)
-        else openAlarmApp(requireContext())
-    }
-
-    private fun openClickDateApp() {
-        if (prefs.appClickDate.appPackage.isNotEmpty())
-            launchApp(prefs.appClickDate)
-        else openCalendar(requireContext())
     }
 
     private fun openSwipeLeftApp() {
@@ -327,7 +296,6 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                     showToastLong(requireContext(), "App does not have the permission to lock the device")
                 } catch (e: Exception) {
                     showToastLong(requireContext(), "Luma failed to lock device.\nPlease check your app settings.")
-                    prefs.lockModeOn = false
                 }
             }
         }
@@ -466,42 +434,6 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         }
     }
 
-    // updates number of apps visible on home screen
-    // does nothing if number has not changed
-    private fun updateAppCount(newAppsNum: Int) {
-        val oldAppsNum = binding.homeAppsLayout.size // current number
-        val diff = oldAppsNum - newAppsNum
-
-        if (diff in 1 until oldAppsNum) { // 1 <= diff <= oldNumApps
-            binding.homeAppsLayout.children.drop(diff)
-        } else if (diff < 0) {
-            val alignment = prefs.homeAlignment.value() // make only one call to prefs and store here
-
-            // add all missing apps to list
-            for (i in oldAppsNum until newAppsNum) {
-                val view = layoutInflater.inflate(R.layout.home_app_button, null) as TextView
-                view.apply {
-                    textSize = prefs.textSize.toFloat()
-                    id = i
-                    val appModel = prefs.getHomeAppModel(i)
-                text = getAppDisplayName(appModel)
-                    setOnTouchListener(getHomeAppsGestureListener(context, this))
-                    if (!prefs.extendHomeAppsArea) {
-                        layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT
-                        )
-                    }
-                    gravity = alignment
-                }
-                binding.homeAppsLayout.addView(view)
-            }
-        } else {
-            // Refresh existing apps (for renaming)
-            refreshAppNames()
-        }
-    }
-
     // Update apps for current page
     private fun updateAppsForCurrentPage() {
         val appsPerPage = prefs.getAppsPerPage(currentPage + 1)
@@ -527,20 +459,16 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         
         if (currentAppCount < appsCount) {
             // Add more app buttons
-            val alignment = prefs.homeAlignment.value()
             for (i in currentAppCount until appsCount) {
                 val view = layoutInflater.inflate(R.layout.home_app_button, null) as TextView
                 view.apply {
-                    textSize = prefs.textSize.toFloat()
-                    // id will be set in refreshAppNames
+                    textSize = 41f
                     setOnTouchListener(getHomeAppsGestureListener(context, this))
-                    if (!prefs.extendHomeAppsArea) {
-                        layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT
-                        )
-                    }
-                    gravity = alignment
+                    layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                    gravity = android.view.Gravity.CENTER
                 }
                 binding.homeAppsLayout.addView(view)
             }

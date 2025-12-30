@@ -3,12 +3,10 @@ package app.luma.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -85,9 +83,7 @@ override fun onCreateView(
             }
             AppDrawerFlag.SetSwipeRight,
             AppDrawerFlag.SetSwipeLeft,
-            AppDrawerFlag.SetSwipeDown,
-            AppDrawerFlag.SetClickClock,
-            AppDrawerFlag.SetClickDate -> {
+            AppDrawerFlag.SetSwipeDown -> {
                 binding.drawerButton.setOnClickListener {
                     findNavController().popBackStack()
                 }
@@ -99,15 +95,9 @@ override fun onCreateView(
             ViewModelProvider(this)[MainViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
 
-        val gravity = when(Prefs(requireContext()).drawerAlignment) {
-            Constants.Gravity.Left -> Gravity.LEFT
-            Constants.Gravity.Center -> Gravity.CENTER
-            Constants.Gravity.Right -> Gravity.RIGHT
-        }
-
         val appAdapter = AppDrawerAdapter(
             flag,
-            gravity,
+            Gravity.CENTER,
             appClickListener(viewModel, flag, n),
             appInfoListener(),
             appShowHideListener(),

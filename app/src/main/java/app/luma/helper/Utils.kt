@@ -15,8 +15,6 @@ import android.os.Bundle
 import android.os.UserHandle
 import android.os.UserManager
 import android.os.Vibrator
-import android.provider.AlarmClock
-import android.provider.CalendarContract
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.DisplayMetrics
@@ -27,8 +25,6 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
 import androidx.core.app.ActivityCompat
 import app.luma.BuildConfig
 import app.luma.R
@@ -38,8 +34,6 @@ import app.luma.data.Constants.BACKUP_WRITE
 import app.luma.data.Prefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.json.JSONArray
-import org.json.JSONObject
 import java.io.*
 import java.text.Collator
 import java.util.*
@@ -254,34 +248,6 @@ fun openCameraApp(context: Context) {
     }
 }
 
-fun openAlarmApp(context: Context) {
-    try {
-        val intent = Intent(AlarmClock.ACTION_SHOW_ALARMS)
-        context.startActivity(intent)
-    } catch (e: java.lang.Exception) {
-        Log.d("TAG", e.toString())
-    }
-}
-
-fun openCalendar(context: Context) {
-    try {
-        val cal: Calendar = Calendar.getInstance()
-        cal.time = Date()
-        val time = cal.time.time
-        val builder: Uri.Builder = CalendarContract.CONTENT_URI.buildUpon()
-        builder.appendPath("time")
-        builder.appendPath(time.toString())
-        context.startActivity(Intent(Intent.ACTION_VIEW, builder.build()))
-    } catch (e: Exception) {
-        try {
-            val intent = Intent(Intent.ACTION_MAIN)
-            intent.addCategory(Intent.CATEGORY_APP_CALENDAR)
-            context.startActivity(intent)
-        } catch (e: Exception) {
-        }
-    }
-}
-
 fun isTablet(context: Context): Boolean {
     val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     val metrics = DisplayMetrics()
@@ -319,16 +285,6 @@ fun openAccessibilitySettings(context: Context) {
         putExtra(":settings:show_fragment_args", bundle)
     }
     context.startActivity(intent)
-}
-
-fun showStatusBar(activity: Activity) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-        activity.window.insetsController?.show(WindowInsets.Type.statusBars())
-    else
-        @Suppress("DEPRECATION", "InlinedApi")
-        activity.window.decorView.apply {
-            systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        }
 }
 
 fun hideStatusBar(activity: Activity) {

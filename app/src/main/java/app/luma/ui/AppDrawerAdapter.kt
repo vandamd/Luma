@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.EditorInfo
@@ -12,7 +11,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import app.luma.R
@@ -48,7 +46,7 @@ class AppDrawerAdapter(
         binding = AdapterAppDrawerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         //val view = binding.root
         prefs = Prefs(parent.context)
-        binding.appTitle.textSize = prefs.textSize.toFloat()
+        binding.appTitle.textSize = 41f
 
         return ViewHolder(binding)
     }
@@ -79,7 +77,6 @@ class AppDrawerAdapter(
 
         holder.appRenameButton.setOnClickListener { renameCommit() }
         holder.appRenameEdit.setOnEditorActionListener { _, actionId, event ->
-            Log.d("rename", "$actionId, $event")
             if ( actionId == EditorInfo.IME_ACTION_DONE ||
                 event != null &&
                 event.action == KeyEvent.ACTION_DOWN) {
@@ -89,17 +86,6 @@ class AppDrawerAdapter(
             false
         }
 
-        // open app if only one app matches
-        val lastMatch = itemCount == 1
-        val openApp = flag == AppDrawerFlag.LaunchApp
-        val autoOpenApp = prefs.autoOpenApp
-        if (lastMatch && openApp && autoOpenApp) {
-            try {
-                clickListener(appFilteredList[position])
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
     }
 
     override fun getItemCount(): Int = appFilteredList.size
@@ -232,8 +218,7 @@ class AppDrawerAdapter(
                 // add icon next to app name to indicate that this app is installed on another profile
                 if (appModel.user != android.os.Process.myUserHandle()) {
                     val icon = AppCompatResources.getDrawable(context, R.drawable.work_profile)
-                    val prefs = Prefs(context)
-                    val px = dp2px(resources, prefs.textSize)
+                    val px = dp2px(resources, 41)
                     icon?.setBounds(0, 0, px, px)
                     if (appLabelGravity == Gravity.LEFT) {
                         appTitle.setCompoundDrawables(null, null, icon, null)

@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.ComponentName
 import android.content.Context
 import android.content.pm.LauncherApps
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -26,11 +25,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val isLumaDefault = MutableLiveData<Boolean>()
     val launcherResetFailed = MutableLiveData<Boolean>()
 
-    val homeAppsAlignment = MutableLiveData(Pair(prefs.homeAlignment, false))
-    val homeAppsCount = MutableLiveData(prefs.homeAppsNum)
-    
-    private var lastShowHiddenApps: Boolean? = null
-
     fun selectedApp(appModel: AppModel, flag: AppDrawerFlag, n: Int = 0) {
         when (flag) {
             AppDrawerFlag.LaunchApp, AppDrawerFlag.HiddenApps -> {
@@ -43,8 +37,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             AppDrawerFlag.SetSwipeRight -> prefs.appSwipeRight = appModel
             AppDrawerFlag.SetSwipeUp -> prefs.appSwipeUp = appModel
             AppDrawerFlag.SetSwipeDown -> prefs.appSwipeDown = appModel
-            AppDrawerFlag.SetClickClock -> prefs.appClickClock = appModel
-            AppDrawerFlag.SetClickDate -> prefs.appClickDate = appModel
             AppDrawerFlag.SetDoubleTap -> prefs.appDoubleTap = appModel
         }
     }
@@ -84,7 +76,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun getAppList(showHiddenApps: Boolean = false) {
+    fun getAppList() {
         viewModelScope.launch {
             appList.value = getAppsList(appContext, true)
         }
@@ -107,10 +99,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         ).contains(".")
     }
 
-
-    fun updateHomeAppsAlignment(gravity: Constants.Gravity, onBottom: Boolean) {
-        homeAppsAlignment.value = Pair(gravity, onBottom)
-    }
 
     fun showMessageDialog(message: String) {
         showMessageDialog.postValue(message)

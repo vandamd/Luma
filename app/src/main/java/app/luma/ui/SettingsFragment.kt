@@ -8,12 +8,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ScrollView
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,7 +29,6 @@ import app.luma.BuildConfig
 import app.luma.MainViewModel
 import app.luma.R
 import app.luma.data.Constants
-import app.luma.data.Constants.Action
 import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.Constants.Theme.*
 import app.luma.data.Prefs
@@ -44,7 +40,6 @@ import app.luma.ui.compose.SettingsComposable.SimpleTextButton
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.ToggleTextButton
-import androidx.navigation.fragment.findNavController
 
 class SettingsFragment : Fragment() {
 
@@ -55,8 +50,6 @@ class SettingsFragment : Fragment() {
 
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
-
-    private val offset = 5
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -150,53 +143,11 @@ class SettingsFragment : Fragment() {
     }
 
     private fun checkAdminPermission() {
-        val isAdmin: Boolean = deviceManager.isAdminActive(componentName)
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
-            prefs.lockModeOn = isAdmin
-    }
-
-    private fun updateHomeAppsNum(homeAppsNum: Int) {
-        prefs.homeAppsNum = homeAppsNum
-        viewModel.homeAppsCount.value = homeAppsNum
-    }
-
-    private fun toggleAutoOpenApp() {
-        prefs.autoOpenApp = !prefs.autoOpenApp
+        deviceManager.isAdminActive(componentName)
     }
 
     private fun setTheme(appTheme: Constants.Theme) {
         prefs.appTheme = appTheme
         requireActivity().recreate()
-    }
-
-
-    private fun setTextSize(size: Int) {
-        prefs.textSize = size
-    }
-
-    private fun updateGesture(flag: AppDrawerFlag, action: Action) {
-        when (flag) {
-            AppDrawerFlag.SetSwipeLeft -> prefs.swipeLeftAction = action
-            AppDrawerFlag.SetSwipeRight -> prefs.swipeRightAction = action
-            AppDrawerFlag.SetSwipeUp -> prefs.swipeUpAction = action
-            AppDrawerFlag.SetSwipeDown -> prefs.swipeDownAction = action
-            AppDrawerFlag.SetClickClock -> prefs.clickClockAction = action
-            AppDrawerFlag.SetClickDate -> prefs.clickDateAction = action
-            AppDrawerFlag.SetDoubleTap -> prefs.doubleTapAction = action
-            AppDrawerFlag.SetHomeApp,
-                AppDrawerFlag.HiddenApps,
-                AppDrawerFlag.LaunchApp -> {}
-        }
-
-        when(action) {
-            Action.OpenApp -> {
-                viewModel.getAppList()
-                findNavController().navigate(
-                    R.id.action_settingsFragment_to_appListFragment,
-                    bundleOf("flag" to flag.toString())
-                )
-            }
-            else -> {}
-        }
     }
 }
