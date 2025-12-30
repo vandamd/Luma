@@ -18,7 +18,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 33
         versionCode 34
-        versionName "v1.1.5"
+        versionName "v1.1.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -31,19 +31,6 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion '1.3.1'
     }
-
-/*     def releaseFile = rootProject.file("./release.properties")
- *     def properties = new Properties()
- *     properties.load(new FileInputStream(releaseFile))
- *
- *     signingConfigs {
- *         release {
- *             storeFile file(properties['storeFile'])
- *             storePassword properties['storePassword']
- *             keyAlias properties['keyAlias']
- *             keyPassword properties['keyPassword']
- *         }
- *     } */
 
     buildTypes {
         release {
@@ -63,7 +50,6 @@ android {
     buildFeatures {
         viewBinding = true
     }
-
 
     lint {
         abortOnError false
