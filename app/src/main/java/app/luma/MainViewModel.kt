@@ -22,7 +22,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val appList = MutableLiveData<List<AppModel>?>()
     val hiddenApps = MutableLiveData<List<AppModel>?>()
-    val isLumaDefault = MutableLiveData<Boolean>()
     val launcherResetFailed = MutableLiveData<Boolean>()
 
     fun selectedApp(appModel: AppModel, flag: AppDrawerFlag, n: Int = 0) {
@@ -86,10 +85,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             hiddenApps.value = getHiddenAppsList(appContext)
         }
-    }
-
-    fun isLumaDefault() {
-        isLumaDefault.value = isLumaDefault(appContext)
     }
 
     fun resetDefaultLauncherApp(context: Context) {

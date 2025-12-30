@@ -122,11 +122,8 @@ class SettingsFragment : Fragment() {
             ViewModelProvider(this).get(MainViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
 
-        viewModel.isLumaDefault()
-
         deviceManager = context?.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
         componentName = ComponentName(requireContext(), DeviceAdmin::class.java)
-        checkAdminPermission()
     }
 
     override fun onDestroyView() {
@@ -140,10 +137,6 @@ class SettingsFragment : Fragment() {
             R.id.action_settingsFragment_to_appListFragment,
             bundleOf("flag" to AppDrawerFlag.HiddenApps.toString())
         )
-    }
-
-    private fun checkAdminPermission() {
-        deviceManager.isAdminActive(componentName)
     }
 
     private fun setTheme(appTheme: Constants.Theme) {

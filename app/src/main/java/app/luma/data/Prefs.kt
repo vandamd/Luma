@@ -164,11 +164,6 @@ class Prefs(val context: Context) {
         storeApp("$i", appModel)
     }
 
-    fun setHomeAppName(i: Int, name: String) {
-        val nameId = "${APP_NAME}_$i"
-        prefs.edit().putString(nameId, name).apply()
-    }
-
     var appSwipeRight: AppModel
         get() = loadApp(SWIPE_RIGHT)
         set(appModel) = storeApp(SWIPE_RIGHT, appModel)

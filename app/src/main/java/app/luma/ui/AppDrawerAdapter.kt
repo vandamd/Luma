@@ -147,11 +147,6 @@ class AppDrawerAdapter(
         notifyDataSetChanged()
     }
 
-    fun launchFirstInList() {
-        if (appFilteredList.size > 0)
-            clickListener(appFilteredList[0])
-    }
-
     class ViewHolder(itemView: AdapterAppDrawerBinding) : RecyclerView.ViewHolder(itemView.root) {
         val appHideButton: ImageView = itemView.appHide
         val appRenameButton: TextView = itemView.appRename

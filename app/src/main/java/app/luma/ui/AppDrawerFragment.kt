@@ -143,14 +143,6 @@ override fun onCreateView(
         })
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
-
-    override fun onStop() {
-        super.onStop()
-    }
-
     private fun View.hideKeyboard() {
         view?.clearFocus()
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

@@ -434,25 +434,6 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         }
     }
 
-    // Update apps for current page
-    private fun updateAppsForCurrentPage() {
-        val appsPerPage = prefs.getAppsPerPage(currentPage + 1)
-        val startIndex = currentPage * 6
-        
-        // Update the number of app buttons if needed
-        updateAppCountForPage(appsPerPage)
-        
-        for (i in 0 until appsPerPage) {
-            val appIndex = startIndex + i
-            val view = binding.homeAppsLayout.getChildAt(i)
-            if (view is TextView) {
-                val appModel = prefs.getHomeAppModel(appIndex)
-                view.text = if (appModel.appAlias.isNotEmpty()) appModel.appAlias else appModel.appLabel
-                view.id = appIndex
-            }
-        }
-    }
-
     // Update the number of app buttons displayed for the current page
     private fun updateAppCountForPage(appsCount: Int) {
         val currentAppCount = binding.homeAppsLayout.childCount
