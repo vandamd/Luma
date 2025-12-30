@@ -14,4 +14,4 @@ google-services.json
 release.properties
 *.hprof
 *.jks
-*.md
+AGENTS.md

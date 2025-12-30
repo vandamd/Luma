@@ -1,17 +1,28 @@
-# Luma - Minimal Launcher
+<img src="example.png" alt="Luma Screenshots">
 
-![Preview](art/preview.png)
+<p>A minimal launcher for the Light Phone III.</p>
 
-Fork of [OlauncherCF](https://github.com/OlauncherCF/OlauncherCF) inspired by [InkOS](https://github.com/gezimos/inkOS).
-
-This launcher was made for use on the Light Phone III, it may look weird on other devices. I removed as many features as possible and set sensible default settings.
-
-It uses [Public Sans](https://fonts.google.com/specimen/Public+Sans) as the font.
-
-Feel free to submit issues, create PRs and fork!
+![GitHub License](https://img.shields.io/github/license/vandamd/luma)
+![GitHub Release](https://img.shields.io/github/v/release/vandamd/luma)
 
 ## Installation
-You can grab the .apk from [latest release](https://github.com/vandamd/Luma/releases/latest), or you can copy the repo link and use [Obtanium](https://github.com/ImranR98/Obtainium).
+The lastest .apk file is available in [releases](https://github.com/vandamd/luma/releases/latest).
 
-## Recommended Settings
-The font size of the launcher follows the system font size and matches LightOS.
+I recommend using [Obtainium](https://github.com/ImranR98/Obtainium) and adding the repository's URL to receive updates.
+
+## Features
+- Text-based home screen
+- Up to 5 pages with 1-6 apps each
+- Configurable swipe gestures + double-tap
+- Hide apps from drawer
+- Rename apps
+
+## Acknowledgements
+Huge thank you to the following projects:
+- Forked from: [OlauncherCF](https://github.com/OlauncherCF/OlauncherCF)
+- Inspired by: [InkOS](https://github.com/gezimos/inkOS)
+
+## Support
+Luma is developed and maintained in my free time.
+
+If you find it useful, please [consider sponsoring](https://github.com/sponsors/vandamd)! :)
