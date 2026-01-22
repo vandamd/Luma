@@ -40,14 +40,9 @@ class AppDrawerAdapter(
     private lateinit var binding: AdapterAppDrawerBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        //val view = LayoutInflater.from(parent.context)
-        //    .inflate(R.layout.adapter_app_drawer, parent, false)
-
         binding = AdapterAppDrawerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        //val view = binding.root
         prefs = Prefs(parent.context)
         binding.appTitle.textSize = 41f
-
         return ViewHolder(binding)
     }
 
@@ -96,9 +91,6 @@ class AppDrawerAdapter(
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val searchChars = constraint.toString()
-/*                 val appFilteredList = (if (searchChars.isEmpty()) appsList
- *                 else appsList.filter { app -> appLabelMatches(app.appLabel, searchChars) } as MutableList<AppModel>)
- *  */
                 val appFilteredList = (if (searchChars.isEmpty()) appsList
                 else appsList.filter { app ->
                     if (app.appAlias.isEmpty()) {

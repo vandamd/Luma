@@ -51,16 +51,10 @@ fun performHapticFeedback(context: Context) {
 }
 
 
-fun showToastLong(context: Context, message: String) {
-    val toast = Toast.makeText(context.applicationContext, message, Toast.LENGTH_LONG)
-    toast.setGravity(Gravity.CENTER, 0, 0)
-    toast.show()
-}
-
-fun showToastShort(context: Context, message: String) {
-    val toast = Toast.makeText(context.applicationContext, message, Toast.LENGTH_SHORT)
-    toast.setGravity(Gravity.CENTER, 0, 0)
-    toast.show()
+fun showToast(context: Context, message: String, duration: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(context.applicationContext, message, duration).apply {
+        setGravity(Gravity.CENTER, 0, 0)
+    }.show()
 }
 
 suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): MutableList<AppModel> {
@@ -227,7 +221,7 @@ fun openAppInfo(context: Context, userHandle: UserHandle, packageName: String) {
     val intent: Intent? = context.packageManager.getLaunchIntentForPackage(packageName)
     intent?.let {
         launcher.startAppDetailsActivity(intent.component, userHandle, null, null)
-    } ?: showToastShort(context, "Unable to to open app info")
+    } ?: showToast(context, "Unable to open app info")
 }
 
 fun openDialerApp(context: Context) {
@@ -268,7 +262,7 @@ fun initActionService(context: Context): ActionService? {
             openAccessibilitySettings(context)
         }
     } else {
-        showToastLong(context, "This action requires Android P (9) or higher" )
+        showToast(context, "This action requires Android P (9) or higher", Toast.LENGTH_LONG)
     }
 
     return null

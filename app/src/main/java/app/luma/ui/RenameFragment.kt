@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
+import isDarkTheme
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.TextField
@@ -28,7 +28,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
 import app.luma.R
@@ -47,12 +46,7 @@ class RenameFragment : Fragment() {
         val compose = ComposeView(requireContext())
         compose.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         compose.setContent {
-            val isDark = when (Prefs(requireContext()).appTheme) {
-                app.luma.data.Constants.Theme.Light -> false
-                app.luma.data.Constants.Theme.Dark -> true
-                app.luma.data.Constants.Theme.System -> isSystemInDarkTheme()
-            }
-            SettingsTheme(isDark) {
+            SettingsTheme(isDarkTheme(Prefs(requireContext()))) {
                 RenameContent()
             }
         }

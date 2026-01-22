@@ -51,7 +51,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         // TODO: Handle multiple launch activities in an app. This is NOT the way.
         val component = when (activityInfo.size) {
             0 -> {
-                showToastShort(appContext, "App not found")
+                showToast(appContext, "App not found")
                 return
             }
             1 -> ComponentName(packageName, activityInfo[0].name)
@@ -68,10 +68,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 launcher.startMainActivity(component, android.os.Process.myUserHandle(), null, null)
             } catch (e: Exception) {
-                showToastShort(appContext, "Unable to launch app")
+                showToast(appContext, "Unable to launch app")
             }
         } catch (e: Exception) {
-            showToastShort(appContext, "Unable to launch app")
+            showToast(appContext, "Unable to launch app")
         }
     }
 

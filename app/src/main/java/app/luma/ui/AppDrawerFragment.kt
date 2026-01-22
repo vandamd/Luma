@@ -7,16 +7,14 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import isDarkTheme
 import androidx.compose.ui.platform.ComposeView
 import SettingsTheme
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -54,17 +52,12 @@ override fun onCreateView(
         val header: ComposeView? = binding.headerCompose
         header?.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         header?.setContent {
-            val isDark = when (Prefs(requireContext()).appTheme) {
-                app.luma.data.Constants.Theme.Light -> false
-                app.luma.data.Constants.Theme.Dark -> true
-                app.luma.data.Constants.Theme.System -> isSystemInDarkTheme()
-            }
             val headerTitle = when (flag) {
-            AppDrawerFlag.SetHomeApp -> "Select/Rename App"
-            AppDrawerFlag.HiddenApps -> "Hidden Apps"
-            else -> "App Drawer"
-        }
-            SettingsTheme(isDark) {
+                AppDrawerFlag.SetHomeApp -> "Select/Rename App"
+                AppDrawerFlag.HiddenApps -> "Hidden Apps"
+                else -> "App Drawer"
+            }
+            SettingsTheme(isDarkTheme(Prefs(requireContext()))) {
                 SettingsHeader(title = headerTitle, onBack = { findNavController().popBackStack() })
             }
         }
@@ -116,16 +109,16 @@ override fun onCreateView(
     }
 
     private fun initViewModel(flag: AppDrawerFlag, viewModel: MainViewModel, appAdapter: AppDrawerAdapter) {
-        viewModel.hiddenApps.observe(viewLifecycleOwner, Observer {
-            if (flag != AppDrawerFlag.HiddenApps) return@Observer
+        viewModel.hiddenApps.observe(viewLifecycleOwner) {
+            if (flag != AppDrawerFlag.HiddenApps) return@observe
             it?.let { appList ->
                 binding.listEmptyHint.visibility = if (appList.isEmpty()) View.VISIBLE else View.GONE
                 populateAppList(appList, appAdapter)
             }
-        })
+        }
 
-        viewModel.appList.observe(viewLifecycleOwner, Observer {
-            if (flag == AppDrawerFlag.HiddenApps) return@Observer
+        viewModel.appList.observe(viewLifecycleOwner) {
+            if (flag == AppDrawerFlag.HiddenApps) return@observe
             it?.let { appList ->
                 val filteredList = if (flag == AppDrawerFlag.SetHomeApp) {
                     appList
@@ -140,13 +133,7 @@ override fun onCreateView(
                 binding.listEmptyHint.visibility = if (filteredList.isEmpty()) View.VISIBLE else View.GONE
                 populateAppList(filteredList, appAdapter)
             }
-        })
-    }
-
-    private fun View.hideKeyboard() {
-        view?.clearFocus()
-        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(windowToken, 0)
+        }
     }
 
     private fun populateAppList(apps: List<AppModel>, appAdapter: AppDrawerAdapter) {

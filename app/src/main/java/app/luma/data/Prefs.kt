@@ -12,7 +12,6 @@ import com.google.gson.reflect.TypeToken
 
 private const val PREFS_FILENAME = "app.luma"
 
-private const val FIRST_OPEN = "FIRST_OPEN"
 private const val FIRST_SETTINGS_OPEN = "FIRST_SETTINGS_OPEN"
 private const val HOME_PAGES = "HOME_PAGES"
 private const val HOME_APPS_PER_PAGE = "HOME_APPS_PER_PAGE_"
@@ -72,10 +71,6 @@ class Prefs(val context: Context) {
             }
         }
         editor.apply()
-    }
-
-    fun firstOpen(): Boolean {
-        return firstTrueFalseAfter(FIRST_OPEN)
     }
 
     fun firstSettingsOpen(): Boolean {
@@ -233,10 +228,6 @@ class Prefs(val context: Context) {
     var showNotificationIndicator: Boolean
         get() = prefs.getBoolean(SHOW_NOTIFICATION_INDICATOR, true)
         set(value) = prefs.edit().putBoolean(SHOW_NOTIFICATION_INDICATOR, value).apply()
-
-    fun getAppName(location: Int): String {
-        return getHomeAppModel(location).appLabel
-    }
 
     fun getAppAlias(appName: String): String {
         return prefs.getString(appName, "").toString()

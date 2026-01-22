@@ -11,19 +11,38 @@ import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.math.abs
 
-/*
-Swipe, double tap and long press touch listener for a view
-Source: https://www.tutorialspoint.com/how-to-handle-swipe-gestures-in-kotlin
-*/
+/**
+ * Unified swipe, tap, and long press touch listener.
+ *
+ * @param context The context
+ * @param view Optional view reference for view-specific callbacks (onClick, onLongClick with view)
+ * @param enableTripleTap Whether to enable triple-tap detection (adds slight delay to double-tap)
+ * @param enableDelayedLongPress Whether to use delayed long press (500ms after system long press)
+ */
+internal open class SwipeTouchListener(
+    context: Context?,
+    private val view: View? = null,
+    private val enableTripleTap: Boolean = false,
+    private val enableDelayedLongPress: Boolean = false
+) : OnTouchListener {
 
-internal open class OnSwipeTouchListener(c: Context?) : OnTouchListener {
     private var longPressOn = false
     private var doubleTapOn = false
     private val gestureDetector: GestureDetector
 
-    override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
-        if (motionEvent.action == MotionEvent.ACTION_UP)
+    override fun onTouch(v: View, motionEvent: MotionEvent): Boolean {
+        // Manage pressed state if we have a view reference
+        if (view != null) {
+            when (motionEvent.action) {
+                MotionEvent.ACTION_DOWN -> view.isPressed = true
+                MotionEvent.ACTION_UP -> view.isPressed = false
+            }
+        }
+
+        if (motionEvent.action == MotionEvent.ACTION_UP) {
             longPressOn = false
+        }
+
         return gestureDetector.onTouchEvent(motionEvent)
     }
 
@@ -31,33 +50,43 @@ internal open class OnSwipeTouchListener(c: Context?) : OnTouchListener {
         private val SWIPE_THRESHOLD: Int = 100
         private val SWIPE_VELOCITY_THRESHOLD: Int = 100
 
-        override fun onDown(e: MotionEvent): Boolean {
-            return true
-        }
+        override fun onDown(e: MotionEvent): Boolean = true
 
         override fun onSingleTapUp(e: MotionEvent): Boolean {
-            if (doubleTapOn) {
+            if (enableTripleTap && doubleTapOn) {
                 doubleTapOn = false
                 onTripleClick()
+            } else if (view != null) {
+                onClick(view)
             }
             return super.onSingleTapUp(e)
         }
 
         override fun onDoubleTap(e: MotionEvent): Boolean {
-            doubleTapOn = true
-            Timer().schedule(Constants.TRIPLE_TAP_DELAY_MS.toLong()) {
-                if (doubleTapOn) {
-                    doubleTapOn = false
-                    onDoubleClick()
+            if (enableTripleTap) {
+                doubleTapOn = true
+                Timer().schedule(Constants.TRIPLE_TAP_DELAY_MS.toLong()) {
+                    if (doubleTapOn) {
+                        doubleTapOn = false
+                        onDoubleClick()
+                    }
                 }
+            } else {
+                onDoubleClick()
             }
             return super.onDoubleTap(e)
         }
 
         override fun onLongPress(e: MotionEvent) {
-            longPressOn = true
-            Timer().schedule(Constants.LONG_PRESS_DELAY_MS.toLong()) {
-                if (longPressOn) onLongClick()
+            if (enableDelayedLongPress) {
+                longPressOn = true
+                Timer().schedule(Constants.LONG_PRESS_DELAY_MS.toLong()) {
+                    if (longPressOn) {
+                        if (view != null) onLongClick(view) else onLongClick()
+                    }
+                }
+            } else {
+                if (view != null) onLongClick(view) else onLongClick()
             }
             super.onLongPress(e)
         }
@@ -87,16 +116,22 @@ internal open class OnSwipeTouchListener(c: Context?) : OnTouchListener {
         }
     }
 
+    // Swipe callbacks
     open fun onSwipeRight() {}
     open fun onSwipeLeft() {}
     open fun onSwipeUp() {}
     open fun onSwipeDown() {}
+
+    // Click callbacks (without view - for screen-level gestures)
     open fun onLongClick() {}
     open fun onDoubleClick() {}
     open fun onTripleClick() {}
-    private fun onClick() {}
+
+    // Click callbacks (with view - for view-level gestures)
+    open fun onLongClick(view: View) {}
+    open fun onClick(view: View) {}
 
     init {
-        gestureDetector = GestureDetector(c, GestureListener())
+        gestureDetector = GestureDetector(context, GestureListener())
     }
 }

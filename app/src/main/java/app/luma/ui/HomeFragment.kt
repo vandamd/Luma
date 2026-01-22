@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -26,8 +27,7 @@ import app.luma.data.Prefs
 import app.luma.databinding.FragmentHomeBinding
 import app.luma.helper.*
 import app.luma.helper.LumaNotificationListener
-import app.luma.listener.OnSwipeTouchListener
-import app.luma.listener.ViewSwipeTouchListener
+import app.luma.listener.SwipeTouchListener
 import kotlinx.coroutines.launch
 
 
@@ -69,7 +69,6 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         initPageNavigation()
 
         initSwipeTouchListener()
-        initClickListeners()
     }
 
     override fun onStart() {
@@ -201,17 +200,14 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         }
     }
 
-    private fun initClickListeners() {
-        // removed setDefaultLauncher click listener
-    }
-
     private fun initObservers() {
         binding.homeAppsLayout.gravity = android.view.Gravity.CENTER
     }
 
     private fun homeAppClicked(location: Int) {
-        if (prefs.getAppName(location).isEmpty()) showLongPressToast()
-        else launchApp(prefs.getHomeAppModel(location))
+        val appModel = prefs.getHomeAppModel(location)
+        if (appModel.appLabel.isEmpty()) showLongPressToast()
+        else launchApp(appModel)
     }
 
     private fun launchApp(appModel: AppModel) {
@@ -293,144 +289,96 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                 try {
                     deviceManager.lockNow()
                 } catch (e: SecurityException) {
-                    showToastLong(requireContext(), "App does not have the permission to lock the device")
+                    showToast(requireContext(), "App does not have the permission to lock the device", Toast.LENGTH_LONG)
                 } catch (e: Exception) {
-                    showToastLong(requireContext(), "Luma failed to lock device.\nPlease check your app settings.")
+                    showToast(requireContext(), "Luma failed to lock device.\nPlease check your app settings.", Toast.LENGTH_LONG)
                 }
             }
         }
     }
 
-    private fun showLongPressToast() = showToastShort(requireContext(), "Long press to select app")
+    private fun showLongPressToast() = showToast(requireContext(), "Long press to select app")
 
     private fun textOnClick(view: View) = onClick(view)
 
     private fun textOnLongClick(view: View) = onLongClick(view)
 
+    // Common swipe handlers shared between screen and app button gestures
+    private fun handleSwipeLeft() {
+        when (val action = prefs.swipeLeftAction) {
+            Action.OpenApp -> openSwipeLeftApp()
+            else -> handleOtherAction(action)
+        }
+    }
+
+    private fun handleSwipeRight() {
+        when (val action = prefs.swipeRightAction) {
+            Action.OpenApp -> openSwipeRightApp()
+            else -> handleOtherAction(action)
+        }
+    }
+
+    private fun handleSwipeUp(): Boolean {
+        // Handle page navigation (swipe up = next page)
+        if (totalPages > 1 && currentPage < totalPages - 1) {
+            switchToPage(currentPage + 1)
+            return true
+        }
+        // If no page navigation, handle normal swipe up
+        when (val action = prefs.swipeUpAction) {
+            Action.OpenApp -> openSwipeUpApp()
+            else -> handleOtherAction(action)
+        }
+        return false
+    }
+
+    private fun handleSwipeDown(): Boolean {
+        // Handle page navigation (swipe down = previous page)
+        if (totalPages > 1 && currentPage > 0) {
+            switchToPage(currentPage - 1)
+            return true
+        }
+        // If no page navigation, handle normal swipe down
+        when (val action = prefs.swipeDownAction) {
+            Action.OpenApp -> openSwipeDownApp()
+            else -> handleOtherAction(action)
+        }
+        return false
+    }
+
+    private fun handleDoubleTap() {
+        when (val action = prefs.doubleTapAction) {
+            Action.OpenApp -> openDoubleTapApp()
+            else -> handleOtherAction(action)
+        }
+    }
+
     private fun getHomeScreenGestureListener(context: Context): View.OnTouchListener {
-        return object : OnSwipeTouchListener(context) {
-            override fun onSwipeLeft() {
-                super.onSwipeLeft()
-                when(val action = prefs.swipeLeftAction) {
-                    Action.OpenApp -> openSwipeLeftApp()
-                    else -> handleOtherAction(action)
-                }
-            }
-
-            override fun onSwipeRight() {
-                super.onSwipeRight()
-                when(val action = prefs.swipeRightAction) {
-                    Action.OpenApp -> openSwipeRightApp()
-                    else -> handleOtherAction(action)
-                }
-            }
-
-            override fun onSwipeUp() {
-                super.onSwipeUp()
-                // Handle page navigation (swipe up = next page)
-                if (totalPages > 1 && currentPage < totalPages - 1) {
-                    switchToPage(currentPage + 1)
-                    return
-                }
-                
-                // If no page navigation, handle normal swipe up
-                when(val action = prefs.swipeUpAction) {
-                    Action.OpenApp -> openSwipeUpApp()
-                    else -> handleOtherAction(action)
-                }
-            }
-
-            override fun onSwipeDown() {
-                super.onSwipeDown()
-                // Handle page navigation (swipe down = previous page)
-                if (totalPages > 1 && currentPage > 0) {
-                    switchToPage(currentPage - 1)
-                    return
-                }
-                
-                // If no page navigation, handle normal swipe down
-                when(val action = prefs.swipeDownAction) {
-                    Action.OpenApp -> openSwipeDownApp()
-                    else -> handleOtherAction(action)
-                }
-            }
+        return object : SwipeTouchListener(context, enableTripleTap = false, enableDelayedLongPress = true) {
+            override fun onSwipeLeft() = handleSwipeLeft()
+            override fun onSwipeRight() = handleSwipeRight()
+            override fun onSwipeUp() { handleSwipeUp() }
+            override fun onSwipeDown() { handleSwipeDown() }
+            override fun onDoubleClick() = handleDoubleTap()
 
             override fun onLongClick() {
-                super.onLongClick()
                 try {
                     findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
-                    // viewModel.firstOpen(false)
-                } catch (e: java.lang.Exception) {
-                }
-            }
-
-            override fun onDoubleClick() {
-                super.onDoubleClick()
-                when(val action = prefs.doubleTapAction) {
-                    Action.OpenApp -> openDoubleTapApp()
-                    else -> handleOtherAction(action)
+                } catch (_: Exception) {
                 }
             }
         }
     }
 
     private fun getHomeAppsGestureListener(context: Context, view: View): View.OnTouchListener {
-        return object : ViewSwipeTouchListener(context, view) {
-            override fun onLongClick(view: View) {
-                super.onLongClick(view)
-                textOnLongClick(view)
-            }
+        return object : SwipeTouchListener(context, view) {
+            override fun onSwipeLeft() = handleSwipeLeft()
+            override fun onSwipeRight() = handleSwipeRight()
+            override fun onSwipeUp() { handleSwipeUp() }
+            override fun onSwipeDown() { handleSwipeDown() }
 
-            override fun onClick(view: View) {
-                super.onClick(view)
-                textOnClick(view)
-            }
-            
-            override fun onSwipeLeft() {
-                super.onSwipeLeft()
-                when(val action = prefs.swipeLeftAction) {
-                    Action.OpenApp -> openSwipeLeftApp()
-                    else -> handleOtherAction(action)
-                }
-            }
-
-            override fun onSwipeRight() {
-                super.onSwipeRight()
-                when(val action = prefs.swipeRightAction) {
-                    Action.OpenApp -> openSwipeRightApp()
-                    else -> handleOtherAction(action)
-                }
-            }
-
-            override fun onSwipeUp() {
-                super.onSwipeUp()
-                // Handle page navigation (swipe up = next page)
-                if (totalPages > 1 && currentPage < totalPages - 1) {
-                    switchToPage(currentPage + 1)
-                    return
-                }
-                
-                // If no page navigation, handle normal swipe up
-                when(val action = prefs.swipeUpAction) {
-                    Action.OpenApp -> openSwipeUpApp()
-                    else -> handleOtherAction(action)
-                }
-            }
-
-            override fun onSwipeDown() {
-                super.onSwipeDown()
-                // Handle page navigation (swipe down = previous page)
-                if (totalPages > 1 && currentPage > 0) {
-                    switchToPage(currentPage - 1)
-                    return
-                }
-                
-                // If no page navigation, handle normal swipe down
-                when(val action = prefs.swipeDownAction) {
-                    Action.OpenApp -> openSwipeDownApp()
-                    else -> handleOtherAction(action)
-                }
-            }
+            override fun onLongClick(view: View) { textOnLongClick(view) }
+            override fun onClick(view: View) { textOnClick(view) }
         }
     }
 

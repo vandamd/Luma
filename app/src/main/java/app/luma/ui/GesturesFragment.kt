@@ -5,24 +5,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import app.luma.R
 import app.luma.data.Constants
 import app.luma.data.Prefs
-import app.luma.ui.compose.SettingsComposable.SettingsHeader
+import app.luma.ui.GestureActionFragment.GestureType
+import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.SelectorButton
-import app.luma.ui.compose.CustomScrollView
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.ui.unit.dp
+import app.luma.ui.compose.SettingsComposable.SettingsHeader
+import isDarkTheme
 
 class GesturesFragment : Fragment() {
 
@@ -41,12 +41,7 @@ class GesturesFragment : Fragment() {
         val compose = ComposeView(requireContext())
         compose.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         compose.setContent {
-            val isDark = when (prefs.appTheme) {
-                app.luma.data.Constants.Theme.Light -> false
-                app.luma.data.Constants.Theme.Dark -> true
-                app.luma.data.Constants.Theme.System -> isSystemInDarkTheme()
-            }
-            SettingsTheme(isDark) {
+            SettingsTheme(isDarkTheme(prefs)) {
                 GesturesScreen()
             }
         }
@@ -66,31 +61,38 @@ class GesturesFragment : Fragment() {
                     SelectorButton(
                         label = "Swipe left",
                         value = getActionText(prefs.swipeLeftAction, prefs.appSwipeLeft.appLabel),
-                        onClick = { findNavController().navigate(R.id.action_gesturesFragment_to_swipeLeftFragment) }
+                        onClick = { navigateToGesture(GestureType.SWIPE_LEFT) }
                     )
                     SelectorButton(
                         label = "Swipe right",
                         value = getActionText(prefs.swipeRightAction, prefs.appSwipeRight.appLabel),
-                        onClick = { findNavController().navigate(R.id.action_gesturesFragment_to_swipeRightFragment) }
+                        onClick = { navigateToGesture(GestureType.SWIPE_RIGHT) }
                     )
                     SelectorButton(
                         label = "Swipe down",
                         value = getActionText(prefs.swipeDownAction, prefs.appSwipeDown.appLabel),
-                        onClick = { findNavController().navigate(R.id.action_gesturesFragment_to_swipeDownFragment) }
+                        onClick = { navigateToGesture(GestureType.SWIPE_DOWN) }
                     )
                     SelectorButton(
                         label = "Swipe up",
                         value = getActionText(prefs.swipeUpAction, prefs.appSwipeUp.appLabel),
-                        onClick = { findNavController().navigate(R.id.action_gesturesFragment_to_swipeUpFragment) }
+                        onClick = { navigateToGesture(GestureType.SWIPE_UP) }
                     )
                     SelectorButton(
                         label = "Double tap",
                         value = getActionText(prefs.doubleTapAction, prefs.appDoubleTap.appLabel),
-                        onClick = { findNavController().navigate(R.id.action_gesturesFragment_to_doubleTapFragment) }
+                        onClick = { navigateToGesture(GestureType.DOUBLE_TAP) }
                     )
                 }
             }
         }
+    }
+
+    private fun navigateToGesture(gestureType: GestureType) {
+        findNavController().navigate(
+            R.id.action_gesturesFragment_to_gestureActionFragment,
+            bundleOf(GestureActionFragment.GESTURE_TYPE to gestureType.name)
+        )
     }
 
     @Composable

@@ -16,8 +16,6 @@ object Constants {
     const val TRIPLE_TAP_DELAY_MS = 300
     const val LONG_PRESS_DELAY_MS = 500
 
-    const val MAX_HOME_APPS = 6
-
     const val BACKUP_WRITE = 1
     const val BACKUP_READ = 2
 

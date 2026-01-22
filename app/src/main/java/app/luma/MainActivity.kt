@@ -20,8 +20,9 @@ import app.luma.style.DisplayDefaults.withDisplayDefaults
 import app.luma.data.Constants
 import app.luma.data.Prefs
 import app.luma.databinding.ActivityMainBinding
+import android.widget.Toast
 import app.luma.helper.isTablet
-import app.luma.helper.showToastLong
+import app.luma.helper.showToast
 import java.io.BufferedReader
 import java.io.FileOutputStream
 import java.io.InputStreamReader
@@ -131,10 +132,7 @@ class MainActivity : AppCompatActivity() {
         if (resetFailed) {
             val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                 Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS) else {
-                showToastLong(
-                    this,
-                    "Search for launcher or home app"
-                )
+                showToast(this, "Search for launcher or home app", Toast.LENGTH_LONG)
                 Intent(Settings.ACTION_SETTINGS)
             }
             startActivity(intent)
@@ -150,10 +148,7 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode != Activity.RESULT_OK) {
-            // showToastLong(applicationContext, "Intent Error")
-            return
-        }
+        if (resultCode != Activity.RESULT_OK) return
 
         when (requestCode) {
             Constants.REQUEST_CODE_ENABLE_ADMIN -> {

@@ -1,18 +1,12 @@
 package app.luma.ui
 
 import SettingsTheme
-import android.app.Activity
-import android.app.admin.DevicePolicyManager
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import isDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -33,8 +27,6 @@ import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.Constants.Theme.*
 import app.luma.data.Prefs
 import app.luma.databinding.FragmentSettingsBinding
-import app.luma.helper.*
-import app.luma.listener.DeviceAdmin
 import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.SimpleTextButton
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
@@ -45,8 +37,6 @@ class SettingsFragment : Fragment() {
 
     private lateinit var prefs: Prefs
     private lateinit var viewModel: MainViewModel
-    private lateinit var deviceManager: DevicePolicyManager
-    private lateinit var componentName: ComponentName
 
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
@@ -65,14 +55,7 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.testView.setContent {
-
-            val isDark = when (prefs.appTheme) {
-                Light -> false
-                Dark -> true
-                System -> isSystemInDarkTheme()
-            }
-
-            SettingsTheme(isDark) {
+            SettingsTheme(isDarkTheme(prefs)) {
                 Settings()
             }
         }
@@ -85,11 +68,7 @@ class SettingsFragment : Fragment() {
                 title = "Luma Settings (" + requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName + ")",
                 onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
             )
-            val isDark = when (prefs.appTheme) {
-                Light -> false
-                Dark -> true
-                System -> isSystemInDarkTheme()
-            }
+            val isDark = isDarkTheme(prefs)
             val themeState = remember { mutableStateOf(!isDark) }
             
             ContentContainer {
@@ -121,9 +100,6 @@ class SettingsFragment : Fragment() {
         viewModel = activity?.run {
             ViewModelProvider(this).get(MainViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
-
-        deviceManager = context?.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
-        componentName = ComponentName(requireContext(), DeviceAdmin::class.java)
     }
 
     override fun onDestroyView() {
