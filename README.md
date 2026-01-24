@@ -16,6 +16,7 @@ I recommend using [Obtainium](https://github.com/ImranR98/Obtainium) and adding 
 - Configurable swipe gestures + double-tap
 - Hide apps from drawer
 - Rename apps
+- Shortcut pinning (e.g. progressive web apps from Chrome). NOTE: Luma temporarily has to be set as the default launcher for the "Add to Home Screen" option in Chrome to work. Reverting back to LightOS is fine once a shortcut is added.
 
 ## Acknowledgements
 Huge thank you to the following projects:
