@@ -3,6 +3,7 @@ package app.luma.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -20,12 +21,15 @@ import app.luma.R
 import app.luma.data.AppModel
 import app.luma.data.Constants.Action
 import app.luma.data.Constants.AppDrawerFlag
+import app.luma.data.GestureType
 import app.luma.data.Prefs
 import app.luma.databinding.FragmentHomeBinding
 import app.luma.helper.*
 import app.luma.helper.LumaNotificationListener
 import app.luma.listener.SwipeTouchListener
 import kotlinx.coroutines.launch
+
+private const val TAG = "HomeFragment"
 
 class HomeFragment :
     Fragment(),
@@ -68,9 +72,7 @@ class HomeFragment :
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = activity?.run {
-            ViewModelProvider(this)[MainViewModel::class.java]
-        } ?: throw Exception("Invalid Activity")
+        viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
 
         initObservers()
         initPageNavigation()
@@ -101,7 +103,7 @@ class HomeFragment :
             performHapticFeedback(requireContext())
             homeAppClicked(appLocation)
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Error handling app click", e)
         }
     }
 
@@ -238,52 +240,25 @@ class HomeFragment :
                     bundleOf("flag" to flag.toString(), "n" to n),
                 )
             } catch (e: Exception) {
+                Log.e(TAG, "Navigation action failed, using fallback", e)
                 findNavController().navigate(
                     R.id.appListFragment,
                     bundleOf("flag" to flag.toString()),
                 )
-                e.printStackTrace()
             }
         }
     }
 
-    private fun openSwipeRightApp() {
-        if (prefs.appSwipeRight.appPackage.isNotEmpty()) {
-            launchApp(prefs.appSwipeRight)
-        } else {
-            openDialerApp(requireContext())
+    private fun openGestureApp(gestureType: GestureType) {
+        val app = prefs.getGestureApp(gestureType)
+        if (app.appPackage.isNotEmpty()) {
+            launchApp(app)
+            return
         }
-    }
-
-    private fun openSwipeDownApp() {
-        if (prefs.appSwipeDown.appPackage.isNotEmpty()) {
-            launchApp(prefs.appSwipeDown)
-        } else {
-            openDialerApp(requireContext())
-        }
-    }
-
-    private fun openSwipeUpApp() {
-        if (prefs.appSwipeUp.appPackage.isNotEmpty()) {
-            launchApp(prefs.appSwipeUp)
-        } else {
-            showAppList(AppDrawerFlag.LaunchApp)
-        }
-    }
-
-    private fun openSwipeLeftApp() {
-        if (prefs.appSwipeLeft.appPackage.isNotEmpty()) {
-            launchApp(prefs.appSwipeLeft)
-        } else {
-            openCameraApp(requireContext())
-        }
-    }
-
-    private fun openDoubleTapApp() {
-        if (prefs.appDoubleTap.appPackage.isNotEmpty()) {
-            launchApp(prefs.appDoubleTap)
-        } else {
-            openCameraApp(requireContext())
+        when (gestureType) {
+            GestureType.SWIPE_RIGHT, GestureType.SWIPE_DOWN -> openDialerApp(requireContext())
+            GestureType.SWIPE_UP -> showAppList(AppDrawerFlag.LaunchApp)
+            GestureType.SWIPE_LEFT, GestureType.DOUBLE_TAP -> openCameraApp(requireContext())
         }
     }
 
@@ -329,55 +304,38 @@ class HomeFragment :
 
     private fun showLongPressToast() = showToast(requireContext(), "Long press to select app")
 
-    // Common swipe handlers shared between screen and app button gestures
-    private fun handleSwipeLeft() {
-        when (val action = prefs.swipeLeftAction) {
-            Action.OpenApp -> openSwipeLeftApp()
-            else -> handleOtherAction(action)
+    private fun handleGesture(gestureType: GestureType) {
+        val action = prefs.getGestureAction(gestureType)
+        if (action == Action.OpenApp) {
+            openGestureApp(gestureType)
+        } else {
+            handleOtherAction(action)
         }
     }
 
-    private fun handleSwipeRight() {
-        when (val action = prefs.swipeRightAction) {
-            Action.OpenApp -> openSwipeRightApp()
-            else -> handleOtherAction(action)
-        }
-    }
+    private fun handleSwipeLeft() = handleGesture(GestureType.SWIPE_LEFT)
+
+    private fun handleSwipeRight() = handleGesture(GestureType.SWIPE_RIGHT)
 
     private fun handleSwipeUp(): Boolean {
-        // Handle page navigation (swipe up = next page)
         if (totalPages > 1 && currentPage < totalPages - 1) {
             switchToPage(currentPage + 1)
             return true
         }
-        // If no page navigation, handle normal swipe up
-        when (val action = prefs.swipeUpAction) {
-            Action.OpenApp -> openSwipeUpApp()
-            else -> handleOtherAction(action)
-        }
+        handleGesture(GestureType.SWIPE_UP)
         return false
     }
 
     private fun handleSwipeDown(): Boolean {
-        // Handle page navigation (swipe down = previous page)
         if (totalPages > 1 && currentPage > 0) {
             switchToPage(currentPage - 1)
             return true
         }
-        // If no page navigation, handle normal swipe down
-        when (val action = prefs.swipeDownAction) {
-            Action.OpenApp -> openSwipeDownApp()
-            else -> handleOtherAction(action)
-        }
+        handleGesture(GestureType.SWIPE_DOWN)
         return false
     }
 
-    private fun handleDoubleTap() {
-        when (val action = prefs.doubleTapAction) {
-            Action.OpenApp -> openDoubleTapApp()
-            else -> handleOtherAction(action)
-        }
-    }
+    private fun handleDoubleTap() = handleGesture(GestureType.DOUBLE_TAP)
 
     private fun getHomeScreenGestureListener(context: Context): View.OnTouchListener =
         object : SwipeTouchListener(context, enableDelayedLongPress = true) {

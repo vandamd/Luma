@@ -1,21 +1,17 @@
 package app.luma.ui
 
-import SettingsTheme
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import app.luma.data.Prefs
 import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import app.luma.ui.compose.SettingsComposable.SimpleTextButton
-import isDarkTheme
 
 class AppCountFragment : Fragment() {
     private lateinit var prefs: Prefs
@@ -31,23 +27,14 @@ class AppCountFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        val compose = ComposeView(requireContext())
-        compose.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-        compose.setContent {
-            SettingsTheme(isDarkTheme(prefs)) {
-                AppCountScreen()
-            }
-        }
-        return compose
-    }
+    ): View = composeView { AppCountScreen() }
 
     @Composable
     fun AppCountScreen() {
         Column {
             SettingsHeader(
                 title = "Page $pageNumber, Number of Apps",
-                onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() },
+                onBack = ::goBack,
             )
 
             ContentContainer {
@@ -70,6 +57,6 @@ class AppCountFragment : Fragment() {
         count: Int,
     ) {
         prefs.setAppsPerPage(page, count)
-        requireActivity().onBackPressedDispatcher.onBackPressed()
+        goBack()
     }
 }

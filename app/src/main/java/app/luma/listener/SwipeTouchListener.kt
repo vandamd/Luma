@@ -3,6 +3,7 @@ package app.luma.listener
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
@@ -10,6 +11,8 @@ import android.view.View
 import android.view.View.OnTouchListener
 import app.luma.data.Constants
 import kotlin.math.abs
+
+private const val TAG = "SwipeTouchListener"
 
 /**
  * Unified swipe, tap, and long press touch listener.
@@ -102,8 +105,8 @@ internal open class SwipeTouchListener(
                         if (diffY < 0) onSwipeUp() else onSwipeDown()
                     }
                 }
-            } catch (exception: Exception) {
-                exception.printStackTrace()
+            } catch (e: Exception) {
+                Log.e(TAG, "Error processing fling gesture", e)
             }
             return false
         }

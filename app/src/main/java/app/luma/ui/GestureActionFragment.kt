@@ -1,14 +1,11 @@
 package app.luma.ui
 
-import SettingsTheme
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -16,33 +13,35 @@ import app.luma.R
 import app.luma.data.Constants
 import app.luma.data.Constants.Action
 import app.luma.data.Constants.AppDrawerFlag
+import app.luma.data.GestureType
 import app.luma.data.Prefs
 import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import app.luma.ui.compose.SettingsComposable.SimpleTextButton
-import isDarkTheme
 
 /**
  * Unified fragment for configuring gesture actions (swipe left/right/up/down, double tap).
  * Pass the gesture type via arguments using the GESTURE_TYPE key.
  */
 class GestureActionFragment : Fragment() {
-    enum class GestureType(
-        val title: String,
-        val appDrawerFlag: AppDrawerFlag,
-        val navActionId: Int,
-    ) {
-        SWIPE_LEFT("Swipe left", AppDrawerFlag.SetSwipeLeft, R.id.action_gestureActionFragment_to_appListFragment),
-        SWIPE_RIGHT("Swipe right", AppDrawerFlag.SetSwipeRight, R.id.action_gestureActionFragment_to_appListFragment),
-        SWIPE_UP("Swipe up", AppDrawerFlag.SetSwipeUp, R.id.action_gestureActionFragment_to_appListFragment),
-        SWIPE_DOWN("Swipe down", AppDrawerFlag.SetSwipeDown, R.id.action_gestureActionFragment_to_appListFragment),
-        DOUBLE_TAP("Double tap", AppDrawerFlag.SetDoubleTap, R.id.action_gestureActionFragment_to_appListFragment),
-    }
-
     companion object {
         const val GESTURE_TYPE = "gesture_type"
+
+        private val gestureDisplayInfo =
+            mapOf(
+                GestureType.SWIPE_LEFT to GestureDisplayInfo("Swipe left", AppDrawerFlag.SetSwipeLeft),
+                GestureType.SWIPE_RIGHT to GestureDisplayInfo("Swipe right", AppDrawerFlag.SetSwipeRight),
+                GestureType.SWIPE_UP to GestureDisplayInfo("Swipe up", AppDrawerFlag.SetSwipeUp),
+                GestureType.SWIPE_DOWN to GestureDisplayInfo("Swipe down", AppDrawerFlag.SetSwipeDown),
+                GestureType.DOUBLE_TAP to GestureDisplayInfo("Double tap", AppDrawerFlag.SetDoubleTap),
+            )
     }
+
+    private data class GestureDisplayInfo(
+        val title: String,
+        val appDrawerFlag: AppDrawerFlag,
+    )
 
     private lateinit var prefs: Prefs
     private lateinit var gestureType: GestureType
@@ -58,23 +57,17 @@ class GestureActionFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        val compose = ComposeView(requireContext())
-        compose.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-        compose.setContent {
-            SettingsTheme(isDarkTheme(prefs)) {
-                GestureScreen()
-            }
-        }
-        return compose
-    }
+    ): View = composeView { GestureScreen() }
+
+    private fun getDisplayInfo(): GestureDisplayInfo = gestureDisplayInfo[gestureType] ?: error("Unknown gesture type: $gestureType")
 
     @Composable
     fun GestureScreen() {
+        val displayInfo = getDisplayInfo()
         Column {
             SettingsHeader(
-                title = gestureType.title,
-                onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() },
+                title = displayInfo.title,
+                onBack = ::goBack,
             )
 
             ContentContainer {
@@ -84,7 +77,7 @@ class GestureActionFragment : Fragment() {
                         val buttonText =
                             when (action) {
                                 Constants.Action.OpenApp -> "Open ${getAppLabel()}"
-                                else -> action.string()
+                                else -> action.displayName()
                             }
                         SimpleTextButton(
                             title = buttonText,
@@ -97,47 +90,24 @@ class GestureActionFragment : Fragment() {
         }
     }
 
-    private fun getCurrentAction(): Action =
-        when (gestureType) {
-            GestureType.SWIPE_LEFT -> prefs.swipeLeftAction
-            GestureType.SWIPE_RIGHT -> prefs.swipeRightAction
-            GestureType.SWIPE_UP -> prefs.swipeUpAction
-            GestureType.SWIPE_DOWN -> prefs.swipeDownAction
-            GestureType.DOUBLE_TAP -> prefs.doubleTapAction
-        }
+    private fun getCurrentAction(): Action = prefs.getGestureAction(gestureType)
 
     private fun setCurrentAction(action: Action) {
-        when (gestureType) {
-            GestureType.SWIPE_LEFT -> prefs.swipeLeftAction = action
-            GestureType.SWIPE_RIGHT -> prefs.swipeRightAction = action
-            GestureType.SWIPE_UP -> prefs.swipeUpAction = action
-            GestureType.SWIPE_DOWN -> prefs.swipeDownAction = action
-            GestureType.DOUBLE_TAP -> prefs.doubleTapAction = action
-        }
+        prefs.setGestureAction(gestureType, action)
     }
 
-    private fun getAppLabel(): String =
-        when (gestureType) {
-            GestureType.SWIPE_LEFT -> prefs.appSwipeLeft.appLabel
-            GestureType.SWIPE_RIGHT -> prefs.appSwipeRight.appLabel
-            GestureType.SWIPE_UP -> prefs.appSwipeUp.appLabel
-            GestureType.SWIPE_DOWN -> prefs.appSwipeDown.appLabel
-            GestureType.DOUBLE_TAP -> prefs.appDoubleTap.appLabel
-        }
+    private fun getAppLabel(): String = prefs.getGestureApp(gestureType).appLabel
 
     private fun handleActionSelection(action: Action) {
         setCurrentAction(action)
-        when (action) {
-            Action.OpenApp -> {
-                findNavController().navigate(
-                    gestureType.navActionId,
-                    bundleOf("flag" to gestureType.appDrawerFlag.toString()),
-                )
-            }
-
-            else -> {
-                requireActivity().onBackPressedDispatcher.onBackPressed()
-            }
+        if (action == Action.OpenApp) {
+            val displayInfo = getDisplayInfo()
+            findNavController().navigate(
+                R.id.action_gestureActionFragment_to_appListFragment,
+                bundleOf("flag" to displayInfo.appDrawerFlag.toString()),
+            )
+        } else {
+            goBack()
         }
     }
 }

@@ -1,6 +1,5 @@
 package app.luma.ui
 
-import SettingsTheme
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,21 +7,18 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import app.luma.R
 import app.luma.data.Constants
+import app.luma.data.GestureType
 import app.luma.data.Prefs
-import app.luma.ui.GestureActionFragment.GestureType
 import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.SelectorButton
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
-import isDarkTheme
 
 class GesturesFragment : Fragment() {
     private lateinit var prefs: Prefs
@@ -36,23 +32,14 @@ class GesturesFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        val compose = ComposeView(requireContext())
-        compose.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-        compose.setContent {
-            SettingsTheme(isDarkTheme(prefs)) {
-                GesturesScreen()
-            }
-        }
-        return compose
-    }
+    ): View = composeView { GesturesScreen() }
 
     @Composable
     fun GesturesScreen() {
         Column {
             SettingsHeader(
                 title = "Gestures",
-                onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() },
+                onBack = ::goBack,
             )
 
             ContentContainer {
@@ -102,6 +89,6 @@ class GesturesFragment : Fragment() {
         when (action) {
             Constants.Action.OpenApp -> "Open $appLabel"
             Constants.Action.Disabled -> "Disabled"
-            else -> action.string()
+            else -> action.displayName()
         }
 }

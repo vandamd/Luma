@@ -2,11 +2,6 @@ package app.luma.data
 
 import androidx.compose.runtime.Composable
 
-interface EnumOption {
-    @Composable
-    fun string(): String
-}
-
 object Constants {
     const val LONG_PRESS_DELAY_MS = 500
 
@@ -21,7 +16,7 @@ object Constants {
         SetDoubleTap,
     }
 
-    enum class Action : EnumOption {
+    enum class Action {
         Disabled,
         OpenApp,
         LockScreen,
@@ -32,7 +27,7 @@ object Constants {
         ;
 
         @Composable
-        override fun string(): String =
+        fun displayName(): String =
             when (this) {
                 OpenApp -> "Open App"
                 LockScreen -> "Lock Screen"

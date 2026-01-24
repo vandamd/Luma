@@ -6,7 +6,6 @@ import android.content.*
 import android.content.pm.LauncherApps
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
-import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
@@ -17,7 +16,6 @@ import android.os.Vibrator
 import android.os.VibratorManager
 import android.provider.MediaStore
 import android.provider.Settings
-import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
@@ -25,18 +23,14 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import app.luma.BuildConfig
-import app.luma.R
 import app.luma.data.AppModel
 import app.luma.data.Prefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.*
 import java.text.Collator
-import java.util.*
-import kotlin.math.pow
-import kotlin.math.sqrt
+
+private const val TAG = "Utils"
 
 fun performHapticFeedback(context: Context) {
     try {
@@ -150,11 +144,6 @@ suspend fun getHiddenAppsList(context: Context): MutableList<AppModel> {
     }
 }
 
-fun isLumaDefault(context: Context): Boolean {
-    val launcherPackageName = getDefaultLauncherPackage(context)
-    return BuildConfig.APPLICATION_ID == launcherPackageName
-}
-
 fun getDefaultLauncherPackage(context: Context): String {
     val intent = Intent()
     intent.action = Intent.ACTION_MAIN
@@ -187,7 +176,7 @@ fun resetDefaultLauncher(context: Context) {
             PackageManager.DONT_KILL_APP,
         )
     } catch (e: Exception) {
-        e.printStackTrace()
+        Log.e(TAG, "Error resetting default launcher", e)
     }
 }
 
@@ -219,31 +208,6 @@ fun openCameraApp(context: Context) {
     } catch (_: Exception) {
         // No camera app available, ignore silently
     }
-}
-
-fun isTablet(context: Context): Boolean {
-    val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    val displayMetrics = context.resources.displayMetrics
-    val widthPixels: Int
-    val heightPixels: Int
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        val windowMetrics = windowManager.currentWindowMetrics
-        widthPixels = windowMetrics.bounds.width()
-        heightPixels = windowMetrics.bounds.height()
-    } else {
-        @Suppress("DEPRECATION")
-        val metrics = DisplayMetrics()
-        @Suppress("DEPRECATION")
-        windowManager.defaultDisplay.getMetrics(metrics)
-        widthPixels = metrics.widthPixels
-        heightPixels = metrics.heightPixels
-    }
-
-    val widthInches = widthPixels / displayMetrics.xdpi
-    val heightInches = heightPixels / displayMetrics.ydpi
-    val diagonalInches = sqrt(widthInches.toDouble().pow(2.0) + heightInches.toDouble().pow(2.0))
-    return diagonalInches >= 7.0
 }
 
 fun initActionService(context: Context): ActionService? {
@@ -315,7 +279,7 @@ fun expandNotificationDrawer(context: Context) {
         val method = statusBarManager.getMethod("expandNotificationsPanel")
         method.invoke(statusBarService)
     } catch (e: Exception) {
-        e.printStackTrace()
+        Log.e(TAG, "Error expanding notification drawer", e)
     }
 }
 
@@ -328,6 +292,6 @@ fun expandQuickSettings(context: Context) {
         val method = statusBarManager.getMethod("expandSettingsPanel")
         method.invoke(statusBarService)
     } catch (e: Exception) {
-        e.printStackTrace()
+        Log.e(TAG, "Error expanding quick settings", e)
     }
 }

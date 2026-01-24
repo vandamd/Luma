@@ -1,21 +1,17 @@
 package app.luma.ui
 
-import SettingsTheme
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import app.luma.data.Prefs
 import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import app.luma.ui.compose.SettingsComposable.SimpleTextButton
-import isDarkTheme
 
 class PageCountFragment : Fragment() {
     private lateinit var prefs: Prefs
@@ -29,23 +25,14 @@ class PageCountFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        val compose = ComposeView(requireContext())
-        compose.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-        compose.setContent {
-            SettingsTheme(isDarkTheme(prefs)) {
-                PageCountScreen()
-            }
-        }
-        return compose
-    }
+    ): View = composeView { PageCountScreen() }
 
     @Composable
     fun PageCountScreen() {
         Column {
             SettingsHeader(
                 title = "Number of Pages",
-                onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() },
+                onBack = ::goBack,
             )
 
             ContentContainer {
@@ -65,6 +52,6 @@ class PageCountFragment : Fragment() {
 
     private fun updateHomePages(homePages: Int) {
         prefs.homePages = homePages
-        requireActivity().onBackPressedDispatcher.onBackPressed()
+        goBack()
     }
 }

@@ -1,6 +1,5 @@
 package app.luma.ui
 
-import SettingsTheme
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -12,8 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
@@ -22,7 +19,6 @@ import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import app.luma.ui.compose.SettingsComposable.SimpleTextButton
 import app.luma.ui.compose.SettingsComposable.ToggleSelectorButton
-import isDarkTheme
 
 class NotificationsFragment : Fragment() {
     private lateinit var prefs: Prefs
@@ -36,23 +32,14 @@ class NotificationsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        val compose = ComposeView(requireContext())
-        compose.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-        compose.setContent {
-            SettingsTheme(isDarkTheme(prefs)) {
-                NotificationsScreen()
-            }
-        }
-        return compose
-    }
+    ): View = composeView { NotificationsScreen() }
 
     @Composable
     fun NotificationsScreen() {
         Column {
             SettingsHeader(
                 title = "Notifications",
-                onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() },
+                onBack = ::goBack,
             )
 
             ContentContainer(verticalArrangement = Arrangement.spacedBy(45.dp)) {

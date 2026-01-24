@@ -7,8 +7,6 @@ class LumaNotificationListener : NotificationListenerService() {
     companion object {
         private var instance: LumaNotificationListener? = null
 
-        fun getInstance(): LumaNotificationListener? = instance
-
         fun getActiveNotificationPackages(): Set<String> = instance?.activeNotifications?.map { it.packageName }?.toSet() ?: emptySet()
     }
 

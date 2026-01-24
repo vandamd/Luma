@@ -1,17 +1,23 @@
 package app.luma.ui
 
 import android.content.Context
-import android.content.res.Resources
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.TypedValue
-import android.view.*
+import android.view.Gravity
+import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.EditText
+import android.widget.Filter
+import android.widget.Filterable
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import app.luma.R
 import app.luma.data.AppModel
@@ -23,13 +29,17 @@ import app.luma.helper.performHapticFeedback
 import app.luma.helper.uninstallApp
 import java.text.Normalizer
 
+data class AppDrawerConfig(
+    val flag: AppDrawerFlag,
+    val gravity: Int,
+    val clickListener: (AppModel) -> Unit,
+    val appInfoListener: (AppModel) -> Unit,
+    val appHideListener: (AppDrawerFlag, AppModel) -> Unit,
+    val appRenameListener: (String, String) -> Unit,
+)
+
 class AppDrawerAdapter(
-    private var flag: AppDrawerFlag,
-    private val gravity: Int,
-    private val clickListener: (AppModel) -> Unit,
-    private val appInfoListener: (AppModel) -> Unit,
-    private val appHideListener: (AppDrawerFlag, AppModel) -> Unit,
-    private val appRenameListener: (String, String) -> Unit,
+    private val config: AppDrawerConfig,
 ) : RecyclerView.Adapter<AppDrawerAdapter.ViewHolder>(),
     Filterable {
     companion object {
@@ -59,39 +69,54 @@ class AppDrawerAdapter(
     ) {
         if (appFilteredList.size == 0) return
         val appModel = appFilteredList[holder.absoluteAdapterPosition]
-        holder.bind(flag, gravity, appModel, clickListener, appInfoListener)
+        holder.bind(config.flag, config.gravity, appModel, config.clickListener, config.appInfoListener)
+        setupHideButton(holder, appModel)
+        setupRenameListeners(holder, appModel)
+    }
 
+    private fun setupHideButton(
+        holder: ViewHolder,
+        appModel: AppModel,
+    ) {
         holder.appHideButton.setOnClickListener {
             appFilteredList.removeAt(holder.absoluteAdapterPosition)
             appsList.remove(appModel)
             notifyItemRemoved(holder.absoluteAdapterPosition)
-            appHideListener(flag, appModel)
+            config.appHideListener(config.flag, appModel)
         }
+    }
 
-        val renameCommit = {
+    private fun setupRenameListeners(
+        holder: ViewHolder,
+        appModel: AppModel,
+    ) {
+        val commitRename = {
             val name =
                 holder.appRenameEdit.text
                     .toString()
                     .trim()
             appModel.appAlias = name
             notifyItemChanged(holder.absoluteAdapterPosition)
-            appRenameListener(appModel.appPackage, appModel.appAlias)
-
-            // Dismiss the keyboard
-            val imm = holder.appRenameEdit.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(holder.appRenameEdit.windowToken, 0)
+            config.appRenameListener(appModel.appPackage, appModel.appAlias)
+            dismissKeyboard(holder.appRenameEdit)
         }
 
-        holder.appRenameButton.setOnClickListener { renameCommit() }
+        holder.appRenameButton.setOnClickListener { commitRename() }
         holder.appRenameEdit.setOnEditorActionListener { _, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_DONE ||
-                (event != null && event.action == KeyEvent.ACTION_DOWN)
-            ) {
-                renameCommit()
-                return@setOnEditorActionListener true
+            val isDoneAction = actionId == EditorInfo.IME_ACTION_DONE
+            val isEnterKey = event != null && event.action == KeyEvent.ACTION_DOWN
+            if (isDoneAction || isEnterKey) {
+                commitRename()
+                true
+            } else {
+                false
             }
-            false
         }
+    }
+
+    private fun dismissKeyboard(editText: EditText) {
+        val imm = editText.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(editText.windowToken, 0)
     }
 
     override fun getItemCount(): Int = appFilteredList.size
@@ -147,7 +172,7 @@ class AppDrawerAdapter(
 
     fun setAppList(appsList: MutableList<AppModel>) {
         this.appsList = appsList
-        if (flag == AppDrawerFlag.SetHomeApp && appsList.isNotEmpty()) {
+        if (config.flag == AppDrawerFlag.SetHomeApp && appsList.isNotEmpty()) {
             val first = appsList[0]
             val pseudo =
                 AppModel(
@@ -165,15 +190,15 @@ class AppDrawerAdapter(
     }
 
     class ViewHolder(
-        itemView: AdapterAppDrawerBinding,
-    ) : RecyclerView.ViewHolder(itemView.root) {
-        val appHideButton: ImageView = itemView.appHide
-        val appRenameButton: TextView = itemView.appRename
-        val appRenameEdit: EditText = itemView.appRenameEdit
-        private val appHideLayout: ConstraintLayout = itemView.appHideLayout
-        private val appTitle: TextView = itemView.appTitle
-        private val appTitleFrame: FrameLayout = itemView.appTitleFrame
-        private val appInfo: ImageView = itemView.appInfo
+        private val binding: AdapterAppDrawerBinding,
+    ) : RecyclerView.ViewHolder(binding.root) {
+        val appHideButton: ImageView = binding.appHide
+        val appRenameButton: TextView = binding.appRename
+        val appRenameEdit: EditText = binding.appRenameEdit
+        private val appHideLayout: ConstraintLayout = binding.appHideLayout
+        private val appTitle: TextView = binding.appTitle
+        private val appTitleFrame: FrameLayout = binding.appTitleFrame
+        private val appInfo: ImageView = binding.appInfo
         private var textWatcher: TextWatcher? = null
 
         fun bind(
@@ -182,10 +207,21 @@ class AppDrawerAdapter(
             appModel: AppModel,
             listener: (AppModel) -> Unit,
             appInfoListener: (AppModel) -> Unit,
-        ) = with(itemView) {
+        ) {
+            val context = itemView.context
             appHideLayout.visibility = View.GONE
 
-            // set show/hide icon
+            configureHideIcon(context, flag)
+            setupTextWatcher(appModel)
+            configureAppTitle(context, appModel, appLabelGravity)
+            configureWorkProfileIcon(context, appModel, appLabelGravity)
+            setupClickListeners(context, appModel, listener, appInfoListener)
+        }
+
+        private fun configureHideIcon(
+            context: Context,
+            flag: AppDrawerFlag,
+        ) {
             val drawable =
                 if (flag == AppDrawerFlag.HiddenApps) {
                     R.drawable.visibility
@@ -193,8 +229,9 @@ class AppDrawerAdapter(
                     R.drawable.visibility_off
                 }
             appHideButton.setImageDrawable(AppCompatResources.getDrawable(context, drawable))
+        }
 
-            // Remove existing TextWatcher to prevent memory leak on recycled ViewHolders
+        private fun setupTextWatcher(appModel: AppModel) {
             textWatcher?.let { appRenameEdit.removeTextChangedListener(it) }
             textWatcher =
                 object : TextWatcher {
@@ -205,8 +242,7 @@ class AppDrawerAdapter(
                         start: Int,
                         count: Int,
                         after: Int,
-                    ) {
-                    }
+                    ) {}
 
                     override fun onTextChanged(
                         s: CharSequence,
@@ -214,57 +250,73 @@ class AppDrawerAdapter(
                         before: Int,
                         count: Int,
                     ) {
-                        if (appRenameEdit.text.isEmpty()) {
-                            appRenameButton.text = "Reset"
-                        } else if (appRenameEdit.text.toString() == appModel.appAlias ||
-                            appRenameEdit.text.toString() == appModel.appLabel
-                        ) {
-                            appRenameButton.text = "Cancel"
-                        } else {
-                            appRenameButton.text = "Rename"
-                        }
+                        appRenameButton.text = computeRenameButtonText(appModel)
                     }
                 }
             appRenameEdit.addTextChangedListener(textWatcher)
+        }
 
-            val appName =
-                appModel.appAlias.ifEmpty {
-                    appModel.appLabel
-                }
+        private fun computeRenameButtonText(appModel: AppModel): String {
+            val currentText = appRenameEdit.text.toString()
+            return when {
+                currentText.isEmpty() -> "Reset"
+                currentText == appModel.appAlias || currentText == appModel.appLabel -> "Cancel"
+                else -> "Rename"
+            }
+        }
 
-            val displayName = if (Prefs(context).showNotificationIndicator && appModel.hasNotification) "$appName*" else appName
+        private fun configureAppTitle(
+            context: Context,
+            appModel: AppModel,
+            gravity: Int,
+        ) {
+            val appName = appModel.appAlias.ifEmpty { appModel.appLabel }
+            val showIndicator = Prefs(context).showNotificationIndicator && appModel.hasNotification
+            val displayName = if (showIndicator) "$appName*" else appName
+
             appTitle.text = displayName
-
-            // set current name as default text in EditText
             appRenameEdit.text = Editable.Factory.getInstance().newEditable(appName)
 
-            // set text gravity
             val params = appTitle.layoutParams as FrameLayout.LayoutParams
-            params.gravity = appLabelGravity
+            params.gravity = gravity
             appTitle.layoutParams = params
+        }
 
-            // add icon next to app name to indicate that this app is installed on another profile
-            if (appModel.user != android.os.Process.myUserHandle()) {
-                val icon = AppCompatResources.getDrawable(context, R.drawable.work_profile)
-                val px = dp2px(resources, 41)
-                icon?.setBounds(0, 0, px, px)
-                if (appLabelGravity == Gravity.LEFT) {
-                    appTitle.setCompoundDrawables(null, null, icon, null)
-                } else {
-                    appTitle.setCompoundDrawables(icon, null, null, null)
-                }
-                appTitle.compoundDrawablePadding = 20
-            } else {
+        private fun configureWorkProfileIcon(
+            context: Context,
+            appModel: AppModel,
+            gravity: Int,
+        ) {
+            val isWorkProfile = appModel.user != android.os.Process.myUserHandle()
+            if (!isWorkProfile) {
                 appTitle.setCompoundDrawables(null, null, null, null)
+                return
             }
 
+            val icon = AppCompatResources.getDrawable(context, R.drawable.work_profile)
+            val px = dp2px(itemView.resources, 41)
+            icon?.setBounds(0, 0, px, px)
+
+            if (gravity == Gravity.LEFT) {
+                appTitle.setCompoundDrawables(null, null, icon, null)
+            } else {
+                appTitle.setCompoundDrawables(icon, null, null, null)
+            }
+            appTitle.compoundDrawablePadding = 20
+        }
+
+        private fun setupClickListeners(
+            context: Context,
+            appModel: AppModel,
+            listener: (AppModel) -> Unit,
+            appInfoListener: (AppModel) -> Unit,
+        ) {
+            appTitleFrame.isHapticFeedbackEnabled = false
             appTitleFrame.setOnClickListener {
                 performHapticFeedback(context)
                 listener(appModel)
             }
-
             appTitleFrame.setOnLongClickListener {
-                // Don't allow long press on pseudo rename app
                 if (appModel.appPackage == "__rename__") {
                     false
                 } else {
@@ -274,15 +326,12 @@ class AppDrawerAdapter(
                 }
             }
 
-            // Disable system haptic feedback for this view
-            appTitleFrame.isHapticFeedbackEnabled = false
-            appInfo.apply {
-                setOnClickListener { appInfoListener(appModel) }
-                setOnLongClickListener {
-                    uninstallApp(context, appModel.appPackage)
-                    true
-                }
+            appInfo.setOnClickListener { appInfoListener(appModel) }
+            appInfo.setOnLongClickListener {
+                uninstallApp(context, appModel.appPackage)
+                true
             }
+
             appHideLayout.setOnClickListener { appHideLayout.visibility = View.GONE }
         }
     }

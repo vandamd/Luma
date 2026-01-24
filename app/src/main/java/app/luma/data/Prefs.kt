@@ -10,12 +10,6 @@ private const val FIRST_SETTINGS_OPEN = "FIRST_SETTINGS_OPEN"
 private const val HOME_PAGES = "HOME_PAGES"
 private const val HOME_APPS_PER_PAGE = "HOME_APPS_PER_PAGE_"
 
-private const val SWIPE_DOWN_ACTION = "SWIPE_DOWN_ACTION"
-private const val SWIPE_UP_ACTION = "SWIPE_UP_ACTION"
-private const val SWIPE_RIGHT_ACTION = "SWIPE_RIGHT_ACTION"
-private const val SWIPE_LEFT_ACTION = "SWIPE_LEFT_ACTION"
-
-private const val DOUBLE_TAP_ACTION = "DOUBLE_TAP_ACTION"
 private const val HIDDEN_APPS = "HIDDEN_APPS"
 private const val INVERT_COLOURS = "INVERT_COLOURS"
 
@@ -25,11 +19,17 @@ private const val APP_USER = "APP_USER"
 private const val APP_ALIAS = "APP_ALIAS"
 private const val APP_ACTIVITY = "APP_ACTIVITY"
 
-private const val SWIPE_RIGHT = "SWIPE_RIGHT"
-private const val SWIPE_LEFT = "SWIPE_LEFT"
-private const val SWIPE_DOWN = "SWIPE_DOWN"
-private const val SWIPE_UP = "SWIPE_UP"
-private const val DOUBLE_TAP = "DOUBLE_TAP"
+enum class GestureType(
+    val actionKey: String,
+    val appKey: String,
+    val defaultAction: Constants.Action,
+) {
+    SWIPE_LEFT("SWIPE_LEFT_ACTION", "SWIPE_LEFT", Constants.Action.ShowAppList),
+    SWIPE_RIGHT("SWIPE_RIGHT_ACTION", "SWIPE_RIGHT", Constants.Action.Disabled),
+    SWIPE_DOWN("SWIPE_DOWN_ACTION", "SWIPE_DOWN", Constants.Action.ShowNotification),
+    SWIPE_UP("SWIPE_UP_ACTION", "SWIPE_UP", Constants.Action.Disabled),
+    DOUBLE_TAP("DOUBLE_TAP_ACTION", "DOUBLE_TAP", Constants.Action.Disabled),
+}
 
 private const val PAGE_INDICATOR_POSITION = "page_indicator_position"
 private const val SHOW_NOTIFICATION_INDICATOR = "show_notification_indicator"
@@ -69,35 +69,30 @@ class Prefs(
     }
 
     var swipeLeftAction: Constants.Action
-        get() = loadAction(SWIPE_LEFT_ACTION, Constants.Action.ShowAppList)
-        set(value) = storeAction(SWIPE_LEFT_ACTION, value)
+        get() = getGestureAction(GestureType.SWIPE_LEFT)
+        set(value) = setGestureAction(GestureType.SWIPE_LEFT, value)
 
     var swipeRightAction: Constants.Action
-        get() = loadAction(SWIPE_RIGHT_ACTION, Constants.Action.Disabled)
-        set(value) = storeAction(SWIPE_RIGHT_ACTION, value)
+        get() = getGestureAction(GestureType.SWIPE_RIGHT)
+        set(value) = setGestureAction(GestureType.SWIPE_RIGHT, value)
 
     var swipeDownAction: Constants.Action
-        get() = loadAction(SWIPE_DOWN_ACTION, Constants.Action.ShowNotification)
-        set(value) = storeAction(SWIPE_DOWN_ACTION, value)
+        get() = getGestureAction(GestureType.SWIPE_DOWN)
+        set(value) = setGestureAction(GestureType.SWIPE_DOWN, value)
 
     var swipeUpAction: Constants.Action
-        get() = loadAction(SWIPE_UP_ACTION, Constants.Action.Disabled)
-        set(value) = storeAction(SWIPE_UP_ACTION, value)
+        get() = getGestureAction(GestureType.SWIPE_UP)
+        set(value) = setGestureAction(GestureType.SWIPE_UP, value)
 
     var doubleTapAction: Constants.Action
-        get() = loadAction(DOUBLE_TAP_ACTION, Constants.Action.Disabled)
-        set(value) = storeAction(DOUBLE_TAP_ACTION, value)
+        get() = getGestureAction(GestureType.DOUBLE_TAP)
+        set(value) = setGestureAction(GestureType.DOUBLE_TAP, value)
 
     private fun loadAction(
         prefString: String,
         default: Constants.Action,
     ): Constants.Action {
-        val string =
-            prefs
-                .getString(
-                    prefString,
-                    default.toString(),
-                ).toString()
+        val string = prefs.getString(prefString, default.name) ?: default.name
         return Constants.Action.valueOf(string)
     }
 
@@ -125,31 +120,49 @@ class Prefs(
         storeApp("$i", appModel)
     }
 
+    fun getGestureApp(type: GestureType): AppModel = loadApp(type.appKey)
+
+    fun setGestureApp(
+        type: GestureType,
+        appModel: AppModel,
+    ) {
+        storeApp(type.appKey, appModel)
+    }
+
+    fun getGestureAction(type: GestureType): Constants.Action = loadAction(type.actionKey, type.defaultAction)
+
+    fun setGestureAction(
+        type: GestureType,
+        action: Constants.Action,
+    ) {
+        storeAction(type.actionKey, action)
+    }
+
     var appSwipeRight: AppModel
-        get() = loadApp(SWIPE_RIGHT)
-        set(appModel) = storeApp(SWIPE_RIGHT, appModel)
+        get() = getGestureApp(GestureType.SWIPE_RIGHT)
+        set(appModel) = setGestureApp(GestureType.SWIPE_RIGHT, appModel)
 
     var appSwipeLeft: AppModel
-        get() = loadApp(SWIPE_LEFT)
-        set(appModel) = storeApp(SWIPE_LEFT, appModel)
+        get() = getGestureApp(GestureType.SWIPE_LEFT)
+        set(appModel) = setGestureApp(GestureType.SWIPE_LEFT, appModel)
 
     var appSwipeDown: AppModel
-        get() = loadApp(SWIPE_DOWN)
-        set(appModel) = storeApp(SWIPE_DOWN, appModel)
+        get() = getGestureApp(GestureType.SWIPE_DOWN)
+        set(appModel) = setGestureApp(GestureType.SWIPE_DOWN, appModel)
 
     var appSwipeUp: AppModel
-        get() = loadApp(SWIPE_UP)
-        set(appModel) = storeApp(SWIPE_UP, appModel)
+        get() = getGestureApp(GestureType.SWIPE_UP)
+        set(appModel) = setGestureApp(GestureType.SWIPE_UP, appModel)
 
     var appDoubleTap: AppModel
-        get() = loadApp(DOUBLE_TAP)
-        set(appModel) = storeApp(DOUBLE_TAP, appModel)
+        get() = getGestureApp(GestureType.DOUBLE_TAP)
+        set(appModel) = setGestureApp(GestureType.DOUBLE_TAP, appModel)
 
     private fun loadApp(id: String): AppModel {
-        val name = prefs.getString("${APP_NAME}_$id", "").toString()
-        val pack = prefs.getString("${APP_PACKAGE}_$id", "").toString()
-        val alias = prefs.getString("${APP_ALIAS}_$id", "").toString()
-        val activity = prefs.getString("${APP_ACTIVITY}_$id", "").toString()
+        val name = prefs.getString("${APP_NAME}_$id", "") ?: ""
+        val pack = prefs.getString("${APP_PACKAGE}_$id", "") ?: ""
+        val alias = prefs.getString("${APP_ALIAS}_$id", "") ?: ""
+        val activity = prefs.getString("${APP_ACTIVITY}_$id", "") ?: ""
 
         return AppModel(
             appLabel = name,
@@ -183,8 +196,11 @@ class Prefs(
 
     var pageIndicatorPosition: PageIndicatorPosition
         get() {
+            val stored =
+                prefs.getString(PAGE_INDICATOR_POSITION, null)
+                    ?: return PageIndicatorPosition.Left
             return try {
-                PageIndicatorPosition.valueOf(prefs.getString(PAGE_INDICATOR_POSITION, PageIndicatorPosition.Left.name).toString())
+                PageIndicatorPosition.valueOf(stored)
             } catch (_: Exception) {
                 PageIndicatorPosition.Left
             }
@@ -195,7 +211,7 @@ class Prefs(
         get() = prefs.getBoolean(SHOW_NOTIFICATION_INDICATOR, true)
         set(value) = prefs.edit().putBoolean(SHOW_NOTIFICATION_INDICATOR, value).apply()
 
-    fun getAppAlias(appName: String): String = prefs.getString(appName, "").toString()
+    fun getAppAlias(appName: String): String = prefs.getString(appName, "") ?: ""
 
     fun setAppAlias(
         appPackage: String,

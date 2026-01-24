@@ -54,9 +54,7 @@ class SettingsFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = activity?.run {
-            ViewModelProvider(this)[MainViewModel::class.java]
-        } ?: throw Exception("Invalid Activity")
+        viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
 
         binding.testView.setContent {
             SettingsTheme(isDarkTheme(prefs)) {
@@ -71,7 +69,7 @@ class SettingsFragment : Fragment() {
             SettingsHeader(
                 title =
                     "Luma Settings (" + requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName + ")",
-                onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() },
+                onBack = ::goBack,
             )
             val invertState = remember { mutableStateOf(prefs.invertColours) }
 

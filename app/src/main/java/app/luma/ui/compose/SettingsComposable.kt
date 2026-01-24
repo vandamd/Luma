@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.Dimension
 import app.luma.R
 import app.luma.data.Constants
-import app.luma.data.EnumOption
 import app.luma.helper.performHapticFeedback
 import app.luma.style.CORNER_RADIUS
 
@@ -54,7 +53,7 @@ object SettingsComposable {
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(SettingsTheme.color.settings, SettingsTheme.shapes.settings)
+                    .background(SettingsTheme.backgroundColor, SettingsTheme.shape)
                     .padding(horizontal = 7.dp, vertical = 0.dp),
         ) {
             Image(

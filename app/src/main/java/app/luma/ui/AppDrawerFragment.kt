@@ -25,6 +25,7 @@ import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.Prefs
 import app.luma.databinding.FragmentAppDrawerBinding
 import app.luma.helper.openAppInfo
+import app.luma.ui.AppDrawerConfig
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import isDarkTheme
 
@@ -94,19 +95,18 @@ class AppDrawerFragment : Fragment() {
             else -> {}
         }
 
-        val viewModel =
-            activity?.run {
-                ViewModelProvider(this)[MainViewModel::class.java]
-            } ?: throw Exception("Invalid Activity")
+        val viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
 
         val appAdapter =
             AppDrawerAdapter(
-                flag,
-                Gravity.CENTER,
-                appClickListener(viewModel, flag, n),
-                appInfoListener(),
-                appShowHideListener(),
-                appRenameListener(),
+                AppDrawerConfig(
+                    flag = flag,
+                    gravity = Gravity.CENTER,
+                    clickListener = appClickListener(viewModel, flag, n),
+                    appInfoListener = appInfoListener(),
+                    appHideListener = appShowHideListener(),
+                    appRenameListener = appRenameListener(),
+                ),
             )
 
         initViewModel(flag, viewModel, appAdapter)
