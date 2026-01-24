@@ -27,7 +27,7 @@ android {
         minSdk 23
         targetSdk 35
         versionCode 34
-        versionName "v1.1.7"
+        versionName "v1.2.0"
     }
 
     buildFeatures {

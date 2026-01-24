@@ -21,7 +21,6 @@ import androidx.navigation.Navigation
 import app.luma.data.Constants
 import app.luma.data.Prefs
 import app.luma.databinding.ActivityMainBinding
-import app.luma.helper.isTablet
 import app.luma.helper.showToast
 import app.luma.style.DisplayDefaults.withDisplayDefaults
 
@@ -114,7 +113,6 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SourceLockedOrientationActivity")
     private fun setupOrientation() {
-        if (isTablet(this)) return
         // In Android 8.0, windowIsTranslucent cannot be used with screenOrientation=portrait
         if (Build.VERSION.SDK_INT != Build.VERSION_CODES.O) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -147,5 +145,4 @@ class MainActivity : AppCompatActivity() {
         binding.messageTextView.text = message
         binding.messageLayout.visibility = View.VISIBLE
     }
-
 }

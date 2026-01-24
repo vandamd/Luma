@@ -2,8 +2,6 @@ package app.luma.data
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.UserHandle
-import app.luma.helper.getUserHandleFromString
 import app.luma.style.FontSizeOption
 
 private const val PREFS_FILENAME = "app.luma"
@@ -19,7 +17,6 @@ private const val SWIPE_LEFT_ACTION = "SWIPE_LEFT_ACTION"
 
 private const val DOUBLE_TAP_ACTION = "DOUBLE_TAP_ACTION"
 private const val HIDDEN_APPS = "HIDDEN_APPS"
-private const val HIDDEN_APPS_UPDATED = "HIDDEN_APPS_UPDATED"
 private const val APP_THEME = "APP_THEME"
 
 private const val APP_NAME = "APP_NAME"
@@ -125,10 +122,6 @@ class Prefs(
         get() = prefs.getStringSet(HIDDEN_APPS, mutableSetOf()) as MutableSet<String>
         set(value) = prefs.edit().putStringSet(HIDDEN_APPS, value).apply()
 
-    var hiddenAppsUpdated: Boolean
-        get() = prefs.getBoolean(HIDDEN_APPS_UPDATED, false)
-        set(value) = prefs.edit().putBoolean(HIDDEN_APPS_UPDATED, value).apply()
-
     fun getHomeAppModel(i: Int): AppModel = loadApp("$i")
 
     fun setHomeAppModel(
@@ -164,20 +157,12 @@ class Prefs(
         val alias = prefs.getString("${APP_ALIAS}_$id", "").toString()
         val activity = prefs.getString("${APP_ACTIVITY}_$id", "").toString()
 
-        val userHandleString =
-            try {
-                prefs.getString("${APP_USER}_$id", "").toString()
-            } catch (_: Exception) {
-                ""
-            }
-        val userHandle: UserHandle = getUserHandleFromString(context, userHandleString)
-
         return AppModel(
             appLabel = name,
             appPackage = pack,
             appAlias = alias,
             appActivityName = activity,
-            user = userHandle,
+            user = android.os.Process.myUserHandle(),
             key = null,
         )
     }

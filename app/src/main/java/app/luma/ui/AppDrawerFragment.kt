@@ -138,7 +138,7 @@ class AppDrawerFragment : Fragment() {
                         val prefs = Prefs(requireContext())
                         val hiddenApps = prefs.hiddenApps
                         appList.filter { app ->
-                            !hiddenApps.contains(app.appPackage + "|" + app.user.toString())
+                            !hiddenApps.contains(app.appPackage)
                         }
                     }
 
@@ -200,10 +200,9 @@ class AppDrawerFragment : Fragment() {
             newSet.addAll(prefs.hiddenApps)
 
             if (flag == AppDrawerFlag.HiddenApps) {
-                newSet.remove(appModel.appPackage) // for backward compatibility
-                newSet.remove(appModel.appPackage + "|" + appModel.user.toString())
+                newSet.remove(appModel.appPackage)
             } else {
-                newSet.add(appModel.appPackage + "|" + appModel.user.toString())
+                newSet.add(appModel.appPackage)
             }
 
             prefs.hiddenApps = newSet

@@ -8,7 +8,6 @@ interface EnumOption {
 }
 
 object Constants {
-    const val REQUEST_CODE_ENABLE_ADMIN = 666
     const val LONG_PRESS_DELAY_MS = 500
 
     enum class AppDrawerFlag {

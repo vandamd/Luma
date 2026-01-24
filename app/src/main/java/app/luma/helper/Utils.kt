@@ -12,7 +12,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.UserHandle
-import android.os.UserManager
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -77,39 +76,32 @@ suspend fun getAppsList(
 
         try {
             val prefs = Prefs(context)
-            if (!prefs.hiddenAppsUpdated) upgradeHiddenApps(prefs)
-            val hiddenApps = prefs.hiddenApps
-
-            val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
             val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
             val collator = Collator.getInstance()
+            val userHandle = android.os.Process.myUserHandle()
 
-            for (profile in userManager.userProfiles) {
-                for (app in launcherApps.getActivityList(null, profile)) {
-                    // we have changed the alias identifier from app.label to app.applicationInfo.packageName
-                    // therefore, we check if the old one is set if the new one is empty
-                    val appAlias =
-                        prefs.getAppAlias(app.applicationInfo.packageName).ifEmpty {
-                            prefs.getAppAlias(app.label.toString())
-                        }
+            for (app in launcherApps.getActivityList(null, userHandle)) {
+                if (app.applicationInfo.packageName == BuildConfig.APPLICATION_ID) {
+                    continue
+                }
 
-                    if (app.applicationInfo.packageName == BuildConfig.APPLICATION_ID) {
-                        continue
+                val appAlias =
+                    prefs.getAppAlias(app.applicationInfo.packageName).ifEmpty {
+                        prefs.getAppAlias(app.label.toString())
                     }
 
-                    val appModel =
-                        AppModel(
-                            app.label.toString(),
-                            collator.getCollationKey(app.label.toString()),
-                            app.applicationInfo.packageName,
-                            app.componentName.className,
-                            profile,
-                            appAlias,
-                            false,
-                        )
+                val appModel =
+                    AppModel(
+                        app.label.toString(),
+                        collator.getCollationKey(app.label.toString()),
+                        app.applicationInfo.packageName,
+                        app.componentName.className,
+                        userHandle,
+                        appAlias,
+                        false,
+                    )
 
-                    appList.add(appModel)
-                }
+                appList.add(appModel)
             }
 
             appList.sortBy {
@@ -120,7 +112,6 @@ suspend fun getAppsList(
                 }
             }
 
-            // Update notification status for all apps
             val packagesWithNotifications = LumaNotificationListener.getActiveNotificationPackages()
             appList.forEach { appModel ->
                 appModel.hasNotification = packagesWithNotifications.contains(appModel.appPackage)
@@ -137,26 +128,18 @@ suspend fun getHiddenAppsList(context: Context): MutableList<AppModel> {
     return withContext(Dispatchers.IO) {
         val pm = context.packageManager
         val prefs = Prefs(context)
-        if (!prefs.hiddenAppsUpdated) upgradeHiddenApps(prefs)
-
         val hiddenAppsSet = prefs.hiddenApps
         val appList: MutableList<AppModel> = mutableListOf()
         if (hiddenAppsSet.isEmpty()) return@withContext appList
 
-        val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
         val collator = Collator.getInstance()
-        for (hiddenPackage in hiddenAppsSet) {
-            val appPackage = hiddenPackage.split("|")[0]
-            val userString = hiddenPackage.split("|")[1]
-            var userHandle = android.os.Process.myUserHandle()
-            for (user in userManager.userProfiles) {
-                if (user.toString() == userString) userHandle = user
-            }
+        val userHandle = android.os.Process.myUserHandle()
+
+        for (appPackage in hiddenAppsSet) {
             try {
                 val appInfo = pm.getApplicationInfo(appPackage, 0)
                 val appName = pm.getApplicationLabel(appInfo).toString()
                 val appKey = collator.getCollationKey(appName)
-                // TODO: hidden apps settings ignore activity name for backward compatibility. Fix it.
                 appList.add(AppModel(appName, appKey, appPackage, "", userHandle, prefs.getAppAlias(appName), false))
             } catch (_: NameNotFoundException) {
                 // App was uninstalled, skip silently
@@ -165,40 +148,6 @@ suspend fun getHiddenAppsList(context: Context): MutableList<AppModel> {
         appList.sort()
         appList
     }
-}
-
-// This is to ensure backward compatibility with older app versions
-// which did not support multiple user profiles
-private fun upgradeHiddenApps(prefs: Prefs) {
-    val hiddenAppsSet = prefs.hiddenApps
-    val newHiddenAppsSet = mutableSetOf<String>()
-    for (hiddenPackage in hiddenAppsSet) {
-        if (hiddenPackage.contains("|")) {
-            newHiddenAppsSet.add(hiddenPackage)
-        } else {
-            newHiddenAppsSet.add(
-                hiddenPackage +
-                    android.os.Process
-                        .myUserHandle()
-                        .toString(),
-            )
-        }
-    }
-    prefs.hiddenApps = newHiddenAppsSet
-    prefs.hiddenAppsUpdated = true
-}
-
-fun getUserHandleFromString(
-    context: Context,
-    userHandleString: String,
-): UserHandle {
-    val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
-    for (userHandle in userManager.userProfiles) {
-        if (userHandle.toString() == userHandleString) {
-            return userHandle
-        }
-    }
-    return android.os.Process.myUserHandle()
 }
 
 fun isLumaDefault(context: Context): Boolean {

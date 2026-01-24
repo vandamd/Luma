@@ -1,9 +1,7 @@
 package app.luma.ui
 
 import android.annotation.SuppressLint
-import android.app.admin.DevicePolicyManager
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -12,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -36,7 +33,6 @@ class HomeFragment :
     View.OnLongClickListener {
     private lateinit var prefs: Prefs
     private lateinit var viewModel: MainViewModel
-    private lateinit var deviceManager: DevicePolicyManager
     private var currentPage = 0
     private var totalPages = 1
     private var pageIndicatorLayout: LinearLayout? = null
@@ -76,7 +72,6 @@ class HomeFragment :
             ViewModelProvider(this)[MainViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
 
-        deviceManager = context?.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
         initObservers()
         initPageNavigation()
 
@@ -324,23 +319,11 @@ class HomeFragment :
     }
 
     private fun lockPhone() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val actionService = ActionService.instance()
-            if (actionService != null) {
-                actionService.lockScreen()
-            } else {
-                openAccessibilitySettings(requireContext())
-            }
+        val actionService = ActionService.instance()
+        if (actionService != null) {
+            actionService.lockScreen()
         } else {
-            requireActivity().runOnUiThread {
-                try {
-                    deviceManager.lockNow()
-                } catch (e: SecurityException) {
-                    showToast(requireContext(), "App does not have the permission to lock the device", Toast.LENGTH_LONG)
-                } catch (e: Exception) {
-                    showToast(requireContext(), "Luma failed to lock device.\nPlease check your app settings.", Toast.LENGTH_LONG)
-                }
-            }
+            openAccessibilitySettings(requireContext())
         }
     }
 
