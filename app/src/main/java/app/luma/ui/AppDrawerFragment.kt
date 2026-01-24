@@ -1,6 +1,5 @@
 package app.luma.ui
 
-import SettingsTheme
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
@@ -25,9 +24,10 @@ import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.Prefs
 import app.luma.databinding.FragmentAppDrawerBinding
 import app.luma.helper.openAppInfo
+import app.luma.style.SettingsTheme
+import app.luma.style.isDarkTheme
 import app.luma.ui.AppDrawerConfig
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
-import isDarkTheme
 
 class AppDrawerFragment : Fragment() {
     private var _binding: FragmentAppDrawerBinding? = null
@@ -200,6 +200,4 @@ class AppDrawerFragment : Fragment() {
             val prefs = Prefs.getInstance(requireContext())
             prefs.setAppAlias(appPackage, appAlias)
         }
-
-    // Removed legacy renameListener function
 }

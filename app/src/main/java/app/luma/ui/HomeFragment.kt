@@ -104,7 +104,7 @@ class HomeFragment :
     override fun onLongClick(view: View): Boolean {
         performHapticFeedback(requireContext())
         val n = view.id
-        showAppList(AppDrawerFlag.SetHomeApp, true, n)
+        showAppList(AppDrawerFlag.SetHomeApp, n)
         return true
     }
 
@@ -232,7 +232,6 @@ class HomeFragment :
 
     private fun showAppList(
         flag: AppDrawerFlag,
-        showHiddenApps: Boolean = false,
         n: Int = 0,
     ) {
         viewModel.getAppList()

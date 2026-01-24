@@ -60,10 +60,7 @@ fun showToast(
         }.show()
 }
 
-suspend fun getAppsList(
-    context: Context,
-    showHiddenApps: Boolean = false,
-): MutableList<AppModel> =
+suspend fun getAppsList(context: Context): MutableList<AppModel> =
     withContext(Dispatchers.IO) {
         val appList: MutableList<AppModel> = mutableListOf()
 

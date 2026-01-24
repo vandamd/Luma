@@ -1,6 +1,5 @@
 package app.luma.ui
 
-import SettingsTheme
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +32,7 @@ import androidx.navigation.fragment.findNavController
 import app.luma.R
 import app.luma.data.AppModel
 import app.luma.data.Prefs
+import app.luma.style.SettingsTheme
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import kotlinx.coroutines.launch

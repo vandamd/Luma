@@ -1,6 +1,5 @@
 package app.luma.ui.compose
 
-import SettingsTheme
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,11 +34,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.Dimension
 import app.luma.R
 import app.luma.data.Constants
 import app.luma.helper.performHapticFeedback
 import app.luma.style.CORNER_RADIUS
+import app.luma.style.SettingsTheme
 
 private fun Modifier.underline(
     color: Color,

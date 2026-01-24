@@ -47,7 +47,6 @@ class MainViewModel(
         val launcher = appContext.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
         val activityInfo = launcher.getActivityList(packageName, userHandle)
 
-        // TODO: Handle multiple launch activities in an app. This is NOT the way.
         val component =
             when (activityInfo.size) {
                 0 -> {

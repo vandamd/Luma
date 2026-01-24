@@ -1,13 +1,13 @@
 package app.luma.ui
 
-import SettingsTheme
 import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import app.luma.data.Prefs
-import isDarkTheme
+import app.luma.style.SettingsTheme
+import app.luma.style.isDarkTheme
 
 /**
  * Creates a ComposeView with proper lifecycle-aware composition strategy and themed content.
