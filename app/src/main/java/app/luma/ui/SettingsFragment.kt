@@ -108,7 +108,7 @@ class SettingsFragment : Fragment() {
     private fun showHiddenApps() {
         viewModel.getHiddenApps()
         findNavController().navigate(
-            R.id.action_settingsFragment_to_appListFragment,
+            R.id.appListFragment,
             bundleOf("flag" to AppDrawerFlag.HiddenApps.toString()),
         )
     }

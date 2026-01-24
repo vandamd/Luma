@@ -14,7 +14,6 @@ import android.os.UserHandle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
-import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
 import android.util.TypedValue
@@ -190,24 +189,6 @@ fun openAppInfo(
     intent?.let {
         launcher.startAppDetailsActivity(intent.component, userHandle, null, null)
     } ?: showToast(context, "Unable to open app info")
-}
-
-fun openDialerApp(context: Context) {
-    try {
-        val sendIntent = Intent(Intent.ACTION_DIAL)
-        context.startActivity(sendIntent)
-    } catch (_: Exception) {
-        // No dialer app available, ignore silently
-    }
-}
-
-fun openCameraApp(context: Context) {
-    try {
-        val sendIntent = Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA)
-        context.startActivity(sendIntent)
-    } catch (_: Exception) {
-        // No camera app available, ignore silently
-    }
 }
 
 fun initActionService(context: Context): ActionService? {

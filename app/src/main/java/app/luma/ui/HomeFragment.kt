@@ -14,7 +14,6 @@ import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import app.luma.MainViewModel
 import app.luma.R
@@ -27,7 +26,6 @@ import app.luma.databinding.FragmentHomeBinding
 import app.luma.helper.*
 import app.luma.helper.LumaNotificationListener
 import app.luma.listener.SwipeTouchListener
-import kotlinx.coroutines.launch
 
 private const val TAG = "HomeFragment"
 
@@ -83,9 +81,6 @@ class HomeFragment :
     override fun onStart() {
         super.onStart()
         hideStatusBar(requireActivity())
-        totalPages = prefs.homePages
-        if (currentPage >= totalPages) currentPage = totalPages - 1
-        updatePageIndicator()
     }
 
     override fun onResume() {
@@ -245,20 +240,10 @@ class HomeFragment :
         n: Int = 0,
     ) {
         viewModel.getAppList()
-        lifecycleScope.launch {
-            try {
-                findNavController().navigate(
-                    R.id.action_mainFragment_to_appListFragment,
-                    bundleOf("flag" to flag.toString(), "n" to n),
-                )
-            } catch (e: Exception) {
-                Log.e(TAG, "Navigation action failed, using fallback", e)
-                findNavController().navigate(
-                    R.id.appListFragment,
-                    bundleOf("flag" to flag.toString()),
-                )
-            }
-        }
+        findNavController().navigate(
+            R.id.appListFragment,
+            bundleOf("flag" to flag.toString(), "n" to n),
+        )
     }
 
     private fun openGestureApp(gestureType: GestureType) {

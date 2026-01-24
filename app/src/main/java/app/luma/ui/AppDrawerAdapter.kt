@@ -45,6 +45,12 @@ class AppDrawerAdapter(
     companion object {
         private val DIACRITICAL_REGEX = Regex("\\p{InCombiningDiacriticalMarks}+")
         private val SEPARATOR_REGEX = Regex("[-_+,. ]")
+
+        private fun normalizeForSearch(text: String): String =
+            Normalizer
+                .normalize(text, Normalizer.Form.NFD)
+                .replace(DIACRITICAL_REGEX, "")
+                .replace(SEPARATOR_REGEX, "")
     }
 
     private lateinit var prefs: Prefs
@@ -52,6 +58,7 @@ class AppDrawerAdapter(
     var appsList: MutableList<AppModel> = mutableListOf()
     var appFilteredList: MutableList<AppModel> = mutableListOf()
     private lateinit var binding: AdapterAppDrawerBinding
+    private val normalizedNameCache = mutableMapOf<String, String>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -160,17 +167,14 @@ class AppDrawerAdapter(
     private fun appLabelMatches(
         appLabel: String,
         searchChars: String,
-    ): Boolean =
-        (
-            appLabel.contains(searchChars, true) or
-                Normalizer
-                    .normalize(appLabel, Normalizer.Form.NFD)
-                    .replace(DIACRITICAL_REGEX, "")
-                    .replace(SEPARATOR_REGEX, "")
-                    .contains(searchChars, true)
-        )
+    ): Boolean {
+        if (appLabel.contains(searchChars, ignoreCase = true)) return true
+        val normalized = normalizedNameCache.getOrPut(appLabel) { normalizeForSearch(appLabel) }
+        return normalized.contains(searchChars, ignoreCase = true)
+    }
 
     fun setAppList(appsList: MutableList<AppModel>) {
+        normalizedNameCache.clear()
         this.appsList = appsList
         if (config.flag == AppDrawerFlag.SetHomeApp && appsList.isNotEmpty()) {
             val first = appsList[0]

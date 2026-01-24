@@ -71,7 +71,7 @@ class GesturesFragment : Fragment() {
             value = value,
             onClick = {
                 findNavController().navigate(
-                    R.id.action_gesturesFragment_to_gestureActionFragment,
+                    R.id.gestureActionFragment,
                     bundleOf(GestureActionFragment.GESTURE_TYPE to type.name),
                 )
             },

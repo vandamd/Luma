@@ -1,7 +1,6 @@
 package app.luma
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -9,7 +8,6 @@ import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -66,7 +64,6 @@ class MainActivity : AppCompatActivity() {
             },
         )
 
-        initClickListeners()
         initObservers(viewModel)
         viewModel.getAppList()
         setupOrientation()
@@ -94,19 +91,9 @@ class MainActivity : AppCompatActivity() {
         recreate()
     }
 
-    private fun initClickListeners() {
-        binding.okay.setOnClickListener {
-            binding.messageLayout.visibility = View.GONE
-            viewModel.showMessageDialog("")
-        }
-    }
-
     private fun initObservers(viewModel: MainViewModel) {
         viewModel.launcherResetFailed.observe(this) {
             openLauncherChooser(it)
-        }
-        viewModel.showMessageDialog.observe(this) {
-            showMessage(it)
         }
     }
 
@@ -137,11 +124,5 @@ class MainActivity : AppCompatActivity() {
                 }
             startActivity(intent)
         }
-    }
-
-    private fun showMessage(message: String) {
-        if (message.isEmpty()) return
-        binding.messageTextView.text = message
-        binding.messageLayout.visibility = View.VISIBLE
     }
 }

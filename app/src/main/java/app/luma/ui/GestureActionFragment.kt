@@ -103,7 +103,7 @@ class GestureActionFragment : Fragment() {
         if (action == Action.OpenApp) {
             val displayInfo = getDisplayInfo()
             findNavController().navigate(
-                R.id.action_gestureActionFragment_to_appListFragment,
+                R.id.appListFragment,
                 bundleOf("flag" to displayInfo.appDrawerFlag.toString()),
             )
         } else {

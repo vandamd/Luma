@@ -175,8 +175,4 @@ class Prefs(
         }
         return first
     }
-
-    fun clear() {
-        prefs.edit().clear().apply()
-    }
 }

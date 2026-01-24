@@ -11,10 +11,6 @@
         android:label="main_fragment"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_mainFragment_to_appListFragment"
-            app:destination="@id/appListFragment"
- />
-        <action
             android:id="@+id/action_mainFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
     </fragment>
@@ -24,14 +20,6 @@
         android:name="app.luma.ui.AppDrawerFragment"
         android:label="app_list_fragment"
         tools:layout="@layout/fragment_app_drawer">
-        <action
-            android:id="@+id/action_appListFragment_to_settingsFragment2"
-            app:destination="@id/settingsFragment"
-            app:popUpTo="@+id/appListFragment"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_appListFragment_to_renameFragment"
-            app:destination="@id/renameFragment" />
     </fragment>
 
 <fragment
@@ -85,9 +73,6 @@
         android:id="@+id/gesturesFragment"
         android:name="app.luma.ui.GesturesFragment"
         android:label="GesturesFragment">
-        <action
-            android:id="@+id/action_gesturesFragment_to_gestureActionFragment"
-            app:destination="@id/gestureActionFragment" />
     </fragment>
     <fragment
         android:id="@+id/gestureActionFragment"
@@ -96,19 +81,12 @@
         <argument
             android:name="gesture_type"
             app:argType="string" />
-        <action
-            android:id="@+id/action_gestureActionFragment_to_appListFragment"
-            app:destination="@id/appListFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="app.luma.ui.SettingsFragment"
         android:label="SettingsFragment"
         android:layout="@layout/fragment_settings">
-        <action
-            android:id="@+id/action_settingsFragment_to_appListFragment"
-            app:destination="@id/appListFragment"
-  />
         <action
             android:id="@+id/action_settingsFragment_to_pagesFragment"
             app:destination="@id/pagesFragment" />

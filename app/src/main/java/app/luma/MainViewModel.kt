@@ -20,8 +20,6 @@ class MainViewModel(
     private val appContext by lazy { application.applicationContext }
     private val prefs = Prefs(appContext)
 
-    val showMessageDialog = MutableLiveData<String>()
-
     val appList = MutableLiveData<List<AppModel>?>()
     val hiddenApps = MutableLiveData<List<AppModel>?>()
     val launcherResetFailed = MutableLiveData<Boolean>()
@@ -101,9 +99,5 @@ class MainViewModel(
             getDefaultLauncherPackage(
                 appContext,
             ).contains(".")
-    }
-
-    fun showMessageDialog(message: String) {
-        showMessageDialog.postValue(message)
     }
 }
