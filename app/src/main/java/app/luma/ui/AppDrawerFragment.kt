@@ -3,22 +3,15 @@ package app.luma.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
-import android.view.inputmethod.InputMethodManager
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.platform.ComposeView
-import SettingsTheme
-import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,166 +24,147 @@ import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.Prefs
 import app.luma.databinding.FragmentAppDrawerBinding
 import app.luma.helper.openAppInfo
+import app.luma.style.SettingsTheme
+import app.luma.style.isDarkTheme
+import app.luma.ui.AppDrawerConfig
+import app.luma.ui.compose.SettingsComposable.SettingsHeader
 
 class AppDrawerFragment : Fragment() {
-
     private var _binding: FragmentAppDrawerBinding? = null
     private val binding get() = _binding!!
-    
+
     private lateinit var flag: AppDrawerFlag
     private var n: Int = 0
 
-override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
-        // return inflater.inflate(R.layout.fragment_app_drawer, container, false)
         _binding = FragmentAppDrawerBinding.inflate(inflater, container, false)
-
 
         val flagString = arguments?.getString("flag", AppDrawerFlag.LaunchApp.toString()) ?: AppDrawerFlag.LaunchApp.toString()
         flag = AppDrawerFlag.valueOf(flagString)
         n = arguments?.getInt("n", 0) ?: 0
-        
+
         val header: ComposeView? = binding.headerCompose
         header?.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         header?.setContent {
-            val isDark = when (Prefs(requireContext()).appTheme) {
-                app.luma.data.Constants.Theme.Light -> false
-                app.luma.data.Constants.Theme.Dark -> true
-                app.luma.data.Constants.Theme.System -> isSystemInDarkTheme()
-            }
-            val headerTitle = when (flag) {
-            AppDrawerFlag.SetHomeApp -> "Select/Rename App"
-            AppDrawerFlag.HiddenApps -> "Hidden Apps"
-            else -> "App Drawer"
-        }
-            SettingsTheme(isDark) {
+            val headerTitle =
+                when (flag) {
+                    AppDrawerFlag.SetHomeApp -> "Select/Rename App"
+                    AppDrawerFlag.HiddenApps -> "Hidden Apps"
+                    else -> "App Drawer"
+                }
+            SettingsTheme(isDarkTheme(Prefs.getInstance(requireContext()))) {
                 SettingsHeader(title = headerTitle, onBack = { findNavController().popBackStack() })
             }
         }
         return binding.root
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     @SuppressLint("RtlHardcoded")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         // flag, n are now determined in onCreateView
-        
-        when (flag) {
-            AppDrawerFlag.SetHomeApp -> {
-                // Remove legacy rename button, keep only the pseudo rename app in the list
-                binding.drawerButton.isVisible = false
-            }
-            AppDrawerFlag.SetSwipeRight,
-            AppDrawerFlag.SetSwipeLeft,
-            AppDrawerFlag.SetSwipeDown,
-            AppDrawerFlag.SetClickClock,
-            AppDrawerFlag.SetClickDate -> {
-                binding.drawerButton.setOnClickListener {
-                    findNavController().popBackStack()
-                }
-            }
-            else -> {}
-        }
 
-        val viewModel = activity?.run {
-            ViewModelProvider(this)[MainViewModel::class.java]
-        } ?: throw Exception("Invalid Activity")
+        // No special setup needed for different flags anymore
+        // The drawerButton was removed as it was always hidden
 
-        val gravity = when(Prefs(requireContext()).drawerAlignment) {
-            Constants.Gravity.Left -> Gravity.LEFT
-            Constants.Gravity.Center -> Gravity.CENTER
-            Constants.Gravity.Right -> Gravity.RIGHT
-        }
+        val viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
 
-        val appAdapter = AppDrawerAdapter(
-            flag,
-            gravity,
-            appClickListener(viewModel, flag, n),
-            appInfoListener(),
-            appShowHideListener(),
-            appRenameListener()
-        )
-
-
+        val appAdapter =
+            AppDrawerAdapter(
+                AppDrawerConfig(
+                    flag = flag,
+                    gravity = Gravity.CENTER,
+                    clickListener = appClickListener(viewModel, flag, n),
+                    appInfoListener = appInfoListener(),
+                    appHideListener = appShowHideListener(),
+                    appRenameListener = appRenameListener(),
+                ),
+            )
 
         initViewModel(flag, viewModel, appAdapter)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = appAdapter
-
-
-
     }
 
-    private fun initViewModel(flag: AppDrawerFlag, viewModel: MainViewModel, appAdapter: AppDrawerAdapter) {
-        viewModel.hiddenApps.observe(viewLifecycleOwner, Observer {
-            if (flag != AppDrawerFlag.HiddenApps) return@Observer
+    private fun initViewModel(
+        flag: AppDrawerFlag,
+        viewModel: MainViewModel,
+        appAdapter: AppDrawerAdapter,
+    ) {
+        viewModel.hiddenApps.observe(viewLifecycleOwner) {
+            if (flag != AppDrawerFlag.HiddenApps) return@observe
             it?.let { appList ->
                 binding.listEmptyHint.visibility = if (appList.isEmpty()) View.VISIBLE else View.GONE
                 populateAppList(appList, appAdapter)
             }
-        })
+        }
 
-        viewModel.appList.observe(viewLifecycleOwner, Observer {
-            if (flag == AppDrawerFlag.HiddenApps) return@Observer
+        viewModel.appList.observe(viewLifecycleOwner) {
+            if (flag == AppDrawerFlag.HiddenApps) return@observe
             it?.let { appList ->
-                val filteredList = if (flag == AppDrawerFlag.SetHomeApp) {
-                    appList
-                } else {
-                    val prefs = Prefs(requireContext())
-                    val hiddenApps = prefs.hiddenApps
-                    appList.filter { app ->
-                        !hiddenApps.contains(app.appPackage + "|" + app.user.toString())
+                val filteredList =
+                    if (flag == AppDrawerFlag.SetHomeApp) {
+                        appList
+                    } else {
+                        val prefs = Prefs.getInstance(requireContext())
+                        val hiddenApps = prefs.hiddenApps
+                        appList.filter { app ->
+                            !hiddenApps.contains(app.appPackage)
+                        }
                     }
-                }
-                
+
                 binding.listEmptyHint.visibility = if (filteredList.isEmpty()) View.VISIBLE else View.GONE
                 populateAppList(filteredList, appAdapter)
             }
-        })
+        }
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
-
-    override fun onStop() {
-        super.onStop()
-    }
-
-    private fun View.hideKeyboard() {
-        view?.clearFocus()
-        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(windowToken, 0)
-    }
-
-    private fun populateAppList(apps: List<AppModel>, appAdapter: AppDrawerAdapter) {
+    private fun populateAppList(
+        apps: List<AppModel>,
+        appAdapter: AppDrawerAdapter,
+    ) {
         // layout animation removed
         appAdapter.setAppList(apps.toMutableList())
     }
 
-    private fun appClickListener(viewModel: MainViewModel, flag: AppDrawerFlag, n: Int = 0): (appModel: AppModel) -> Unit =
+    private fun appClickListener(
+        viewModel: MainViewModel,
+        flag: AppDrawerFlag,
+        n: Int = 0,
+    ): (appModel: AppModel) -> Unit =
         { appModel ->
             if (flag == AppDrawerFlag.SetHomeApp && appModel.appPackage == "__rename__") {
                 // We need to pass the home app information to rename
-                val homeAppModel = Prefs(requireContext()).getHomeAppModel(n)
+                val homeAppModel = Prefs.getInstance(requireContext()).getHomeAppModel(n)
                 findNavController().navigate(
                     R.id.renameFragment,
                     bundleOf(
                         "appPackage" to homeAppModel.appPackage,
                         "appLabel" to homeAppModel.appLabel,
-                        "homePosition" to n
-                    )
+                        "homePosition" to n,
+                    ),
                 )
             } else {
                 viewModel.selectedApp(appModel, flag, n)
-                if (flag == AppDrawerFlag.LaunchApp || flag == AppDrawerFlag.HiddenApps)
+                if (flag == AppDrawerFlag.LaunchApp || flag == AppDrawerFlag.HiddenApps) {
                     findNavController().popBackStack(R.id.mainFragment, false)
-                else
+                } else {
                     findNavController().popBackStack()
+                }
             }
         }
 
@@ -199,31 +173,31 @@ override fun onCreateView(
             openAppInfo(
                 requireContext(),
                 appModel.user,
-                appModel.appPackage
+                appModel.appPackage,
             )
             findNavController().popBackStack(R.id.mainFragment, false)
         }
 
     private fun appShowHideListener(): (flag: AppDrawerFlag, appModel: AppModel) -> Unit =
         { flag, appModel ->
-            val prefs = Prefs(requireContext())
+            val prefs = Prefs.getInstance(requireContext())
             val newSet = mutableSetOf<String>()
             newSet.addAll(prefs.hiddenApps)
 
             if (flag == AppDrawerFlag.HiddenApps) {
-                newSet.remove(appModel.appPackage) // for backward compatibility
-                newSet.remove(appModel.appPackage + "|" + appModel.user.toString())
-            } else newSet.add(appModel.appPackage + "|" + appModel.user.toString())
+                newSet.remove(appModel.appPackage)
+            } else {
+                newSet.add(appModel.appPackage)
+            }
 
             prefs.hiddenApps = newSet
 
             if (newSet.isEmpty()) findNavController().popBackStack()
         }
+
     private fun appRenameListener(): (appPackage: String, appAlias: String) -> Unit =
         { appPackage, appAlias ->
-            val prefs = Prefs(requireContext())
+            val prefs = Prefs.getInstance(requireContext())
             prefs.setAppAlias(appPackage, appAlias)
         }
-
-    // Removed legacy renameListener function
 }

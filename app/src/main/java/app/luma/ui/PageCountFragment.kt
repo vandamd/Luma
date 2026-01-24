@@ -1,63 +1,38 @@
 package app.luma.ui
 
-import SettingsTheme
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import app.luma.MainViewModel
 import app.luma.data.Prefs
-import app.luma.ui.compose.SettingsComposable.SettingsHeader
-import app.luma.ui.compose.SettingsComposable.ContentContainer
-import app.luma.ui.compose.SettingsComposable.SimpleTextButton
 import app.luma.ui.compose.CustomScrollView
+import app.luma.ui.compose.SettingsComposable.ContentContainer
+import app.luma.ui.compose.SettingsComposable.SettingsHeader
+import app.luma.ui.compose.SettingsComposable.SimpleTextButton
 
 class PageCountFragment : Fragment() {
-
     private lateinit var prefs: Prefs
-    private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        prefs = Prefs(requireContext())
-        viewModel = activity?.run {
-            ViewModelProvider(this).get(MainViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
+        prefs = Prefs.getInstance(requireContext())
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val compose = ComposeView(requireContext())
-        compose.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-        compose.setContent {
-            val isDark = when (prefs.appTheme) {
-                app.luma.data.Constants.Theme.Light -> false
-                app.luma.data.Constants.Theme.Dark -> true
-                app.luma.data.Constants.Theme.System -> isSystemInDarkTheme()
-            }
-            SettingsTheme(isDark) {
-                PageCountScreen()
-            }
-        }
-        return compose
-    }
+        savedInstanceState: Bundle?,
+    ): View = composeView { PageCountScreen() }
 
     @Composable
     fun PageCountScreen() {
         Column {
             SettingsHeader(
                 title = "Number of Pages",
-                onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
+                onBack = ::goBack,
             )
 
             ContentContainer {
@@ -67,7 +42,7 @@ class PageCountFragment : Fragment() {
                         SimpleTextButton(
                             title = "$i Page${if (i > 1) "s" else ""}",
                             underline = isSelected,
-                            onClick = { updateHomePages(i) }
+                            onClick = { updateHomePages(i) },
                         )
                     }
                 }
@@ -77,6 +52,6 @@ class PageCountFragment : Fragment() {
 
     private fun updateHomePages(homePages: Int) {
         prefs.homePages = homePages
-        requireActivity().onBackPressedDispatcher.onBackPressed()
+        goBack()
     }
 }

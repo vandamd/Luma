@@ -1,7 +1,6 @@
 package app.luma
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -9,27 +8,20 @@ import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
-import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import app.luma.style.DisplayDefaults.withDisplayDefaults
-import app.luma.data.Constants
 import app.luma.data.Prefs
 import app.luma.databinding.ActivityMainBinding
-import app.luma.helper.isTablet
-import app.luma.helper.showToastLong
-import java.io.BufferedReader
-import java.io.FileOutputStream
-import java.io.InputStreamReader
-import java.util.*
+import app.luma.helper.showToast
+import app.luma.style.DisplayDefaults.withDisplayDefaults
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var prefs: Prefs
     private lateinit var navController: NavController
     private lateinit var viewModel: MainViewModel
@@ -43,41 +35,41 @@ class MainActivity : AppCompatActivity() {
         super.applyOverrideConfiguration(overrideConfiguration.withDisplayDefaults(this))
     }
 
-    override fun onBackPressed() {
-        if (navController.currentDestination?.id != R.id.mainFragment)
-            super.onBackPressed()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        prefs = Prefs(this)
-        val themeMode = when (prefs.appTheme) {
-            Constants.Theme.Light -> AppCompatDelegate.MODE_NIGHT_NO
-            Constants.Theme.Dark -> AppCompatDelegate.MODE_NIGHT_YES
-            Constants.Theme.System -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-        }
+        prefs = Prefs.getInstance(this)
+        val themeMode =
+            if (prefs.invertColours) {
+                AppCompatDelegate.MODE_NIGHT_NO
+            } else {
+                AppCompatDelegate.MODE_NIGHT_YES
+            }
         AppCompatDelegate.setDefaultNightMode(themeMode)
-        //super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_main)
 
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
-
-
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
-        initClickListeners()
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (navController.currentDestination?.id != R.id.mainFragment) {
+                        navController.popBackStack()
+                    }
+                }
+            },
+        )
+
         initObservers(viewModel)
         viewModel.getAppList()
         setupOrientation()
 
         window.addFlags(FLAG_LAYOUT_NO_LIMITS)
     }
-
-
 
     override fun onStop() {
         backToHomeScreen()
@@ -89,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         super.onUserLeaveHint()
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         backToHomeScreen()
         super.onNewIntent(intent)
     }
@@ -99,104 +91,38 @@ class MainActivity : AppCompatActivity() {
         recreate()
     }
 
-    private fun initClickListeners() {
-        binding.okay.setOnClickListener {
-            binding.messageLayout.visibility = View.GONE
-            viewModel.showMessageDialog("")
-        }
-    }
-
     private fun initObservers(viewModel: MainViewModel) {
         viewModel.launcherResetFailed.observe(this) {
             openLauncherChooser(it)
-        }
-        viewModel.showMessageDialog.observe(this) {
-            showMessage(it)
         }
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
     private fun setupOrientation() {
-        if (isTablet(this)) return
         // In Android 8.0, windowIsTranslucent cannot be used with screenOrientation=portrait
-        if (Build.VERSION.SDK_INT != Build.VERSION_CODES.O)
+        if (Build.VERSION.SDK_INT != Build.VERSION_CODES.O) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
     }
 
     private fun backToHomeScreen() {
         // Whenever home button is pressed or user leaves the launcher,
         // pop all the fragments except main
-        if (navController.currentDestination?.id != R.id.mainFragment)
+        if (navController.currentDestination?.id != R.id.mainFragment) {
             navController.popBackStack(R.id.mainFragment, false)
+        }
     }
 
     private fun openLauncherChooser(resetFailed: Boolean) {
         if (resetFailed) {
-            val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS) else {
-                showToastLong(
-                    this,
-                    "Search for launcher or home app"
-                )
-                Intent(Settings.ACTION_SETTINGS)
-            }
+            val intent =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
+                } else {
+                    showToast(this, "Search for launcher or home app", Toast.LENGTH_LONG)
+                    Intent(Settings.ACTION_SETTINGS)
+                }
             startActivity(intent)
-        }
-    }
-
-    private fun showMessage(message: String) {
-        if (message.isEmpty()) return
-        binding.messageTextView.text = message
-        binding.messageLayout.visibility = View.VISIBLE
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode != Activity.RESULT_OK) {
-            // showToastLong(applicationContext, "Intent Error")
-            return
-        }
-
-        when (requestCode) {
-            Constants.REQUEST_CODE_ENABLE_ADMIN -> {
-                prefs.lockModeOn = true
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
-                    showMessage(getString(R.string.double_tap_lock_is_enabled_message))
-                else
-                    showMessage(getString(R.string.double_tap_lock_uninstall_message))
-            }
-            Constants.BACKUP_READ -> {
-                data?.data?.also { uri ->
-                    applicationContext.contentResolver.openInputStream(uri).use { inputStream ->
-                        val stringBuilder = StringBuilder()
-                        BufferedReader(InputStreamReader(inputStream)).use { reader ->
-                            var line: String? = reader.readLine()
-                            while (line != null) {
-                                stringBuilder.append(line)
-                                line = reader.readLine()
-                            }
-                        }
-
-                        val string = stringBuilder.toString()
-                        val prefs = Prefs(applicationContext)
-                        prefs.clear()
-                        prefs.loadFromString(string)
-                    }
-                }
-                startActivity(Intent.makeRestartActivityTask(this.intent?.component))
-            }
-            Constants.BACKUP_WRITE -> {
-                data?.data?.also { uri ->
-                    applicationContext.contentResolver.openFileDescriptor(uri, "w")?.use { file ->
-                        FileOutputStream(file.fileDescriptor).use { stream ->
-                            val text = Prefs(applicationContext).saveToString()
-                            stream.channel.truncate(0)
-                            stream.write( text.toByteArray() )
-                        }
-                    }
-                }
-            }
         }
     }
 }

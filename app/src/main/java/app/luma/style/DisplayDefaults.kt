@@ -18,10 +18,11 @@ object DisplayDefaults {
 
     fun Context.withDisplayDefaults(): Context {
         val configuration = Configuration(resources.configuration)
-        val prefs = Prefs(this)
-        val option = resolveOption(this).also {
-            if (prefs.fontSizeOption != it) prefs.fontSizeOption = it
-        }
+        val prefs = Prefs.getInstance(this)
+        val option =
+            resolveOption(this).also {
+                if (prefs.fontSizeOption != it) prefs.fontSizeOption = it
+            }
         return if (configuration.applyDisplayDefaults(option)) {
             createConfigurationContext(configuration)
         } else {
@@ -31,10 +32,11 @@ object DisplayDefaults {
 
     fun Configuration?.withDisplayDefaults(context: Context): Configuration? {
         this ?: return null
-        val prefs = Prefs(context)
-        val option = resolveOption(context).also {
-            if (prefs.fontSizeOption != it) prefs.fontSizeOption = it
-        }
+        val prefs = Prefs.getInstance(context)
+        val option =
+            resolveOption(context).also {
+                if (prefs.fontSizeOption != it) prefs.fontSizeOption = it
+            }
         applyDisplayDefaults(option)
         return this
     }
@@ -56,11 +58,10 @@ object DisplayDefaults {
         return changed
     }
 
-    private fun targetDensityDpi(): Int {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+    private fun targetDensityDpi(): Int =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             DisplayMetrics.DENSITY_DEVICE_STABLE
         } else {
             Resources.getSystem().displayMetrics.densityDpi
         }
-    }
 }

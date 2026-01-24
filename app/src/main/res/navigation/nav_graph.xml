@@ -11,16 +11,8 @@
         android:label="main_fragment"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_mainFragment_to_appListFragment"
-            app:destination="@id/appListFragment"
- />
-        <action
             android:id="@+id/action_mainFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment"
- />
-        <action
-            android:id="@+id/action_mainFragment_to_appListFragment2"
-            app:destination="@id/appListFragment" />
+            app:destination="@id/settingsFragment" />
     </fragment>
 
     <fragment
@@ -28,14 +20,6 @@
         android:name="app.luma.ui.AppDrawerFragment"
         android:label="app_list_fragment"
         tools:layout="@layout/fragment_app_drawer">
-        <action
-            android:id="@+id/action_appListFragment_to_settingsFragment2"
-            app:destination="@id/settingsFragment"
-            app:popUpTo="@+id/appListFragment"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_appListFragment_to_renameFragment"
-            app:destination="@id/renameFragment" />
     </fragment>
 
 <fragment
@@ -89,71 +73,19 @@
         android:id="@+id/gesturesFragment"
         android:name="app.luma.ui.GesturesFragment"
         android:label="GesturesFragment">
-        <action
-            android:id="@+id/action_gesturesFragment_to_swipeLeftFragment"
-            app:destination="@id/swipeLeftFragment" />
-        <action
-            android:id="@+id/action_gesturesFragment_to_swipeRightFragment"
-            app:destination="@id/swipeRightFragment" />
-        <action
-            android:id="@+id/action_gesturesFragment_to_swipeDownFragment"
-            app:destination="@id/swipeDownFragment" />
-        <action
-            android:id="@+id/action_gesturesFragment_to_swipeUpFragment"
-            app:destination="@id/swipeUpFragment" />
-        <action
-            android:id="@+id/action_gesturesFragment_to_doubleTapFragment"
-            app:destination="@id/doubleTapFragment" />
     </fragment>
     <fragment
-        android:id="@+id/swipeLeftFragment"
-        android:name="app.luma.ui.SwipeLeftFragment"
-        android:label="SwipeLeftFragment">
-        <action
-            android:id="@+id/action_swipeLeftFragment_to_appListFragment"
-            app:destination="@id/appListFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/swipeRightFragment"
-        android:name="app.luma.ui.SwipeRightFragment"
-        android:label="SwipeRightFragment">
-        <action
-            android:id="@+id/action_swipeRightFragment_to_appListFragment"
-            app:destination="@id/appListFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/swipeDownFragment"
-        android:name="app.luma.ui.SwipeDownFragment"
-        android:label="SwipeDownFragment">
-        <action
-            android:id="@+id/action_swipeDownFragment_to_appListFragment"
-            app:destination="@id/appListFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/swipeUpFragment"
-        android:name="app.luma.ui.SwipeUpFragment"
-        android:label="SwipeUpFragment">
-        <action
-            android:id="@+id/action_swipeUpFragment_to_appListFragment"
-            app:destination="@id/appListFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/doubleTapFragment"
-        android:name="app.luma.ui.DoubleTapFragment"
-        android:label="DoubleTapFragment">
-        <action
-            android:id="@+id/action_doubleTapFragment_to_appListFragment"
-            app:destination="@id/appListFragment" />
+        android:id="@+id/gestureActionFragment"
+        android:name="app.luma.ui.GestureActionFragment"
+        android:label="GestureActionFragment">
+        <argument
+            android:name="gesture_type"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="app.luma.ui.SettingsFragment"
-        android:label="SettingsFragment"
-        android:layout="@layout/fragment_settings">
-        <action
-            android:id="@+id/action_settingsFragment_to_appListFragment"
-            app:destination="@id/appListFragment"
-  />
+        android:label="SettingsFragment">
         <action
             android:id="@+id/action_settingsFragment_to_pagesFragment"
             app:destination="@id/pagesFragment" />

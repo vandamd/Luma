@@ -1,35 +1,39 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
+apply plugin: 'org.jlleitschuh.gradle.ktlint'
+
+ktlint {
+    version = "1.8.0"
+    android = true
+    verbose = true
+    outputColorName = "RED"
+}
 
 android {
-    compileSdkVersion 33
+    compileSdk 35
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = "11"
     }
 
     defaultConfig {
         applicationId "app.luma"
-        minSdkVersion 23
-        targetSdkVersion 33
+        minSdk 29
+        targetSdk 35
         versionCode 34
-        versionName "v1.1.6"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        versionName "v1.2.0"
     }
 
     buildFeatures {
         compose true
         viewBinding = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.3.1'
+        buildConfig = true
     }
 
     buildTypes {
@@ -47,10 +51,6 @@ android {
         }
     }
 
-    buildFeatures {
-        viewBinding = true
-    }
-
     lint {
         abortOnError false
     }
@@ -60,49 +60,26 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation "androidx.recyclerview:recyclerview:1.2.1"
+    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation "androidx.recyclerview:recyclerview:1.3.2"
 
     // Android lifecycle
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.7'
 
     // Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:2.5.3"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.8.5"
+    implementation 'androidx.navigation:navigation-ui-ktx:2.8.5'
 
-    // Work Manager
-    implementation "androidx.work:work-runtime-ktx:2.7.1"
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
 
-    // JETPACK
-    // Integration with activities
-    implementation 'androidx.activity:activity-compose:1.6.1'
-    // Compose Material Design
-    implementation 'androidx.compose.material:material:1.3.1'
-    // Animations
-    implementation 'androidx.compose.animation:animation:1.3.2'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+    // JETPACK Compose with BOM for version management
+    implementation platform('androidx.compose:compose-bom:2024.12.01')
+    implementation 'androidx.activity:activity-compose:1.9.3'
+    implementation 'androidx.compose.material:material'
+    implementation 'androidx.compose.animation:animation'
+    implementation 'androidx.compose.ui:ui'
 
-    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
-    implementation 'com.google.code.gson:gson:2.8.9'
-
-
-    def androidx_test_espresso = "3.5.0"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$androidx_test_espresso"
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:$androidx_test_espresso"
-    implementation "androidx.test.espresso:espresso-idling-resource:$androidx_test_espresso"
-    implementation "androidx.test.espresso:espresso-idling-resource:3.5.0"
-
-
-    // Test rules and transitive dependencies:
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.3.2")
-    // Needed for createComposeRule, but not createAndroidComposeRule:
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.3.2")
-    androidTestImplementation("androidx.navigation:navigation-testing:2.5.3")
-    debugImplementation("androidx.fragment:fragment-testing:1.5.5")
-    implementation 'androidx.test:core-ktx:1.5.0'
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.5.0')
-    androidTestImplementation('androidx.test:runner:1.5.1')
-    androidTestImplementation('androidx.test:rules:1.5.0')
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.1.0"
 }

@@ -4,8 +4,6 @@
         android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:animateLayoutChanges="false"
-        android:orientation="vertical"
         android:background="?attr/primaryShadeDarkColor"
         tools:context=".ui.HomeFragment">
     <FrameLayout
@@ -45,13 +43,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:text="@string/swipe_left_for_apps" />
+            android:text="Swipe left for all apps" />
 
         <TextView
             style="@style/TextSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/long_press_for_settings" />
+            android:text="Long press anywhere for settings" />
 
     </LinearLayout>
 </FrameLayout>

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -22,32 +23,18 @@
 
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <!--        <item name="android:enforceStatusBarContrast">false</item>-->
         <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
-        <!--        <item name="android:windowTranslucentStatus">false</item>-->
-        <!--        <item name="android:windowTranslucentNavigation">true</item>-->
 
 
         <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryDark">@android:color/darker_gray</item>
-        <item name="colorAccent">@color/black</item>
 
         <item name="primaryColor">@color/black</item>
-        <item name="primaryInverseColor">@color/blackInverse</item>
-        <item name="primaryTextShadowColor">@color/black</item>
-        <item name="primaryColorTrans50">@color/black</item>
         <item name="primaryColorTrans80">@color/black</item>
-        <item name="primaryColorInverseTrans50">@color/white</item>
-        <item name="primaryColorInverseTrans80">@color/white</item>
         <item name="primaryColorInverseTrans90">@color/white</item>
         <item name="primaryShadeColor">@color/white</item>
         <item name="primaryShadeDarkColor">@color/white</item>
 
-    </style>
-
-    <style name="WindowAnimationTransition">
-        <item name="android:windowEnterAnimation">@null</item>
-        <item name="android:windowExitAnimation">@null</item>
     </style>
 
     <style name="AppSearchText" parent="Widget.AppCompat.SearchView">
@@ -61,34 +48,15 @@
         <item name="android:cursorVisible">false</item>
     </style>
 
-    <style name="TextDefault" parent="@android:style/TextAppearance.Large">
-        <item name="android:textColor">@drawable/text_colors_default</item>
-        <item name="android:textColorHint">?attr/primaryColorTrans80</item>
-        <item name="android:shadowColor">@android:color/transparent</item>
-        <item name="android:shadowDx">0</item>
-        <item name="android:shadowDy">0</item>
-        <item name="android:shadowRadius">0</item>
-    </style>
-
-    <style name="TextLarge" parent="TextDefault">
+    <style name="TextLarge">
         <item name="android:fontFamily">@font/public_sans</item>
         <item name="android:textSize">@dimen/text_large</item>
+        <item name="android:textColor">?attr/primaryColor</item>
     </style>
 
-    <style name="TextMedium" parent="TextDefault">
-        <item name="android:textSize">20sp</item>
-    </style>
-
-    <style name="TextSmall" parent="TextDefault">
+    <style name="TextSmall">
         <item name="android:textSize">@dimen/text_small</item>
-    </style>
-
-    <style name="TextSmallBold" parent="TextSmall">
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="TextSmallLight" parent="TextSmall">
-        <item name="android:textColor">@drawable/text_colors_light</item>
+        <item name="android:textColor">?attr/primaryColor</item>
     </style>
 
 </resources>

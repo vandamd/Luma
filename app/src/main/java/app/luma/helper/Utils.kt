@@ -6,20 +6,15 @@ import android.content.*
 import android.content.pm.LauncherApps
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
-import android.content.res.Configuration
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.UserHandle
-import android.os.UserManager
+import android.os.VibrationEffect
 import android.os.Vibrator
-import android.provider.AlarmClock
-import android.provider.CalendarContract
-import android.provider.MediaStore
+import android.os.VibratorManager
 import android.provider.Settings
-import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
@@ -27,89 +22,76 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
-import androidx.core.app.ActivityCompat
 import app.luma.BuildConfig
-import app.luma.R
 import app.luma.data.AppModel
-import app.luma.data.Constants.BACKUP_READ
-import app.luma.data.Constants.BACKUP_WRITE
 import app.luma.data.Prefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.json.JSONArray
-import org.json.JSONObject
-import java.io.*
 import java.text.Collator
-import java.util.*
-import kotlin.math.pow
-import kotlin.math.sqrt
 
+private const val TAG = "Utils"
 
 fun performHapticFeedback(context: Context) {
     try {
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        vibrator.vibrate(42)
+        val vibrator =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val vibratorManager =
+                    context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                vibratorManager.defaultVibrator
+            } else {
+                @Suppress("DEPRECATION")
+                context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            }
+        vibrator.vibrate(VibrationEffect.createOneShot(42, VibrationEffect.DEFAULT_AMPLITUDE))
     } catch (e: Exception) {
         // Continue if haptic feedback fails
     }
 }
 
-
-fun showToastLong(context: Context, message: String) {
-    val toast = Toast.makeText(context.applicationContext, message, Toast.LENGTH_LONG)
-    toast.setGravity(Gravity.CENTER, 0, 0)
-    toast.show()
+fun showToast(
+    context: Context,
+    message: String,
+    duration: Int = Toast.LENGTH_SHORT,
+) {
+    Toast
+        .makeText(context.applicationContext, message, duration)
+        .apply {
+            setGravity(Gravity.CENTER, 0, 0)
+        }.show()
 }
 
-fun showToastShort(context: Context, message: String) {
-    val toast = Toast.makeText(context.applicationContext, message, Toast.LENGTH_SHORT)
-    toast.setGravity(Gravity.CENTER, 0, 0)
-    toast.show()
-}
-
-suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): MutableList<AppModel> {
-    return withContext(Dispatchers.IO) {
+suspend fun getAppsList(context: Context): MutableList<AppModel> =
+    withContext(Dispatchers.IO) {
         val appList: MutableList<AppModel> = mutableListOf()
 
         try {
-            if (!Prefs(context).hiddenAppsUpdated) upgradeHiddenApps(Prefs(context))
-            val hiddenApps = Prefs(context).hiddenApps
-
-            val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
+            val prefs = Prefs.getInstance(context)
             val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
             val collator = Collator.getInstance()
+            val userHandle = android.os.Process.myUserHandle()
 
-            val prefs = Prefs(context)
+            for (app in launcherApps.getActivityList(null, userHandle)) {
+                if (app.applicationInfo.packageName == BuildConfig.APPLICATION_ID) {
+                    continue
+                }
 
-            for (profile in userManager.userProfiles) {
-                for (app in launcherApps.getActivityList(null, profile)) {
-
-
-                    // we have changed the alias identifier from app.label to app.applicationInfo.packageName
-                    // therefore, we check if the old one is set if the new one is empty
-                    val appAlias = prefs.getAppAlias(app.applicationInfo.packageName).ifEmpty {
+                val appAlias =
+                    prefs.getAppAlias(app.applicationInfo.packageName).ifEmpty {
                         prefs.getAppAlias(app.label.toString())
                     }
 
-                    if (app.applicationInfo.packageName == BuildConfig.APPLICATION_ID) {
-                        continue
-                    }
-
-                    val appModel = AppModel(
+                val appModel =
+                    AppModel(
                         app.label.toString(),
                         collator.getCollationKey(app.label.toString()),
                         app.applicationInfo.packageName,
                         app.componentName.className,
-                        profile,
+                        userHandle,
                         appAlias,
-                        false
+                        false,
                     )
 
-                    appList.add(appModel)
-
-                }
+                appList.add(appModel)
             }
 
             appList.sortBy {
@@ -120,78 +102,42 @@ suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): Muta
                 }
             }
 
-            // Update notification status for all apps
             val packagesWithNotifications = LumaNotificationListener.getActiveNotificationPackages()
             appList.forEach { appModel ->
                 appModel.hasNotification = packagesWithNotifications.contains(appModel.appPackage)
             }
-
         } catch (e: java.lang.Exception) {
-            Log.d("backup", "$e")
+            if (BuildConfig.DEBUG) {
+                Log.d("backup", "$e")
+            }
         }
         appList
     }
-}
 
 suspend fun getHiddenAppsList(context: Context): MutableList<AppModel> {
     return withContext(Dispatchers.IO) {
         val pm = context.packageManager
-        if (!Prefs(context).hiddenAppsUpdated) upgradeHiddenApps(Prefs(context))
-
-        val hiddenAppsSet = Prefs(context).hiddenApps
+        val prefs = Prefs.getInstance(context)
+        val hiddenAppsSet = prefs.hiddenApps
         val appList: MutableList<AppModel> = mutableListOf()
         if (hiddenAppsSet.isEmpty()) return@withContext appList
 
-        val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
         val collator = Collator.getInstance()
-        for (hiddenPackage in hiddenAppsSet) {
-            val appPackage = hiddenPackage.split("|")[0]
-            val userString = hiddenPackage.split("|")[1]
-            var userHandle = android.os.Process.myUserHandle()
-            for (user in userManager.userProfiles) {
-                if (user.toString() == userString) userHandle = user
-            }
+        val userHandle = android.os.Process.myUserHandle()
+
+        for (appPackage in hiddenAppsSet) {
             try {
                 val appInfo = pm.getApplicationInfo(appPackage, 0)
                 val appName = pm.getApplicationLabel(appInfo).toString()
                 val appKey = collator.getCollationKey(appName)
-                // TODO: hidden apps settings ignore activity name for backward compatibility. Fix it.
-                appList.add(AppModel(appName, appKey, appPackage, "", userHandle, Prefs(context).getAppAlias(appName), false))
-            } catch (e: NameNotFoundException) {
-
+                appList.add(AppModel(appName, appKey, appPackage, "", userHandle, prefs.getAppAlias(appName), false))
+            } catch (_: NameNotFoundException) {
+                // App was uninstalled, skip silently
             }
         }
         appList.sort()
         appList
     }
-}
-
-// This is to ensure backward compatibility with older app versions
-// which did not support multiple user profiles
-private fun upgradeHiddenApps(prefs: Prefs) {
-    val hiddenAppsSet = prefs.hiddenApps
-    val newHiddenAppsSet = mutableSetOf<String>()
-    for (hiddenPackage in hiddenAppsSet) {
-        if (hiddenPackage.contains("|")) newHiddenAppsSet.add(hiddenPackage)
-        else newHiddenAppsSet.add(hiddenPackage + android.os.Process.myUserHandle().toString())
-    }
-    prefs.hiddenApps = newHiddenAppsSet
-    prefs.hiddenAppsUpdated = true
-}
-
-fun getUserHandleFromString(context: Context, userHandleString: String): UserHandle {
-    val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
-    for (userHandle in userManager.userProfiles) {
-        if (userHandle.toString() == userHandleString) {
-            return userHandle
-        }
-    }
-    return android.os.Process.myUserHandle()
-}
-
-fun isLumaDefault(context: Context): Boolean {
-    val launcherPackageName = getDefaultLauncherPackage(context)
-    return BuildConfig.APPLICATION_ID == launcherPackageName
 }
 
 fun getDefaultLauncherPackage(context: Context): String {
@@ -202,7 +148,9 @@ fun getDefaultLauncherPackage(context: Context): String {
     val result = packageManager.resolveActivity(intent, 0)
     return if (result?.activityInfo != null) {
         result.activityInfo.packageName
-    } else "android"
+    } else {
+        "android"
+    }
 }
 
 // Source: https://stackoverflow.com/a/13239706
@@ -213,7 +161,7 @@ fun resetDefaultLauncher(context: Context) {
         packageManager.setComponentEnabledSetting(
             componentName,
             PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-            PackageManager.DONT_KILL_APP
+            PackageManager.DONT_KILL_APP,
         )
         val selector = Intent(Intent.ACTION_MAIN)
         selector.addCategory(Intent.CATEGORY_HOME)
@@ -221,76 +169,23 @@ fun resetDefaultLauncher(context: Context) {
         packageManager.setComponentEnabledSetting(
             componentName,
             PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-            PackageManager.DONT_KILL_APP
+            PackageManager.DONT_KILL_APP,
         )
     } catch (e: Exception) {
-        e.printStackTrace()
+        Log.e(TAG, "Error resetting default launcher", e)
     }
 }
 
-fun openAppInfo(context: Context, userHandle: UserHandle, packageName: String) {
+fun openAppInfo(
+    context: Context,
+    userHandle: UserHandle,
+    packageName: String,
+) {
     val launcher = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
     val intent: Intent? = context.packageManager.getLaunchIntentForPackage(packageName)
     intent?.let {
         launcher.startAppDetailsActivity(intent.component, userHandle, null, null)
-    } ?: showToastShort(context, "Unable to to open app info")
-}
-
-fun openDialerApp(context: Context) {
-    try {
-        val sendIntent = Intent(Intent.ACTION_DIAL)
-        context.startActivity(sendIntent)
-    } catch (e: java.lang.Exception) {
-
-    }
-}
-
-fun openCameraApp(context: Context) {
-    try {
-        val sendIntent = Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA)
-        context.startActivity(sendIntent)
-    } catch (e: java.lang.Exception) {
-
-    }
-}
-
-fun openAlarmApp(context: Context) {
-    try {
-        val intent = Intent(AlarmClock.ACTION_SHOW_ALARMS)
-        context.startActivity(intent)
-    } catch (e: java.lang.Exception) {
-        Log.d("TAG", e.toString())
-    }
-}
-
-fun openCalendar(context: Context) {
-    try {
-        val cal: Calendar = Calendar.getInstance()
-        cal.time = Date()
-        val time = cal.time.time
-        val builder: Uri.Builder = CalendarContract.CONTENT_URI.buildUpon()
-        builder.appendPath("time")
-        builder.appendPath(time.toString())
-        context.startActivity(Intent(Intent.ACTION_VIEW, builder.build()))
-    } catch (e: Exception) {
-        try {
-            val intent = Intent(Intent.ACTION_MAIN)
-            intent.addCategory(Intent.CATEGORY_APP_CALENDAR)
-            context.startActivity(intent)
-        } catch (e: Exception) {
-        }
-    }
-}
-
-fun isTablet(context: Context): Boolean {
-    val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    val metrics = DisplayMetrics()
-    windowManager.defaultDisplay.getMetrics(metrics)
-    val widthInches = metrics.widthPixels / metrics.xdpi
-    val heightInches = metrics.heightPixels / metrics.ydpi
-    val diagonalInches = sqrt(widthInches.toDouble().pow(2.0) + heightInches.toDouble().pow(2.0))
-    if (diagonalInches >= 7.0) return true
-    return false
+    } ?: showToast(context, "Unable to open app info")
 }
 
 fun initActionService(context: Context): ActionService? {
@@ -302,7 +197,7 @@ fun initActionService(context: Context): ActionService? {
             openAccessibilitySettings(context)
         }
     } else {
-        showToastLong(context, "This action requires Android P (9) or higher" )
+        showToast(context, "This action requires Android P (9) or higher", Toast.LENGTH_LONG)
     }
 
     return null
@@ -321,20 +216,10 @@ fun openAccessibilitySettings(context: Context) {
     context.startActivity(intent)
 }
 
-fun showStatusBar(activity: Activity) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-        activity.window.insetsController?.show(WindowInsets.Type.statusBars())
-    else
-        @Suppress("DEPRECATION", "InlinedApi")
-        activity.window.decorView.apply {
-            systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        }
-}
-
 fun hideStatusBar(activity: Activity) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         activity.window.insetsController?.hide(WindowInsets.Type.statusBars())
-    else {
+    } else {
         @Suppress("DEPRECATION")
         activity.window.decorView.apply {
             systemUiVisibility = View.SYSTEM_UI_FLAG_IMMERSIVE or View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -342,19 +227,25 @@ fun hideStatusBar(activity: Activity) {
     }
 }
 
-fun uninstallApp(context: Context, appPackage: String) {
+fun uninstallApp(
+    context: Context,
+    appPackage: String,
+) {
     val intent = Intent(Intent.ACTION_DELETE)
     intent.data = Uri.parse("package:$appPackage")
     context.startActivity(intent)
 }
 
-fun dp2px(resources: Resources, dp: Int): Int {
-    return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP,
-        dp.toFloat(),
-        resources.displayMetrics
-    ).toInt()
-}
+fun dp2px(
+    resources: Resources,
+    dp: Int,
+): Int =
+    TypedValue
+        .applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            resources.displayMetrics,
+        ).toInt()
 
 @Suppress("SpellCheckingInspection")
 @SuppressLint("WrongConstant")
@@ -366,7 +257,7 @@ fun expandNotificationDrawer(context: Context) {
         val method = statusBarManager.getMethod("expandNotificationsPanel")
         method.invoke(statusBarService)
     } catch (e: Exception) {
-        e.printStackTrace()
+        Log.e(TAG, "Error expanding notification drawer", e)
     }
 }
 
@@ -379,6 +270,6 @@ fun expandQuickSettings(context: Context) {
         val method = statusBarManager.getMethod("expandSettingsPanel")
         method.invoke(statusBarService)
     } catch (e: Exception) {
-        e.printStackTrace()
+        Log.e(TAG, "Error expanding quick settings", e)
     }
 }

@@ -10,11 +10,12 @@ object SystemFontScale {
     private const val SMALL_THRESHOLD = 0.9f
 
     fun resolveOption(context: Context): FontSizeOption {
-        val rawScale = try {
-            Settings.System.getFloat(context.contentResolver, Settings.System.FONT_SCALE)
-        } catch (_: Settings.SettingNotFoundException) {
-            1f
-        }
+        val rawScale =
+            try {
+                Settings.System.getFloat(context.contentResolver, Settings.System.FONT_SCALE)
+            } catch (_: Settings.SettingNotFoundException) {
+                1f
+            }
 
         return if (rawScale <= SMALL_THRESHOLD) FontSizeOption.Small else FontSizeOption.Medium
     }
