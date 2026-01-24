@@ -98,7 +98,7 @@ class MainViewModel(
             return
         }
 
-        val parts = payload.split("|")
+        val parts = payload.split("|", limit = 2)
         val shortcutPackage = parts.getOrNull(0) ?: return
         val shortcutId = parts.getOrNull(1) ?: return
 

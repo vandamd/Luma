@@ -96,13 +96,11 @@ suspend fun getAppsList(context: Context): MutableList<AppModel> =
                 appList.add(appModel)
             }
 
-            // Add pinned shortcuts to the app list (excluding hidden ones)
             val hiddenShortcutIds = prefs.hiddenShortcutIds
 
             for (entry in prefs.pinnedShortcuts) {
                 val shortcut = ShortcutEntry.parse(entry) ?: continue
 
-                // Skip hidden shortcuts
                 if (hiddenShortcutIds.contains(shortcut.payload)) continue
 
                 val shortcutModel =
@@ -118,7 +116,6 @@ suspend fun getAppsList(context: Context): MutableList<AppModel> =
                 appList.add(shortcutModel)
             }
 
-            // Sort apps and shortcuts alphabetically
             appList.sortBy {
                 if (it.appAlias.isEmpty()) {
                     it.appLabel.lowercase()
@@ -150,7 +147,6 @@ suspend fun getHiddenAppsList(context: Context): MutableList<AppModel> =
         val collator = Collator.getInstance()
         val userHandle = android.os.Process.myUserHandle()
 
-        // Add hidden regular apps
         for (appPackage in hiddenAppsSet) {
             try {
                 val appInfo = pm.getApplicationInfo(appPackage, 0)
@@ -162,11 +158,9 @@ suspend fun getHiddenAppsList(context: Context): MutableList<AppModel> =
             }
         }
 
-        // Add hidden pinned shortcuts
         for (entry in prefs.pinnedShortcuts) {
             val shortcut = ShortcutEntry.parse(entry) ?: continue
 
-            // Only include if this shortcut is hidden
             if (!hiddenShortcutIds.contains(shortcut.payload)) continue
 
             val shortcutModel =

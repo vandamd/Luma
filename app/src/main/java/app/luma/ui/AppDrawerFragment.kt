@@ -184,7 +184,7 @@ class AppDrawerFragment : Fragment() {
             val prefs = Prefs.getInstance(requireContext())
 
             if (appModel.appPackage == Constants.PINNED_SHORTCUT_PACKAGE) {
-                val shortcutId = appModel.appActivityName // format: "packageName|shortcutId"
+                val shortcutId = appModel.appActivityName
                 if (flag == AppDrawerFlag.HiddenApps) {
                     prefs.unhideShortcut(shortcutId)
                 } else {
@@ -203,7 +203,6 @@ class AppDrawerFragment : Fragment() {
                 prefs.hiddenApps = newSet
             }
 
-            // Navigate back if the hidden list is now empty
             if (flag == AppDrawerFlag.HiddenApps) {
                 val hasHiddenApps = prefs.hiddenApps.isNotEmpty()
                 val hasHiddenShortcuts = prefs.hiddenShortcutIds.isNotEmpty()
@@ -217,7 +216,6 @@ class AppDrawerFragment : Fragment() {
         { appModel ->
             val prefs = Prefs.getInstance(requireContext())
             val shortcutId = appModel.appActivityName
-            // Permanently remove the shortcut and its hidden state
             prefs.removePinnedShortcut(shortcutId)
             prefs.unhideShortcut(shortcutId)
         }
