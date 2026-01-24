@@ -28,8 +28,6 @@ android {
         targetSdk 35
         versionCode 34
         versionName "v1.1.7"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildFeatures {
@@ -88,19 +86,4 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout-compose:1.1.0"
     implementation 'com.google.code.gson:gson:2.11.0'
 
-    // Test dependencies
-    def androidx_test_espresso = "3.6.1"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$androidx_test_espresso"
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:$androidx_test_espresso"
-    androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$androidx_test_espresso"
-    androidTestImplementation 'androidx.test:core-ktx:1.6.1'
-
-    // Compose test rules and transitive dependencies
-    androidTestImplementation(platform('androidx.compose:compose-bom:2024.12.01'))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
-    androidTestImplementation("androidx.navigation:navigation-testing:2.8.5")
-    debugImplementation("androidx.fragment:fragment-testing:1.8.5")
-    androidTestImplementation('androidx.test:runner:1.6.2')
-    androidTestImplementation('androidx.test:rules:1.6.1')
 }
