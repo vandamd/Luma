@@ -31,7 +31,7 @@ internal open class SwipeTouchListener(
         if (view != null) {
             when (motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> view.isPressed = true
-                MotionEvent.ACTION_UP -> view.isPressed = false
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> view.isPressed = false
             }
         }
 
