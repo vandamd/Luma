@@ -27,7 +27,11 @@ data class ShortcutEntry(
     companion object {
         fun parse(entry: String): ShortcutEntry? {
             val parts = entry.split("|")
-            return if (parts.size >= 3) ShortcutEntry(parts[0], parts[1], parts[2]) else null
+            return if (parts.size >= 3) {
+                ShortcutEntry(parts[0], parts[1], parts.drop(2).joinToString("|"))
+            } else {
+                null
+            }
         }
     }
 }
