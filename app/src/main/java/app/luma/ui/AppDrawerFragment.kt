@@ -90,6 +90,7 @@ class AppDrawerFragment : Fragment() {
                     clickListener = appClickListener(viewModel, flag, n),
                     appInfoListener = appInfoListener(),
                     appHideListener = appShowHideListener(),
+                    appDeleteShortcutListener = appDeleteShortcutListener(),
                     appRenameListener = appRenameListener(),
                 ),
             )
@@ -181,18 +182,42 @@ class AppDrawerFragment : Fragment() {
     private fun appShowHideListener(): (flag: AppDrawerFlag, appModel: AppModel) -> Unit =
         { flag, appModel ->
             val prefs = Prefs.getInstance(requireContext())
-            val newSet = mutableSetOf<String>()
-            newSet.addAll(prefs.hiddenApps)
 
-            if (flag == AppDrawerFlag.HiddenApps) {
-                newSet.remove(appModel.appPackage)
+            if (appModel.appPackage == Constants.PINNED_SHORTCUT_PACKAGE) {
+                val shortcutId = appModel.appActivityName
+                if (flag == AppDrawerFlag.HiddenApps) {
+                    prefs.unhideShortcut(shortcutId)
+                } else {
+                    prefs.hideShortcut(shortcutId)
+                }
             } else {
-                newSet.add(appModel.appPackage)
+                val newSet = mutableSetOf<String>()
+                newSet.addAll(prefs.hiddenApps)
+
+                if (flag == AppDrawerFlag.HiddenApps) {
+                    newSet.remove(appModel.appPackage)
+                } else {
+                    newSet.add(appModel.appPackage)
+                }
+
+                prefs.hiddenApps = newSet
             }
 
-            prefs.hiddenApps = newSet
+            if (flag == AppDrawerFlag.HiddenApps) {
+                val hasHiddenApps = prefs.hiddenApps.isNotEmpty()
+                val hasHiddenShortcuts = prefs.hiddenShortcutIds.isNotEmpty()
+                if (!hasHiddenApps && !hasHiddenShortcuts) {
+                    findNavController().popBackStack()
+                }
+            }
+        }
 
-            if (newSet.isEmpty()) findNavController().popBackStack()
+    private fun appDeleteShortcutListener(): (appModel: AppModel) -> Unit =
+        { appModel ->
+            val prefs = Prefs.getInstance(requireContext())
+            val shortcutId = appModel.appActivityName
+            prefs.removePinnedShortcut(shortcutId)
+            prefs.unhideShortcut(shortcutId)
         }
 
     private fun appRenameListener(): (appPackage: String, appAlias: String) -> Unit =

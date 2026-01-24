@@ -24,7 +24,9 @@ import android.view.WindowManager
 import android.widget.Toast
 import app.luma.BuildConfig
 import app.luma.data.AppModel
+import app.luma.data.Constants
 import app.luma.data.Prefs
+import app.luma.data.ShortcutEntry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.text.Collator
@@ -94,6 +96,26 @@ suspend fun getAppsList(context: Context): MutableList<AppModel> =
                 appList.add(appModel)
             }
 
+            val hiddenShortcutIds = prefs.hiddenShortcutIds
+
+            for (entry in prefs.pinnedShortcuts) {
+                val shortcut = ShortcutEntry.parse(entry) ?: continue
+
+                if (hiddenShortcutIds.contains(shortcut.payload)) continue
+
+                val shortcutModel =
+                    AppModel(
+                        appLabel = shortcut.label,
+                        key = collator.getCollationKey(shortcut.label),
+                        appPackage = Constants.PINNED_SHORTCUT_PACKAGE,
+                        appActivityName = shortcut.payload,
+                        user = userHandle,
+                        appAlias = "",
+                        hasNotification = false,
+                    )
+                appList.add(shortcutModel)
+            }
+
             appList.sortBy {
                 if (it.appAlias.isEmpty()) {
                     it.appLabel.lowercase()
@@ -114,13 +136,13 @@ suspend fun getAppsList(context: Context): MutableList<AppModel> =
         appList
     }
 
-suspend fun getHiddenAppsList(context: Context): MutableList<AppModel> {
-    return withContext(Dispatchers.IO) {
+suspend fun getHiddenAppsList(context: Context): MutableList<AppModel> =
+    withContext(Dispatchers.IO) {
         val pm = context.packageManager
         val prefs = Prefs.getInstance(context)
         val hiddenAppsSet = prefs.hiddenApps
+        val hiddenShortcutIds = prefs.hiddenShortcutIds
         val appList: MutableList<AppModel> = mutableListOf()
-        if (hiddenAppsSet.isEmpty()) return@withContext appList
 
         val collator = Collator.getInstance()
         val userHandle = android.os.Process.myUserHandle()
@@ -135,10 +157,28 @@ suspend fun getHiddenAppsList(context: Context): MutableList<AppModel> {
                 // App was uninstalled, skip silently
             }
         }
+
+        for (entry in prefs.pinnedShortcuts) {
+            val shortcut = ShortcutEntry.parse(entry) ?: continue
+
+            if (!hiddenShortcutIds.contains(shortcut.payload)) continue
+
+            val shortcutModel =
+                AppModel(
+                    appLabel = shortcut.label,
+                    key = collator.getCollationKey(shortcut.label),
+                    appPackage = Constants.PINNED_SHORTCUT_PACKAGE,
+                    appActivityName = shortcut.payload,
+                    user = userHandle,
+                    appAlias = "",
+                    hasNotification = false,
+                )
+            appList.add(shortcutModel)
+        }
+
         appList.sort()
         appList
     }
-}
 
 fun getDefaultLauncherPackage(context: Context): String {
     val intent = Intent()

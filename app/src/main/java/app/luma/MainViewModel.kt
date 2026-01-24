@@ -4,14 +4,20 @@ import android.app.Application
 import android.content.ComponentName
 import android.content.Context
 import android.content.pm.LauncherApps
+import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import app.luma.data.AppModel
+import app.luma.data.Constants
 import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.GestureType
 import app.luma.data.Prefs
-import app.luma.helper.*
+import app.luma.helper.getAppsList
+import app.luma.helper.getDefaultLauncherPackage
+import app.luma.helper.getHiddenAppsList
+import app.luma.helper.resetDefaultLauncher
+import app.luma.helper.showToast
 import kotlinx.coroutines.launch
 
 class MainViewModel(
@@ -44,6 +50,12 @@ class MainViewModel(
         val packageName = appModel.appPackage
         val appActivityName = appModel.appActivityName
         val userHandle = appModel.user
+
+        if (packageName == Constants.PINNED_SHORTCUT_PACKAGE) {
+            launchPinnedShortcut(appActivityName)
+            return
+        }
+
         val launcher = appContext.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
         val activityInfo = launcher.getActivityList(packageName, userHandle)
 
@@ -62,7 +74,7 @@ class MainViewModel(
                     if (appActivityName.isNotEmpty()) {
                         ComponentName(packageName, appActivityName)
                     } else {
-                        ComponentName(packageName, activityInfo[activityInfo.size - 1].name)
+                        ComponentName(packageName, activityInfo.last().name)
                     }
                 }
             }
@@ -80,6 +92,24 @@ class MainViewModel(
         }
     }
 
+    private fun launchPinnedShortcut(payload: String) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
+            showToast(appContext, "Shortcuts require Android 7.1+")
+            return
+        }
+
+        val parts = payload.split("|", limit = 2)
+        val shortcutPackage = parts.getOrNull(0) ?: return
+        val shortcutId = parts.getOrNull(1) ?: return
+
+        try {
+            val launcher = appContext.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
+            launcher.startShortcut(shortcutPackage, shortcutId, null, null, android.os.Process.myUserHandle())
+        } catch (_: Exception) {
+            showToast(appContext, "Unable to launch shortcut")
+        }
+    }
+
     fun getAppList() {
         viewModelScope.launch {
             appList.value = getAppsList(appContext)
@@ -94,9 +124,6 @@ class MainViewModel(
 
     fun resetDefaultLauncherApp(context: Context) {
         resetDefaultLauncher(context)
-        launcherResetFailed.value =
-            getDefaultLauncherPackage(
-                appContext,
-            ).contains(".")
+        launcherResetFailed.value = getDefaultLauncherPackage(appContext).contains(".")
     }
 }

@@ -18,6 +18,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import app.luma.R
 import app.luma.data.AppModel
+import app.luma.data.Constants
 import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.Prefs
 import app.luma.databinding.AdapterAppDrawerBinding
@@ -32,6 +33,7 @@ data class AppDrawerConfig(
     val clickListener: (AppModel) -> Unit,
     val appInfoListener: (AppModel) -> Unit,
     val appHideListener: (AppDrawerFlag, AppModel) -> Unit,
+    val appDeleteShortcutListener: (AppModel) -> Unit,
     val appRenameListener: (String, String) -> Unit,
 )
 
@@ -69,7 +71,20 @@ class AppDrawerAdapter(
     ) {
         if (appFilteredList.size == 0) return
         val appModel = appFilteredList[holder.absoluteAdapterPosition]
-        holder.bind(config.flag, config.gravity, appModel, config.clickListener, config.appInfoListener)
+        val deleteShortcutAction = {
+            appFilteredList.removeAt(holder.absoluteAdapterPosition)
+            appsList.remove(appModel)
+            notifyItemRemoved(holder.absoluteAdapterPosition)
+            config.appDeleteShortcutListener(appModel)
+        }
+        holder.bind(
+            config.flag,
+            config.gravity,
+            appModel,
+            config.clickListener,
+            config.appInfoListener,
+            deleteShortcutAction,
+        )
         setupHideButton(holder, appModel)
         setupRenameListeners(holder, appModel)
     }
@@ -197,6 +212,7 @@ class AppDrawerAdapter(
             appModel: AppModel,
             listener: (AppModel) -> Unit,
             appInfoListener: (AppModel) -> Unit,
+            deleteShortcutAction: () -> Unit,
         ) {
             val context = itemView.context
             binding.appHideLayout.visibility = View.GONE
@@ -205,7 +221,7 @@ class AppDrawerAdapter(
             setupTextWatcher(appModel)
             configureAppTitle(context, appModel, appLabelGravity)
             configureWorkProfileIcon(context, appModel, appLabelGravity)
-            setupClickListeners(context, appModel, listener, appInfoListener)
+            setupClickListeners(context, appModel, listener, appInfoListener, deleteShortcutAction)
         }
 
         private fun configureHideIcon(
@@ -300,6 +316,7 @@ class AppDrawerAdapter(
             appModel: AppModel,
             listener: (AppModel) -> Unit,
             appInfoListener: (AppModel) -> Unit,
+            deleteShortcutAction: () -> Unit,
         ) {
             binding.appTitleFrame.isHapticFeedbackEnabled = false
             binding.appTitleFrame.setOnClickListener {
@@ -316,10 +333,22 @@ class AppDrawerAdapter(
                 }
             }
 
-            binding.appInfo.setOnClickListener { appInfoListener(appModel) }
-            binding.appInfo.setOnLongClickListener {
-                uninstallApp(context, appModel.appPackage)
-                true
+            val isPinnedShortcut = appModel.appPackage == Constants.PINNED_SHORTCUT_PACKAGE
+            if (isPinnedShortcut) {
+                binding.appInfo.setImageDrawable(
+                    AppCompatResources.getDrawable(context, R.drawable.ic_outline_delete_24),
+                )
+                binding.appInfo.setOnClickListener { deleteShortcutAction() }
+                binding.appInfo.setOnLongClickListener { true }
+            } else {
+                binding.appInfo.setImageDrawable(
+                    AppCompatResources.getDrawable(context, R.drawable.ic_outline_info_24),
+                )
+                binding.appInfo.setOnClickListener { appInfoListener(appModel) }
+                binding.appInfo.setOnLongClickListener {
+                    uninstallApp(context, appModel.appPackage)
+                    true
+                }
             }
 
             binding.appHideLayout.setOnClickListener { binding.appHideLayout.visibility = View.GONE }
