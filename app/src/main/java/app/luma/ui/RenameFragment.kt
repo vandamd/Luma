@@ -62,7 +62,7 @@ class RenameFragment : Fragment() {
             newName: String,
             homePosition: Int,
         ) {
-            val prefs = Prefs(requireContext())
+            val prefs = Prefs.getInstance(requireContext())
 
             val homeAppModel = prefs.getHomeAppModel(homePosition)
             val updatedAppModel =

@@ -13,7 +13,7 @@ import isDarkTheme
  * Creates a ComposeView with proper lifecycle-aware composition strategy and themed content.
  */
 fun Fragment.composeView(content: @Composable () -> Unit): View {
-    val prefs = Prefs(requireContext())
+    val prefs = Prefs.getInstance(requireContext())
     return ComposeView(requireContext()).apply {
         setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         setContent {

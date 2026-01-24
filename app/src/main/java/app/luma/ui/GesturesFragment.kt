@@ -25,7 +25,7 @@ class GesturesFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        prefs = Prefs(requireContext())
+        prefs = Prefs.getInstance(requireContext())
     }
 
     override fun onCreateView(

@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        prefs = Prefs(this)
+        prefs = Prefs.getInstance(this)
         val themeMode =
             if (prefs.invertColours) {
                 AppCompatDelegate.MODE_NIGHT_NO

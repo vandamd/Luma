@@ -19,7 +19,7 @@ class AppCountFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        prefs = Prefs(requireContext())
+        prefs = Prefs.getInstance(requireContext())
         pageNumber = arguments?.getInt("pageNumber", 1) ?: 1
     }
 

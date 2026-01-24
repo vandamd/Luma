@@ -18,7 +18,7 @@ class MainViewModel(
     application: Application,
 ) : AndroidViewModel(application) {
     private val appContext by lazy { application.applicationContext }
-    private val prefs = Prefs(appContext)
+    private val prefs = Prefs.getInstance(appContext)
 
     val appList = MutableLiveData<List<AppModel>?>()
     val hiddenApps = MutableLiveData<List<AppModel>?>()

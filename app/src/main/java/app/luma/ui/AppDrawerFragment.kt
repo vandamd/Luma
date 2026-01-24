@@ -56,7 +56,7 @@ class AppDrawerFragment : Fragment() {
                     AppDrawerFlag.HiddenApps -> "Hidden Apps"
                     else -> "App Drawer"
                 }
-            SettingsTheme(isDarkTheme(Prefs(requireContext()))) {
+            SettingsTheme(isDarkTheme(Prefs.getInstance(requireContext()))) {
                 SettingsHeader(title = headerTitle, onBack = { findNavController().popBackStack() })
             }
         }
@@ -120,7 +120,7 @@ class AppDrawerFragment : Fragment() {
                     if (flag == AppDrawerFlag.SetHomeApp) {
                         appList
                     } else {
-                        val prefs = Prefs(requireContext())
+                        val prefs = Prefs.getInstance(requireContext())
                         val hiddenApps = prefs.hiddenApps
                         appList.filter { app ->
                             !hiddenApps.contains(app.appPackage)
@@ -149,7 +149,7 @@ class AppDrawerFragment : Fragment() {
         { appModel ->
             if (flag == AppDrawerFlag.SetHomeApp && appModel.appPackage == "__rename__") {
                 // We need to pass the home app information to rename
-                val homeAppModel = Prefs(requireContext()).getHomeAppModel(n)
+                val homeAppModel = Prefs.getInstance(requireContext()).getHomeAppModel(n)
                 findNavController().navigate(
                     R.id.renameFragment,
                     bundleOf(
@@ -180,7 +180,7 @@ class AppDrawerFragment : Fragment() {
 
     private fun appShowHideListener(): (flag: AppDrawerFlag, appModel: AppModel) -> Unit =
         { flag, appModel ->
-            val prefs = Prefs(requireContext())
+            val prefs = Prefs.getInstance(requireContext())
             val newSet = mutableSetOf<String>()
             newSet.addAll(prefs.hiddenApps)
 
@@ -197,7 +197,7 @@ class AppDrawerFragment : Fragment() {
 
     private fun appRenameListener(): (appPackage: String, appAlias: String) -> Unit =
         { appPackage, appAlias ->
-            val prefs = Prefs(requireContext())
+            val prefs = Prefs.getInstance(requireContext())
             prefs.setAppAlias(appPackage, appAlias)
         }
 

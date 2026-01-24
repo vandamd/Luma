@@ -48,7 +48,7 @@ class GestureActionFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        prefs = Prefs(requireContext())
+        prefs = Prefs.getInstance(requireContext())
         val typeName = arguments?.getString(GESTURE_TYPE) ?: GestureType.SWIPE_LEFT.name
         gestureType = GestureType.valueOf(typeName)
     }

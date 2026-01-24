@@ -37,6 +37,15 @@ private const val FONT_SIZE_OPTION = "font_size_option"
 class Prefs(
     val context: Context,
 ) {
+    companion object {
+        @Volatile private var instance: Prefs? = null
+
+        fun getInstance(context: Context): Prefs =
+            instance ?: synchronized(this) {
+                instance ?: Prefs(context.applicationContext).also { instance = it }
+            }
+    }
+
     enum class PageIndicatorPosition { Left, Right, Hidden }
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, 0)

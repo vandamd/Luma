@@ -68,7 +68,7 @@ suspend fun getAppsList(
         val appList: MutableList<AppModel> = mutableListOf()
 
         try {
-            val prefs = Prefs(context)
+            val prefs = Prefs.getInstance(context)
             val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
             val collator = Collator.getInstance()
             val userHandle = android.os.Process.myUserHandle()
@@ -120,7 +120,7 @@ suspend fun getAppsList(
 suspend fun getHiddenAppsList(context: Context): MutableList<AppModel> {
     return withContext(Dispatchers.IO) {
         val pm = context.packageManager
-        val prefs = Prefs(context)
+        val prefs = Prefs.getInstance(context)
         val hiddenAppsSet = prefs.hiddenApps
         val appList: MutableList<AppModel> = mutableListOf()
         if (hiddenAppsSet.isEmpty()) return@withContext appList

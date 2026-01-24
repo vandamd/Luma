@@ -261,7 +261,7 @@ class AppDrawerAdapter(
             gravity: Int,
         ) {
             val appName = appModel.appAlias.ifEmpty { appModel.appLabel }
-            val showIndicator = Prefs(context).showNotificationIndicator && appModel.hasNotification
+            val showIndicator = Prefs.getInstance(context).showNotificationIndicator && appModel.hasNotification
             val displayName = if (showIndicator) "$appName*" else appName
 
             binding.appTitle.text = displayName

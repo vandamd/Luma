@@ -49,7 +49,7 @@ class HomeFragment :
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         val view = binding.root
-        prefs = Prefs(requireContext())
+        prefs = Prefs.getInstance(requireContext())
 
         if (prefs.firstSettingsOpen()) {
             binding.firstRunTips.visibility = View.VISIBLE
