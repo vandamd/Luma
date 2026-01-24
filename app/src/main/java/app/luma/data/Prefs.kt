@@ -11,7 +11,26 @@ private const val HOME_PAGES = "HOME_PAGES"
 private const val HOME_APPS_PER_PAGE = "HOME_APPS_PER_PAGE_"
 
 private const val HIDDEN_APPS = "HIDDEN_APPS"
+private const val HIDDEN_SHORTCUT_IDS = "HIDDEN_SHORTCUT_IDS"
 private const val INVERT_COLOURS = "INVERT_COLOURS"
+private const val PINNED_SHORTCUTS = "PINNED_SHORTCUTS"
+
+data class ShortcutEntry(
+    val packageName: String,
+    val shortcutId: String,
+    val label: String,
+) {
+    val payload: String get() = "$packageName|$shortcutId"
+
+    fun serialize(): String = "$packageName|$shortcutId|$label"
+
+    companion object {
+        fun parse(entry: String): ShortcutEntry? {
+            val parts = entry.split("|")
+            return if (parts.size >= 3) ShortcutEntry(parts[0], parts[1], parts[2]) else null
+        }
+    }
+}
 
 private const val APP_NAME = "APP_NAME"
 private const val APP_PACKAGE = "APP_PACKAGE"
@@ -99,6 +118,39 @@ class Prefs(
         appModel: AppModel,
     ) {
         storeApp("$i", appModel)
+    }
+
+    var pinnedShortcuts: Set<String>
+        get() = prefs.getStringSet(PINNED_SHORTCUTS, emptySet()) ?: emptySet()
+        set(value) = prefs.edit().putStringSet(PINNED_SHORTCUTS, value).apply()
+
+    fun addPinnedShortcut(
+        packageName: String,
+        shortcutId: String,
+        label: String,
+    ) {
+        val entry = ShortcutEntry(packageName, shortcutId, label)
+        pinnedShortcuts = pinnedShortcuts + entry.serialize()
+    }
+
+    fun removePinnedShortcut(payload: String) {
+        pinnedShortcuts =
+            pinnedShortcuts
+                .filterNot { entry ->
+                    ShortcutEntry.parse(entry)?.payload == payload
+                }.toSet()
+    }
+
+    var hiddenShortcutIds: Set<String>
+        get() = prefs.getStringSet(HIDDEN_SHORTCUT_IDS, emptySet()) ?: emptySet()
+        set(value) = prefs.edit().putStringSet(HIDDEN_SHORTCUT_IDS, value).apply()
+
+    fun hideShortcut(id: String) {
+        hiddenShortcutIds = hiddenShortcutIds + id
+    }
+
+    fun unhideShortcut(id: String) {
+        hiddenShortcutIds = hiddenShortcutIds - id
     }
 
     fun getGestureApp(type: GestureType): AppModel = loadApp(type.appKey)

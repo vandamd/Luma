@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.content.pm.LauncherApps
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import app.luma.data.Constants
 import app.luma.data.Prefs
 import app.luma.databinding.ActivityMainBinding
 import app.luma.helper.showToast
@@ -69,6 +71,8 @@ class MainActivity : AppCompatActivity() {
         setupOrientation()
 
         window.addFlags(FLAG_LAYOUT_NO_LIMITS)
+
+        handlePinShortcutRequest(intent)
     }
 
     override fun onStop() {
@@ -82,8 +86,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onNewIntent(intent: Intent) {
-        backToHomeScreen()
         super.onNewIntent(intent)
+        setIntent(intent)
+        handlePinShortcutRequest(intent)
+        backToHomeScreen()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -106,11 +112,51 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun backToHomeScreen() {
-        // Whenever home button is pressed or user leaves the launcher,
-        // pop all the fragments except main
         if (navController.currentDestination?.id != R.id.mainFragment) {
             navController.popBackStack(R.id.mainFragment, false)
         }
+    }
+
+    private fun handlePinShortcutRequest(intent: Intent?) {
+        if (intent == null) return
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+        if (intent.action != Constants.REQUEST_CONFIRM_PIN_SHORTCUT) return
+
+        val launcherApps = getSystemService(LauncherApps::class.java) ?: return
+        val request =
+            try {
+                launcherApps.getPinItemRequest(intent)
+            } catch (_: Exception) {
+                return
+            } ?: return
+
+        if (!request.isValid) return
+        if (request.requestType != LauncherApps.PinItemRequest.REQUEST_TYPE_SHORTCUT) return
+
+        val shortcutInfo = request.shortcutInfo ?: return
+        val shortcutPackage = shortcutInfo.`package` ?: return
+        val shortcutId = shortcutInfo.id ?: return
+
+        val label =
+            shortcutInfo.shortLabel?.toString()
+                ?: shortcutInfo.longLabel?.toString()
+                ?: "Shortcut"
+
+        val accepted =
+            try {
+                request.accept()
+            } catch (_: Exception) {
+                false
+            }
+
+        if (!accepted) {
+            showToast(this, "Unable to add shortcut")
+            return
+        }
+
+        prefs.addPinnedShortcut(shortcutPackage, shortcutId, label)
+
+        showToast(this, "Added to app drawer")
     }
 
     private fun openLauncherChooser(resetFailed: Boolean) {
