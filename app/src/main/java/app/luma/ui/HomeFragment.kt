@@ -1,6 +1,7 @@
 package app.luma.ui
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -280,11 +282,15 @@ class HomeFragment :
     }
 
     private fun lockPhone() {
-        val actionService = ActionService.instance()
-        if (actionService != null) {
-            actionService.lockScreen()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val actionService = ActionService.instance()
+            if (actionService != null) {
+                actionService.lockScreen()
+            } else {
+                openAccessibilitySettings(requireContext())
+            }
         } else {
-            openAccessibilitySettings(requireContext())
+            showToast(requireContext(), "Lock screen requires Android 9 or higher", Toast.LENGTH_LONG)
         }
     }
 
