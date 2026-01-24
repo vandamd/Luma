@@ -89,16 +89,12 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     }
 
     override fun onClick(view: View) {
-        when (view.id) {
-            else -> {
-                try { // Launch app
-                    val appLocation = view.id.toString().toInt()
-                    performHapticFeedback(requireContext())
-                    homeAppClicked(appLocation)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
+        try {
+            val appLocation = view.id
+            performHapticFeedback(requireContext())
+            homeAppClicked(appLocation)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -182,9 +178,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                     marginEnd = (15.5 * density).toInt()
                     topMargin = (-7.0 * density).toInt()
                 }
-                Prefs.PageIndicatorPosition.Hidden -> {
-                    // This case shouldn't be reached as we return early above
-                }
+                Prefs.PageIndicatorPosition.Hidden -> { }
             }
         }
         
@@ -299,10 +293,6 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
 
     private fun showLongPressToast() = showToast(requireContext(), "Long press to select app")
 
-    private fun textOnClick(view: View) = onClick(view)
-
-    private fun textOnLongClick(view: View) = onLongClick(view)
-
     // Common swipe handlers shared between screen and app button gestures
     private fun handleSwipeLeft() {
         when (val action = prefs.swipeLeftAction) {
@@ -354,7 +344,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     }
 
     private fun getHomeScreenGestureListener(context: Context): View.OnTouchListener {
-        return object : SwipeTouchListener(context, enableTripleTap = false, enableDelayedLongPress = true) {
+        return object : SwipeTouchListener(context, enableDelayedLongPress = true) {
             override fun onSwipeLeft() = handleSwipeLeft()
             override fun onSwipeRight() = handleSwipeRight()
             override fun onSwipeUp() { handleSwipeUp() }
@@ -365,6 +355,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                 try {
                     findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
                 } catch (_: Exception) {
+                    // Navigation already in progress, ignore
                 }
             }
         }
@@ -377,8 +368,8 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
             override fun onSwipeUp() { handleSwipeUp() }
             override fun onSwipeDown() { handleSwipeDown() }
 
-            override fun onLongClick(view: View) { textOnLongClick(view) }
-            override fun onClick(view: View) { textOnClick(view) }
+            override fun onLongClick(view: View) { this@HomeFragment.onLongClick(view) }
+            override fun onClick(view: View) { this@HomeFragment.onClick(view) }
         }
     }
 

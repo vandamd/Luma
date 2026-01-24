@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.UserHandle
 import android.util.Log
+import app.luma.BuildConfig
 import app.luma.helper.getUserHandleFromString
 import app.luma.style.FontSizeOption
 import com.google.gson.Gson
@@ -67,7 +68,11 @@ class Prefs(val context: Context) {
                     val list = value.filterIsInstance<String>().toSet()
                     editor.putStringSet(key, list)
                 }
-                else ->  { Log.d("backup error", "$value") }
+                else -> {
+                    if (BuildConfig.DEBUG) {
+                        Log.d("backup error", "$value")
+                    }
+                }
             }
         }
         editor.apply()

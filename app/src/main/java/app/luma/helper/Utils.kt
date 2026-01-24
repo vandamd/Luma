@@ -62,14 +62,13 @@ suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): Muta
         val appList: MutableList<AppModel> = mutableListOf()
 
         try {
-            if (!Prefs(context).hiddenAppsUpdated) upgradeHiddenApps(Prefs(context))
-            val hiddenApps = Prefs(context).hiddenApps
+            val prefs = Prefs(context)
+            if (!prefs.hiddenAppsUpdated) upgradeHiddenApps(prefs)
+            val hiddenApps = prefs.hiddenApps
 
             val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
             val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
             val collator = Collator.getInstance()
-
-            val prefs = Prefs(context)
 
             for (profile in userManager.userProfiles) {
                 for (app in launcherApps.getActivityList(null, profile)) {
@@ -115,7 +114,9 @@ suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): Muta
             }
 
         } catch (e: java.lang.Exception) {
-            Log.d("backup", "$e")
+            if (BuildConfig.DEBUG) {
+                Log.d("backup", "$e")
+            }
         }
         appList
     }
@@ -124,9 +125,10 @@ suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): Muta
 suspend fun getHiddenAppsList(context: Context): MutableList<AppModel> {
     return withContext(Dispatchers.IO) {
         val pm = context.packageManager
-        if (!Prefs(context).hiddenAppsUpdated) upgradeHiddenApps(Prefs(context))
+        val prefs = Prefs(context)
+        if (!prefs.hiddenAppsUpdated) upgradeHiddenApps(prefs)
 
-        val hiddenAppsSet = Prefs(context).hiddenApps
+        val hiddenAppsSet = prefs.hiddenApps
         val appList: MutableList<AppModel> = mutableListOf()
         if (hiddenAppsSet.isEmpty()) return@withContext appList
 
@@ -144,9 +146,9 @@ suspend fun getHiddenAppsList(context: Context): MutableList<AppModel> {
                 val appName = pm.getApplicationLabel(appInfo).toString()
                 val appKey = collator.getCollationKey(appName)
                 // TODO: hidden apps settings ignore activity name for backward compatibility. Fix it.
-                appList.add(AppModel(appName, appKey, appPackage, "", userHandle, Prefs(context).getAppAlias(appName), false))
-            } catch (e: NameNotFoundException) {
-
+                appList.add(AppModel(appName, appKey, appPackage, "", userHandle, prefs.getAppAlias(appName), false))
+            } catch (_: NameNotFoundException) {
+                // App was uninstalled, skip silently
             }
         }
         appList.sort()
@@ -228,8 +230,8 @@ fun openDialerApp(context: Context) {
     try {
         val sendIntent = Intent(Intent.ACTION_DIAL)
         context.startActivity(sendIntent)
-    } catch (e: java.lang.Exception) {
-
+    } catch (_: Exception) {
+        // No dialer app available, ignore silently
     }
 }
 
@@ -237,8 +239,8 @@ fun openCameraApp(context: Context) {
     try {
         val sendIntent = Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA)
         context.startActivity(sendIntent)
-    } catch (e: java.lang.Exception) {
-
+    } catch (_: Exception) {
+        // No camera app available, ignore silently
     }
 }
 

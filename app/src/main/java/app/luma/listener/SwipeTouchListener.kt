@@ -1,14 +1,14 @@
 package app.luma.listener
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import app.luma.data.Constants
-import java.util.*
-import kotlin.concurrent.schedule
 import kotlin.math.abs
 
 /**
@@ -16,19 +16,18 @@ import kotlin.math.abs
  *
  * @param context The context
  * @param view Optional view reference for view-specific callbacks (onClick, onLongClick with view)
- * @param enableTripleTap Whether to enable triple-tap detection (adds slight delay to double-tap)
  * @param enableDelayedLongPress Whether to use delayed long press (500ms after system long press)
  */
 internal open class SwipeTouchListener(
     context: Context?,
     private val view: View? = null,
-    private val enableTripleTap: Boolean = false,
     private val enableDelayedLongPress: Boolean = false
 ) : OnTouchListener {
 
     private var longPressOn = false
-    private var doubleTapOn = false
     private val gestureDetector: GestureDetector
+    private val handler = Handler(Looper.getMainLooper())
+    private var longPressRunnable: Runnable? = null
 
     override fun onTouch(v: View, motionEvent: MotionEvent): Boolean {
         // Manage pressed state if we have a view reference
@@ -41,6 +40,8 @@ internal open class SwipeTouchListener(
 
         if (motionEvent.action == MotionEvent.ACTION_UP) {
             longPressOn = false
+            longPressRunnable?.let { handler.removeCallbacks(it) }
+            longPressRunnable = null
         }
 
         return gestureDetector.onTouchEvent(motionEvent)
@@ -53,38 +54,26 @@ internal open class SwipeTouchListener(
         override fun onDown(e: MotionEvent): Boolean = true
 
         override fun onSingleTapUp(e: MotionEvent): Boolean {
-            if (enableTripleTap && doubleTapOn) {
-                doubleTapOn = false
-                onTripleClick()
-            } else if (view != null) {
+            if (view != null) {
                 onClick(view)
             }
             return super.onSingleTapUp(e)
         }
 
         override fun onDoubleTap(e: MotionEvent): Boolean {
-            if (enableTripleTap) {
-                doubleTapOn = true
-                Timer().schedule(Constants.TRIPLE_TAP_DELAY_MS.toLong()) {
-                    if (doubleTapOn) {
-                        doubleTapOn = false
-                        onDoubleClick()
-                    }
-                }
-            } else {
-                onDoubleClick()
-            }
+            onDoubleClick()
             return super.onDoubleTap(e)
         }
 
         override fun onLongPress(e: MotionEvent) {
             if (enableDelayedLongPress) {
                 longPressOn = true
-                Timer().schedule(Constants.LONG_PRESS_DELAY_MS.toLong()) {
+                longPressRunnable = Runnable {
                     if (longPressOn) {
                         if (view != null) onLongClick(view) else onLongClick()
                     }
                 }
+                handler.postDelayed(longPressRunnable!!, Constants.LONG_PRESS_DELAY_MS.toLong())
             } else {
                 if (view != null) onLongClick(view) else onLongClick()
             }
@@ -92,11 +81,12 @@ internal open class SwipeTouchListener(
         }
 
         override fun onFling(
-            event1: MotionEvent,
+            event1: MotionEvent?,
             event2: MotionEvent,
             velocityX: Float,
             velocityY: Float
         ): Boolean {
+            if (event1 == null) return false
             try {
                 val diffY = event2.y - event1.y
                 val diffX = event2.x - event1.x
@@ -125,7 +115,6 @@ internal open class SwipeTouchListener(
     // Click callbacks (without view - for screen-level gestures)
     open fun onLongClick() {}
     open fun onDoubleClick() {}
-    open fun onTripleClick() {}
 
     // Click callbacks (with view - for view-level gestures)
     open fun onLongClick(view: View) {}

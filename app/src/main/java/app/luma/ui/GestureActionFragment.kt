@@ -43,12 +43,6 @@ class GestureActionFragment : Fragment() {
 
     companion object {
         const val GESTURE_TYPE = "gesture_type"
-
-        fun newInstance(gestureType: GestureType): GestureActionFragment {
-            return GestureActionFragment().apply {
-                arguments = bundleOf(GESTURE_TYPE to gestureType.name)
-            }
-        }
     }
 
     private lateinit var prefs: Prefs

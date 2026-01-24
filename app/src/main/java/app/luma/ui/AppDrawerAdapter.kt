@@ -33,6 +33,11 @@ class AppDrawerAdapter(
     private val appRenameListener: (String, String) -> Unit
 ) : RecyclerView.Adapter<AppDrawerAdapter.ViewHolder>(), Filterable {
 
+    companion object {
+        private val DIACRITICAL_REGEX = Regex("\\p{InCombiningDiacriticalMarks}+")
+        private val SEPARATOR_REGEX = Regex("[-_+,. ]")
+    }
+
     private lateinit var prefs: Prefs
     private var appFilter = createAppFilter()
     var appsList: MutableList<AppModel> = mutableListOf()
@@ -116,8 +121,8 @@ class AppDrawerAdapter(
     private fun appLabelMatches(appLabel: String, searchChars: String): Boolean {
         return (appLabel.contains(searchChars, true) or
                 Normalizer.normalize(appLabel, Normalizer.Form.NFD)
-                    .replace(Regex("\\p{InCombiningDiacriticalMarks}+"), "")
-                    .replace(Regex("[-_+,. ]"), "")
+                    .replace(DIACRITICAL_REGEX, "")
+                    .replace(SEPARATOR_REGEX, "")
                     .contains(searchChars, true))
     }
 
@@ -147,6 +152,7 @@ class AppDrawerAdapter(
         private val appTitle: TextView = itemView.appTitle
         private val appTitleFrame: FrameLayout = itemView.appTitleFrame
         private val appInfo: ImageView = itemView.appInfo
+        private var textWatcher: TextWatcher? = null
 
         fun bind(
             flag: AppDrawerFlag,
@@ -162,8 +168,9 @@ class AppDrawerAdapter(
                 val drawable = if (flag == AppDrawerFlag.HiddenApps) { R.drawable.visibility } else { R.drawable.visibility_off }
                 appHideButton.setImageDrawable(AppCompatResources.getDrawable(context, drawable))
 
-                appRenameEdit.addTextChangedListener(object : TextWatcher {
-
+                // Remove existing TextWatcher to prevent memory leak on recycled ViewHolders
+                textWatcher?.let { appRenameEdit.removeTextChangedListener(it) }
+                textWatcher = object : TextWatcher {
                     override fun afterTextChanged(s: Editable) {}
 
                     override fun beforeTextChanged(
@@ -184,7 +191,8 @@ class AppDrawerAdapter(
                             appRenameButton.text = context.getString(R.string.rename)
                         }
                     }
-                })
+                }
+                appRenameEdit.addTextChangedListener(textWatcher)
 
                 val appName = appModel.appAlias.ifEmpty {
                     appModel.appLabel

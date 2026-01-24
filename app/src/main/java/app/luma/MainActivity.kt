@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         super.onUserLeaveHint()
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         backToHomeScreen()
         super.onNewIntent(intent)
     }
