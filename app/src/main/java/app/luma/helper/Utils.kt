@@ -96,14 +96,6 @@ suspend fun getAppsList(context: Context): MutableList<AppModel> =
                 appList.add(appModel)
             }
 
-            appList.sortBy {
-                if (it.appAlias.isEmpty()) {
-                    it.appLabel.lowercase()
-                } else {
-                    it.appAlias.lowercase()
-                }
-            }
-
             // Add pinned shortcuts to the app list (excluding hidden ones)
             val hiddenShortcutIds = prefs.hiddenShortcutIds
 
@@ -126,7 +118,7 @@ suspend fun getAppsList(context: Context): MutableList<AppModel> =
                 appList.add(shortcutModel)
             }
 
-            // Re-sort to include shortcuts
+            // Sort apps and shortcuts alphabetically
             appList.sortBy {
                 if (it.appAlias.isEmpty()) {
                     it.appLabel.lowercase()
