@@ -85,7 +85,11 @@ class Prefs(
         set(value) = prefs.edit().putBoolean(INVERT_COLOURS, value).apply()
 
     var hiddenApps: MutableSet<String>
-        get() = prefs.getStringSet(HIDDEN_APPS, mutableSetOf()) as MutableSet<String>
+        get() {
+            val stored = prefs.getStringSet(HIDDEN_APPS, mutableSetOf()) ?: mutableSetOf()
+            // Migrate old format: "packageName|userHandle" -> "packageName"
+            return stored.mapTo(mutableSetOf()) { if (it.contains("|")) it.split("|")[0] else it }
+        }
         set(value) = prefs.edit().putStringSet(HIDDEN_APPS, value).apply()
 
     fun getHomeAppModel(i: Int): AppModel = loadApp("$i")
