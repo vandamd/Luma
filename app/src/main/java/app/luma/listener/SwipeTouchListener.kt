@@ -21,15 +21,17 @@ import kotlin.math.abs
 internal open class SwipeTouchListener(
     context: Context?,
     private val view: View? = null,
-    private val enableDelayedLongPress: Boolean = false
+    private val enableDelayedLongPress: Boolean = false,
 ) : OnTouchListener {
-
     private var longPressOn = false
     private val gestureDetector: GestureDetector
     private val handler = Handler(Looper.getMainLooper())
     private var longPressRunnable: Runnable? = null
 
-    override fun onTouch(v: View, motionEvent: MotionEvent): Boolean {
+    override fun onTouch(
+        v: View,
+        motionEvent: MotionEvent,
+    ): Boolean {
         // Manage pressed state if we have a view reference
         if (view != null) {
             when (motionEvent.action) {
@@ -48,8 +50,8 @@ internal open class SwipeTouchListener(
     }
 
     private inner class GestureListener : SimpleOnGestureListener() {
-        private val SWIPE_THRESHOLD: Int = 100
-        private val SWIPE_VELOCITY_THRESHOLD: Int = 100
+        private val swipeThreshold: Int = 100
+        private val swipeVelocityThreshold: Int = 100
 
         override fun onDown(e: MotionEvent): Boolean = true
 
@@ -68,11 +70,12 @@ internal open class SwipeTouchListener(
         override fun onLongPress(e: MotionEvent) {
             if (enableDelayedLongPress) {
                 longPressOn = true
-                longPressRunnable = Runnable {
-                    if (longPressOn) {
-                        if (view != null) onLongClick(view) else onLongClick()
+                longPressRunnable =
+                    Runnable {
+                        if (longPressOn) {
+                            if (view != null) onLongClick(view) else onLongClick()
+                        }
                     }
-                }
                 handler.postDelayed(longPressRunnable!!, Constants.LONG_PRESS_DELAY_MS.toLong())
             } else {
                 if (view != null) onLongClick(view) else onLongClick()
@@ -84,18 +87,18 @@ internal open class SwipeTouchListener(
             event1: MotionEvent?,
             event2: MotionEvent,
             velocityX: Float,
-            velocityY: Float
+            velocityY: Float,
         ): Boolean {
             if (event1 == null) return false
             try {
                 val diffY = event2.y - event1.y
                 val diffX = event2.x - event1.x
                 if (abs(diffX) > abs(diffY)) {
-                    if (abs(diffX) > SWIPE_THRESHOLD && abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (abs(diffX) > swipeThreshold && abs(velocityX) > swipeVelocityThreshold) {
                         if (diffX > 0) onSwipeRight() else onSwipeLeft()
                     }
                 } else {
-                    if (abs(diffY) > SWIPE_THRESHOLD && abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (abs(diffY) > swipeThreshold && abs(velocityY) > swipeVelocityThreshold) {
                         if (diffY < 0) onSwipeUp() else onSwipeDown()
                     }
                 }
@@ -108,16 +111,21 @@ internal open class SwipeTouchListener(
 
     // Swipe callbacks
     open fun onSwipeRight() {}
+
     open fun onSwipeLeft() {}
+
     open fun onSwipeUp() {}
+
     open fun onSwipeDown() {}
 
     // Click callbacks (without view - for screen-level gestures)
     open fun onLongClick() {}
+
     open fun onDoubleClick() {}
 
     // Click callbacks (with view - for view-level gestures)
     open fun onLongClick(view: View) {}
+
     open fun onClick(view: View) {}
 
     init {

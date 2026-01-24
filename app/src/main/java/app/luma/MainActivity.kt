@@ -11,25 +11,24 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import app.luma.style.DisplayDefaults.withDisplayDefaults
 import app.luma.data.Constants
 import app.luma.data.Prefs
 import app.luma.databinding.ActivityMainBinding
-import android.widget.Toast
 import app.luma.helper.isTablet
 import app.luma.helper.showToast
+import app.luma.style.DisplayDefaults.withDisplayDefaults
 import java.io.BufferedReader
 import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var prefs: Prefs
     private lateinit var navController: NavController
     private lateinit var viewModel: MainViewModel
@@ -44,25 +43,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (navController.currentDestination?.id != R.id.mainFragment)
+        if (navController.currentDestination?.id != R.id.mainFragment) {
             super.onBackPressed()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         prefs = Prefs(this)
-        val themeMode = when (prefs.appTheme) {
-            Constants.Theme.Light -> AppCompatDelegate.MODE_NIGHT_NO
-            Constants.Theme.Dark -> AppCompatDelegate.MODE_NIGHT_YES
-            Constants.Theme.System -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-        }
+        val themeMode =
+            when (prefs.appTheme) {
+                Constants.Theme.Light -> AppCompatDelegate.MODE_NIGHT_NO
+                Constants.Theme.Dark -> AppCompatDelegate.MODE_NIGHT_YES
+                Constants.Theme.System -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            }
         AppCompatDelegate.setDefaultNightMode(themeMode)
 
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
-
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
@@ -74,8 +73,6 @@ class MainActivity : AppCompatActivity() {
 
         window.addFlags(FLAG_LAYOUT_NO_LIMITS)
     }
-
-
 
     override fun onStop() {
         backToHomeScreen()
@@ -117,24 +114,28 @@ class MainActivity : AppCompatActivity() {
     private fun setupOrientation() {
         if (isTablet(this)) return
         // In Android 8.0, windowIsTranslucent cannot be used with screenOrientation=portrait
-        if (Build.VERSION.SDK_INT != Build.VERSION_CODES.O)
+        if (Build.VERSION.SDK_INT != Build.VERSION_CODES.O) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
     }
 
     private fun backToHomeScreen() {
         // Whenever home button is pressed or user leaves the launcher,
         // pop all the fragments except main
-        if (navController.currentDestination?.id != R.id.mainFragment)
+        if (navController.currentDestination?.id != R.id.mainFragment) {
             navController.popBackStack(R.id.mainFragment, false)
+        }
     }
 
     private fun openLauncherChooser(resetFailed: Boolean) {
         if (resetFailed) {
-            val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS) else {
-                showToast(this, "Search for launcher or home app", Toast.LENGTH_LONG)
-                Intent(Settings.ACTION_SETTINGS)
-            }
+            val intent =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
+                } else {
+                    showToast(this, "Search for launcher or home app", Toast.LENGTH_LONG)
+                    Intent(Settings.ACTION_SETTINGS)
+                }
             startActivity(intent)
         }
     }
@@ -145,18 +146,24 @@ class MainActivity : AppCompatActivity() {
         binding.messageLayout.visibility = View.VISIBLE
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+    ) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode != Activity.RESULT_OK) return
 
         when (requestCode) {
             Constants.REQUEST_CODE_ENABLE_ADMIN -> {
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
                     showMessage(getString(R.string.double_tap_lock_is_enabled_message))
-                else
+                } else {
                     showMessage(getString(R.string.double_tap_lock_uninstall_message))
+                }
             }
+
             Constants.BACKUP_READ -> {
                 data?.data?.also { uri ->
                     applicationContext.contentResolver.openInputStream(uri).use { inputStream ->
@@ -177,13 +184,14 @@ class MainActivity : AppCompatActivity() {
                 }
                 startActivity(Intent.makeRestartActivityTask(this.intent?.component))
             }
+
             Constants.BACKUP_WRITE -> {
                 data?.data?.also { uri ->
                     applicationContext.contentResolver.openFileDescriptor(uri, "w")?.use { file ->
                         FileOutputStream(file.fileDescriptor).use { stream ->
                             val text = Prefs(applicationContext).saveToString()
                             stream.channel.truncate(0)
-                            stream.write( text.toByteArray() )
+                            stream.write(text.toByteArray())
                         }
                     }
                 }

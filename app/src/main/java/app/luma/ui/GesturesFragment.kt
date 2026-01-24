@@ -25,7 +25,6 @@ import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import isDarkTheme
 
 class GesturesFragment : Fragment() {
-
     private lateinit var prefs: Prefs
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +35,7 @@ class GesturesFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         val compose = ComposeView(requireContext())
         compose.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -53,7 +52,7 @@ class GesturesFragment : Fragment() {
         Column {
             SettingsHeader(
                 title = "Gestures",
-                onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
+                onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() },
             )
 
             ContentContainer {
@@ -61,27 +60,27 @@ class GesturesFragment : Fragment() {
                     SelectorButton(
                         label = "Swipe left",
                         value = getActionText(prefs.swipeLeftAction, prefs.appSwipeLeft.appLabel),
-                        onClick = { navigateToGesture(GestureType.SWIPE_LEFT) }
+                        onClick = { navigateToGesture(GestureType.SWIPE_LEFT) },
                     )
                     SelectorButton(
                         label = "Swipe right",
                         value = getActionText(prefs.swipeRightAction, prefs.appSwipeRight.appLabel),
-                        onClick = { navigateToGesture(GestureType.SWIPE_RIGHT) }
+                        onClick = { navigateToGesture(GestureType.SWIPE_RIGHT) },
                     )
                     SelectorButton(
                         label = "Swipe down",
                         value = getActionText(prefs.swipeDownAction, prefs.appSwipeDown.appLabel),
-                        onClick = { navigateToGesture(GestureType.SWIPE_DOWN) }
+                        onClick = { navigateToGesture(GestureType.SWIPE_DOWN) },
                     )
                     SelectorButton(
                         label = "Swipe up",
                         value = getActionText(prefs.swipeUpAction, prefs.appSwipeUp.appLabel),
-                        onClick = { navigateToGesture(GestureType.SWIPE_UP) }
+                        onClick = { navigateToGesture(GestureType.SWIPE_UP) },
                     )
                     SelectorButton(
                         label = "Double tap",
                         value = getActionText(prefs.doubleTapAction, prefs.appDoubleTap.appLabel),
-                        onClick = { navigateToGesture(GestureType.DOUBLE_TAP) }
+                        onClick = { navigateToGesture(GestureType.DOUBLE_TAP) },
                     )
                 }
             }
@@ -91,16 +90,18 @@ class GesturesFragment : Fragment() {
     private fun navigateToGesture(gestureType: GestureType) {
         findNavController().navigate(
             R.id.action_gesturesFragment_to_gestureActionFragment,
-            bundleOf(GestureActionFragment.GESTURE_TYPE to gestureType.name)
+            bundleOf(GestureActionFragment.GESTURE_TYPE to gestureType.name),
         )
     }
 
     @Composable
-    private fun getActionText(action: Constants.Action, appLabel: String): String {
-        return when (action) {
+    private fun getActionText(
+        action: Constants.Action,
+        appLabel: String,
+    ): String =
+        when (action) {
             Constants.Action.OpenApp -> "Open $appLabel"
             Constants.Action.Disabled -> "Disabled"
             else -> action.string()
         }
-    }
 }

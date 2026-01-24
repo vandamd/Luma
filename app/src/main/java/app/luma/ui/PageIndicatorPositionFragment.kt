@@ -6,20 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
-import isDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import app.luma.data.Prefs
+import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import app.luma.ui.compose.SettingsComposable.SimpleTextButton
-import app.luma.ui.compose.CustomScrollView
+import isDarkTheme
 
 class PageIndicatorPositionFragment : Fragment() {
-
     private lateinit var prefs: Prefs
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +29,7 @@ class PageIndicatorPositionFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         val compose = ComposeView(requireContext())
         compose.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -47,7 +46,7 @@ class PageIndicatorPositionFragment : Fragment() {
         Column {
             SettingsHeader(
                 title = "Page Indicator Position",
-                onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
+                onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() },
             )
             ContentContainer {
                 CustomScrollView {
@@ -57,7 +56,7 @@ class PageIndicatorPositionFragment : Fragment() {
                         onClick = {
                             prefs.pageIndicatorPosition = Prefs.PageIndicatorPosition.Left
                             requireActivity().onBackPressedDispatcher.onBackPressed()
-                        }
+                        },
                     )
                     SimpleTextButton(
                         title = "Right",
@@ -65,7 +64,7 @@ class PageIndicatorPositionFragment : Fragment() {
                         onClick = {
                             prefs.pageIndicatorPosition = Prefs.PageIndicatorPosition.Right
                             requireActivity().onBackPressedDispatcher.onBackPressed()
-                        }
+                        },
                     )
                     SimpleTextButton(
                         title = "Hidden",
@@ -73,7 +72,7 @@ class PageIndicatorPositionFragment : Fragment() {
                         onClick = {
                             prefs.pageIndicatorPosition = Prefs.PageIndicatorPosition.Hidden
                             requireActivity().onBackPressedDispatcher.onBackPressed()
-                        }
+                        },
                     )
                 }
             }

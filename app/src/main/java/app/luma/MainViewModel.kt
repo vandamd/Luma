@@ -14,7 +14,9 @@ import app.luma.data.Prefs
 import app.luma.helper.*
 import kotlinx.coroutines.launch
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class MainViewModel(
+    application: Application,
+) : AndroidViewModel(application) {
     private val appContext by lazy { application.applicationContext }
     private val prefs = Prefs(appContext)
 
@@ -24,22 +26,41 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val hiddenApps = MutableLiveData<List<AppModel>?>()
     val launcherResetFailed = MutableLiveData<Boolean>()
 
-    fun selectedApp(appModel: AppModel, flag: AppDrawerFlag, n: Int = 0) {
+    fun selectedApp(
+        appModel: AppModel,
+        flag: AppDrawerFlag,
+        n: Int = 0,
+    ) {
         when (flag) {
             AppDrawerFlag.LaunchApp, AppDrawerFlag.HiddenApps -> {
                 launchApp(appModel)
             }
+
             AppDrawerFlag.SetHomeApp -> {
                 prefs.setHomeAppModel(n, appModel)
             }
-            AppDrawerFlag.SetSwipeLeft -> prefs.appSwipeLeft = appModel
-            AppDrawerFlag.SetSwipeRight -> prefs.appSwipeRight = appModel
-            AppDrawerFlag.SetSwipeUp -> prefs.appSwipeUp = appModel
-            AppDrawerFlag.SetSwipeDown -> prefs.appSwipeDown = appModel
-            AppDrawerFlag.SetDoubleTap -> prefs.appDoubleTap = appModel
+
+            AppDrawerFlag.SetSwipeLeft -> {
+                prefs.appSwipeLeft = appModel
+            }
+
+            AppDrawerFlag.SetSwipeRight -> {
+                prefs.appSwipeRight = appModel
+            }
+
+            AppDrawerFlag.SetSwipeUp -> {
+                prefs.appSwipeUp = appModel
+            }
+
+            AppDrawerFlag.SetSwipeDown -> {
+                prefs.appSwipeDown = appModel
+            }
+
+            AppDrawerFlag.SetDoubleTap -> {
+                prefs.appDoubleTap = appModel
+            }
         }
     }
-
 
     private fun launchApp(appModel: AppModel) {
         val packageName = appModel.appPackage
@@ -49,18 +70,25 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val activityInfo = launcher.getActivityList(packageName, userHandle)
 
         // TODO: Handle multiple launch activities in an app. This is NOT the way.
-        val component = when (activityInfo.size) {
-            0 -> {
-                showToast(appContext, "App not found")
-                return
+        val component =
+            when (activityInfo.size) {
+                0 -> {
+                    showToast(appContext, "App not found")
+                    return
+                }
+
+                1 -> {
+                    ComponentName(packageName, activityInfo[0].name)
+                }
+
+                else -> {
+                    if (appActivityName.isNotEmpty()) {
+                        ComponentName(packageName, appActivityName)
+                    } else {
+                        ComponentName(packageName, activityInfo[activityInfo.size - 1].name)
+                    }
+                }
             }
-            1 -> ComponentName(packageName, activityInfo[0].name)
-            else -> if (appActivityName.isNotEmpty()) {
-                ComponentName(packageName, appActivityName)
-            } else {
-                ComponentName(packageName, activityInfo[activityInfo.size - 1].name)
-            }
-        }
 
         try {
             launcher.startMainActivity(component, userHandle, null, null)
@@ -89,11 +117,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun resetDefaultLauncherApp(context: Context) {
         resetDefaultLauncher(context)
-        launcherResetFailed.value = getDefaultLauncherPackage(
-            appContext
-        ).contains(".")
+        launcherResetFailed.value =
+            getDefaultLauncherPackage(
+                appContext,
+            ).contains(".")
     }
-
 
     fun showMessageDialog(message: String) {
         showMessageDialog.postValue(message)

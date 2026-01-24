@@ -8,7 +8,6 @@ import androidx.annotation.RequiresApi
 import java.lang.ref.WeakReference
 
 class ActionService : AccessibilityService() {
-
     override fun onServiceConnected() {
         instance = WeakReference(this)
     }
@@ -19,24 +18,18 @@ class ActionService : AccessibilityService() {
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
-    fun lockScreen(): Boolean {
-        return performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
-    }
+    fun lockScreen(): Boolean = performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
 
     @RequiresApi(Build.VERSION_CODES.P)
-    fun showRecents(): Boolean {
-        return performGlobalAction(GLOBAL_ACTION_RECENTS)
-    }
+    fun showRecents(): Boolean = performGlobalAction(GLOBAL_ACTION_RECENTS)
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
+
     override fun onInterrupt() { }
 
     companion object {
         private var instance: WeakReference<ActionService> = WeakReference(null)
 
-        fun instance(): ActionService? {
-            return instance.get()
-        }
-
+        fun instance(): ActionService? = instance.get()
     }
 }

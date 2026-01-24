@@ -10,7 +10,6 @@ interface EnumOption {
 }
 
 object Constants {
-
     const val REQUEST_CODE_ENABLE_ADMIN = 666
     const val LONG_PRESS_DELAY_MS = 500
 
@@ -28,18 +27,19 @@ object Constants {
         SetDoubleTap,
     }
 
-    enum class Action: EnumOption {
+    enum class Action : EnumOption {
         Disabled,
         OpenApp,
         LockScreen,
         ShowAppList,
         OpenQuickSettings,
         ShowRecents,
-        ShowNotification;
+        ShowNotification,
+        ;
 
         @Composable
-        override fun string(): String {
-            return when(this) {
+        override fun string(): String =
+            when (this) {
                 OpenApp -> stringResource(R.string.open_app)
                 LockScreen -> stringResource(R.string.lock_screen)
                 ShowNotification -> stringResource(R.string.show_notifications)
@@ -48,21 +48,20 @@ object Constants {
                 ShowRecents -> stringResource(R.string.show_recents)
                 Disabled -> stringResource(R.string.disabled)
             }
-        }
     }
 
-    enum class Theme: EnumOption {
+    enum class Theme : EnumOption {
         System,
         Dark,
-        Light;
+        Light,
+        ;
 
         @Composable
-        override fun string(): String {
-            return when(this) {
+        override fun string(): String =
+            when (this) {
                 System -> "System"
                 Dark -> stringResource(R.string.dark)
                 Light -> stringResource(R.string.light)
             }
-        }
     }
 }

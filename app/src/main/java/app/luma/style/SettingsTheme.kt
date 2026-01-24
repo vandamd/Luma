@@ -9,12 +9,12 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import app.luma.R
 import app.luma.data.Constants
@@ -25,13 +25,12 @@ import app.luma.style.textGray
 import app.luma.style.textLight
 
 @Composable
-fun isDarkTheme(prefs: Prefs): Boolean {
-    return when (prefs.appTheme) {
+fun isDarkTheme(prefs: Prefs): Boolean =
+    when (prefs.appTheme) {
         Constants.Theme.Light -> false
         Constants.Theme.Dark -> true
         Constants.Theme.System -> isSystemInDarkTheme()
     }
-}
 
 @Immutable
 data class ReplacementTypography(
@@ -54,78 +53,90 @@ data class ReplacementColor(
     val selector: Color,
 )
 
-val LocalReplacementTypography = staticCompositionLocalOf {
-    ReplacementTypography(
-        body = TextStyle.Default,
-        title = TextStyle.Default,
-        item = TextStyle.Default,
-        pageButton = TextStyle.Default,
-        button = TextStyle.Default,
-        buttonDisabled = TextStyle.Default,
-    )
-}
-val LocalReplacementShapes = staticCompositionLocalOf {
-    ReplacementShapes(
-        settings = RoundedCornerShape(ZeroCornerSize)
-    )
-}
-val LocalReplacementColor = staticCompositionLocalOf {
-    ReplacementColor(
-        settings = Color.Unspecified,
-        selector = Color.Unspecified,
-    )
-}
+val LocalReplacementTypography =
+    staticCompositionLocalOf {
+        ReplacementTypography(
+            body = TextStyle.Default,
+            title = TextStyle.Default,
+            item = TextStyle.Default,
+            pageButton = TextStyle.Default,
+            button = TextStyle.Default,
+            buttonDisabled = TextStyle.Default,
+        )
+    }
+val LocalReplacementShapes =
+    staticCompositionLocalOf {
+        ReplacementShapes(
+            settings = RoundedCornerShape(ZeroCornerSize),
+        )
+    }
+val LocalReplacementColor =
+    staticCompositionLocalOf {
+        ReplacementColor(
+            settings = Color.Unspecified,
+            selector = Color.Unspecified,
+        )
+    }
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun SettingsTheme(
     isDark: Boolean,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
-    val replacementTypography = ReplacementTypography(
-        body = TextStyle(fontSize = 16.sp),
-        title = TextStyle(
-            fontSize = 20.sp,
-            color = if (isDark) textLight else textDark,
-        ),
-        item = TextStyle(
-            fontFamily = FontFamily(Font(R.font.public_sans)),
-            fontWeight = FontWeight.Light,
-            fontSize = 16.sp,
-            color = if (isDark) textLight else textDark,
-        ),
-        pageButton = TextStyle(
-            fontFamily = FontFamily(Font(R.font.public_sans)),
-            fontSize = 32.sp,
-            color = if (isDark) textLight else textDark,
-            platformStyle = PlatformTextStyle(includeFontPadding = false),
-        ),
-        button = TextStyle(
-            fontFamily = FontFamily(Font(R.font.public_sans)),
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp,
-            color = if (isDark) textLight else textDark,
-        ),
-        buttonDisabled = TextStyle(
-            fontFamily = FontFamily(Font(R.font.public_sans)),
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp,
-            color = textGray,
-        ),    )
-    val replacementShapes = ReplacementShapes(
-        settings = RoundedCornerShape(CORNER_RADIUS),
-    )
-    val replacementColor = ReplacementColor(
-        settings = colorResource( if (isDark) R.color.black else R.color.white ),
-        selector = colorResource( if (isDark) R.color.black else R.color.white ),
-    )
+    val replacementTypography =
+        ReplacementTypography(
+            body = TextStyle(fontSize = 16.sp),
+            title =
+                TextStyle(
+                    fontSize = 20.sp,
+                    color = if (isDark) textLight else textDark,
+                ),
+            item =
+                TextStyle(
+                    fontFamily = FontFamily(Font(R.font.public_sans)),
+                    fontWeight = FontWeight.Light,
+                    fontSize = 16.sp,
+                    color = if (isDark) textLight else textDark,
+                ),
+            pageButton =
+                TextStyle(
+                    fontFamily = FontFamily(Font(R.font.public_sans)),
+                    fontSize = 32.sp,
+                    color = if (isDark) textLight else textDark,
+                    platformStyle = PlatformTextStyle(includeFontPadding = false),
+                ),
+            button =
+                TextStyle(
+                    fontFamily = FontFamily(Font(R.font.public_sans)),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = if (isDark) textLight else textDark,
+                ),
+            buttonDisabled =
+                TextStyle(
+                    fontFamily = FontFamily(Font(R.font.public_sans)),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = textGray,
+                ),
+        )
+    val replacementShapes =
+        ReplacementShapes(
+            settings = RoundedCornerShape(CORNER_RADIUS),
+        )
+    val replacementColor =
+        ReplacementColor(
+            settings = colorResource(if (isDark) R.color.black else R.color.white),
+            selector = colorResource(if (isDark) R.color.black else R.color.white),
+        )
     CompositionLocalProvider(
         LocalReplacementTypography provides replacementTypography,
         LocalReplacementShapes provides replacementShapes,
         LocalReplacementColor provides replacementColor,
     ) {
         MaterialTheme(
-            content = content
+            content = content,
         )
     }
 }

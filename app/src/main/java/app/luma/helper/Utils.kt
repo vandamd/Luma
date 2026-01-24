@@ -40,7 +40,6 @@ import java.util.*
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-
 fun performHapticFeedback(context: Context) {
     try {
         val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
@@ -50,15 +49,23 @@ fun performHapticFeedback(context: Context) {
     }
 }
 
-
-fun showToast(context: Context, message: String, duration: Int = Toast.LENGTH_SHORT) {
-    Toast.makeText(context.applicationContext, message, duration).apply {
-        setGravity(Gravity.CENTER, 0, 0)
-    }.show()
+fun showToast(
+    context: Context,
+    message: String,
+    duration: Int = Toast.LENGTH_SHORT,
+) {
+    Toast
+        .makeText(context.applicationContext, message, duration)
+        .apply {
+            setGravity(Gravity.CENTER, 0, 0)
+        }.show()
 }
 
-suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): MutableList<AppModel> {
-    return withContext(Dispatchers.IO) {
+suspend fun getAppsList(
+    context: Context,
+    showHiddenApps: Boolean = false,
+): MutableList<AppModel> =
+    withContext(Dispatchers.IO) {
         val appList: MutableList<AppModel> = mutableListOf()
 
         try {
@@ -72,30 +79,29 @@ suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): Muta
 
             for (profile in userManager.userProfiles) {
                 for (app in launcherApps.getActivityList(null, profile)) {
-
-
                     // we have changed the alias identifier from app.label to app.applicationInfo.packageName
                     // therefore, we check if the old one is set if the new one is empty
-                    val appAlias = prefs.getAppAlias(app.applicationInfo.packageName).ifEmpty {
-                        prefs.getAppAlias(app.label.toString())
-                    }
+                    val appAlias =
+                        prefs.getAppAlias(app.applicationInfo.packageName).ifEmpty {
+                            prefs.getAppAlias(app.label.toString())
+                        }
 
                     if (app.applicationInfo.packageName == BuildConfig.APPLICATION_ID) {
                         continue
                     }
 
-                    val appModel = AppModel(
-                        app.label.toString(),
-                        collator.getCollationKey(app.label.toString()),
-                        app.applicationInfo.packageName,
-                        app.componentName.className,
-                        profile,
-                        appAlias,
-                        false
-                    )
+                    val appModel =
+                        AppModel(
+                            app.label.toString(),
+                            collator.getCollationKey(app.label.toString()),
+                            app.applicationInfo.packageName,
+                            app.componentName.className,
+                            profile,
+                            appAlias,
+                            false,
+                        )
 
                     appList.add(appModel)
-
                 }
             }
 
@@ -112,7 +118,6 @@ suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): Muta
             appList.forEach { appModel ->
                 appModel.hasNotification = packagesWithNotifications.contains(appModel.appPackage)
             }
-
         } catch (e: java.lang.Exception) {
             if (BuildConfig.DEBUG) {
                 Log.d("backup", "$e")
@@ -120,7 +125,6 @@ suspend fun getAppsList(context: Context, showHiddenApps: Boolean = false): Muta
         }
         appList
     }
-}
 
 suspend fun getHiddenAppsList(context: Context): MutableList<AppModel> {
     return withContext(Dispatchers.IO) {
@@ -162,14 +166,25 @@ private fun upgradeHiddenApps(prefs: Prefs) {
     val hiddenAppsSet = prefs.hiddenApps
     val newHiddenAppsSet = mutableSetOf<String>()
     for (hiddenPackage in hiddenAppsSet) {
-        if (hiddenPackage.contains("|")) newHiddenAppsSet.add(hiddenPackage)
-        else newHiddenAppsSet.add(hiddenPackage + android.os.Process.myUserHandle().toString())
+        if (hiddenPackage.contains("|")) {
+            newHiddenAppsSet.add(hiddenPackage)
+        } else {
+            newHiddenAppsSet.add(
+                hiddenPackage +
+                    android.os.Process
+                        .myUserHandle()
+                        .toString(),
+            )
+        }
     }
     prefs.hiddenApps = newHiddenAppsSet
     prefs.hiddenAppsUpdated = true
 }
 
-fun getUserHandleFromString(context: Context, userHandleString: String): UserHandle {
+fun getUserHandleFromString(
+    context: Context,
+    userHandleString: String,
+): UserHandle {
     val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
     for (userHandle in userManager.userProfiles) {
         if (userHandle.toString() == userHandleString) {
@@ -192,7 +207,9 @@ fun getDefaultLauncherPackage(context: Context): String {
     val result = packageManager.resolveActivity(intent, 0)
     return if (result?.activityInfo != null) {
         result.activityInfo.packageName
-    } else "android"
+    } else {
+        "android"
+    }
 }
 
 // Source: https://stackoverflow.com/a/13239706
@@ -203,7 +220,7 @@ fun resetDefaultLauncher(context: Context) {
         packageManager.setComponentEnabledSetting(
             componentName,
             PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-            PackageManager.DONT_KILL_APP
+            PackageManager.DONT_KILL_APP,
         )
         val selector = Intent(Intent.ACTION_MAIN)
         selector.addCategory(Intent.CATEGORY_HOME)
@@ -211,14 +228,18 @@ fun resetDefaultLauncher(context: Context) {
         packageManager.setComponentEnabledSetting(
             componentName,
             PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-            PackageManager.DONT_KILL_APP
+            PackageManager.DONT_KILL_APP,
         )
     } catch (e: Exception) {
         e.printStackTrace()
     }
 }
 
-fun openAppInfo(context: Context, userHandle: UserHandle, packageName: String) {
+fun openAppInfo(
+    context: Context,
+    userHandle: UserHandle,
+    packageName: String,
+) {
     val launcher = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
     val intent: Intent? = context.packageManager.getLaunchIntentForPackage(packageName)
     intent?.let {
@@ -284,9 +305,9 @@ fun openAccessibilitySettings(context: Context) {
 }
 
 fun hideStatusBar(activity: Activity) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         activity.window.insetsController?.hide(WindowInsets.Type.statusBars())
-    else {
+    } else {
         @Suppress("DEPRECATION")
         activity.window.decorView.apply {
             systemUiVisibility = View.SYSTEM_UI_FLAG_IMMERSIVE or View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -294,19 +315,25 @@ fun hideStatusBar(activity: Activity) {
     }
 }
 
-fun uninstallApp(context: Context, appPackage: String) {
+fun uninstallApp(
+    context: Context,
+    appPackage: String,
+) {
     val intent = Intent(Intent.ACTION_DELETE)
     intent.data = Uri.parse("package:$appPackage")
     context.startActivity(intent)
 }
 
-fun dp2px(resources: Resources, dp: Int): Int {
-    return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP,
-        dp.toFloat(),
-        resources.displayMetrics
-    ).toInt()
-}
+fun dp2px(
+    resources: Resources,
+    dp: Int,
+): Int =
+    TypedValue
+        .applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            resources.displayMetrics,
+        ).toInt()
 
 @Suppress("SpellCheckingInspection")
 @SuppressLint("WrongConstant")

@@ -30,9 +30,10 @@ import app.luma.helper.LumaNotificationListener
 import app.luma.listener.SwipeTouchListener
 import kotlinx.coroutines.launch
 
-
-class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener {
-
+class HomeFragment :
+    Fragment(),
+    View.OnClickListener,
+    View.OnLongClickListener {
     private lateinit var prefs: Prefs
     private lateinit var viewModel: MainViewModel
     private lateinit var deviceManager: DevicePolicyManager
@@ -43,7 +44,11 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         val view = binding.root
@@ -56,9 +61,11 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
-
 
         viewModel = activity?.run {
             ViewModelProvider(this)[MainViewModel::class.java]
@@ -123,65 +130,72 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
             binding.mainLayout.removeView(it)
             if (it === pageIndicatorLayout) pageIndicatorLayout = null
         }
-        
+
         // Only show indicator if there are 2 or more pages and not hidden
         if (totalPages < 2) {
             currentPage = 0
             pageIndicatorLayout = null
             return
         }
-        
+
         // If hidden, just return without creating indicators but keep page logic
         if (prefs.pageIndicatorPosition == Prefs.PageIndicatorPosition.Hidden) {
             pageIndicatorLayout = null
             return
         }
-        
+
         // Always create a fresh indicator layout
-        val newLayout = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            tag = "pageIndicator"
-        }
-        
+        val newLayout =
+            LinearLayout(requireContext()).apply {
+                orientation = LinearLayout.VERTICAL
+                tag = "pageIndicator"
+            }
+
         val density = resources.displayMetrics.density
         val circleSize = (11.6 * density).toInt()
         val circleMargin = (0.8 * density).toInt()
         val circleVerticalMargin = (7.8 * density).toInt()
-        
+
         // Add circles for each page
         for (i in 0 until totalPages) {
             val index = i
-            val circle = View(requireContext()).apply {
-                layoutParams = LinearLayout.LayoutParams(circleSize, circleSize).apply {
-                    setMargins(circleMargin, circleVerticalMargin, circleMargin, circleVerticalMargin)
+            val circle =
+                View(requireContext()).apply {
+                    layoutParams =
+                        LinearLayout.LayoutParams(circleSize, circleSize).apply {
+                            setMargins(circleMargin, circleVerticalMargin, circleMargin, circleVerticalMargin)
+                        }
+                    isClickable = true
+                    isFocusable = true
+                    setOnClickListener { switchToPage(index) }
+                    setBackgroundResource(if (index == currentPage) R.drawable.filled_circle else R.drawable.hollow_circle)
                 }
-                isClickable = true
-                isFocusable = true
-                setOnClickListener { switchToPage(index) }
-                setBackgroundResource(if (index == currentPage) R.drawable.filled_circle else R.drawable.hollow_circle)
-            }
             newLayout.addView(circle)
         }
-        
-        val layoutParams = FrameLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        ).apply {
-            when (prefs.pageIndicatorPosition) {
-                Prefs.PageIndicatorPosition.Left -> {
-                    gravity = Gravity.START or Gravity.CENTER_VERTICAL
-                    marginStart = (15.5 * density).toInt()
-                    topMargin = (-7.0 * density).toInt()
+
+        val layoutParams =
+            FrameLayout
+                .LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                ).apply {
+                    when (prefs.pageIndicatorPosition) {
+                        Prefs.PageIndicatorPosition.Left -> {
+                            gravity = Gravity.START or Gravity.CENTER_VERTICAL
+                            marginStart = (15.5 * density).toInt()
+                            topMargin = (-7.0 * density).toInt()
+                        }
+
+                        Prefs.PageIndicatorPosition.Right -> {
+                            gravity = Gravity.END or Gravity.CENTER_VERTICAL
+                            marginEnd = (15.5 * density).toInt()
+                            topMargin = (-7.0 * density).toInt()
+                        }
+
+                        Prefs.PageIndicatorPosition.Hidden -> { }
+                    }
                 }
-                Prefs.PageIndicatorPosition.Right -> {
-                    gravity = Gravity.END or Gravity.CENTER_VERTICAL
-                    marginEnd = (15.5 * density).toInt()
-                    topMargin = (-7.0 * density).toInt()
-                }
-                Prefs.PageIndicatorPosition.Hidden -> { }
-            }
-        }
-        
+
         binding.mainLayout.addView(newLayout, layoutParams)
         pageIndicatorLayout = newLayout
     }
@@ -200,26 +214,33 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
 
     private fun homeAppClicked(location: Int) {
         val appModel = prefs.getHomeAppModel(location)
-        if (appModel.appLabel.isEmpty()) showLongPressToast()
-        else launchApp(appModel)
+        if (appModel.appLabel.isEmpty()) {
+            showLongPressToast()
+        } else {
+            launchApp(appModel)
+        }
     }
 
     private fun launchApp(appModel: AppModel) {
         viewModel.selectedApp(appModel, AppDrawerFlag.LaunchApp)
     }
 
-    private fun showAppList(flag: AppDrawerFlag, showHiddenApps: Boolean = false, n: Int = 0) {
+    private fun showAppList(
+        flag: AppDrawerFlag,
+        showHiddenApps: Boolean = false,
+        n: Int = 0,
+    ) {
         viewModel.getAppList()
         lifecycleScope.launch {
             try {
                 findNavController().navigate(
                     R.id.action_mainFragment_to_appListFragment,
-                    bundleOf("flag" to flag.toString(), "n" to n)
+                    bundleOf("flag" to flag.toString(), "n" to n),
                 )
             } catch (e: Exception) {
                 findNavController().navigate(
                     R.id.appListFragment,
-                    bundleOf("flag" to flag.toString())
+                    bundleOf("flag" to flag.toString()),
                 )
                 e.printStackTrace()
             }
@@ -227,45 +248,72 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     }
 
     private fun openSwipeRightApp() {
-        if (prefs.appSwipeRight.appPackage.isNotEmpty())
+        if (prefs.appSwipeRight.appPackage.isNotEmpty()) {
             launchApp(prefs.appSwipeRight)
-        else openDialerApp(requireContext())
+        } else {
+            openDialerApp(requireContext())
+        }
     }
 
     private fun openSwipeDownApp() {
-        if (prefs.appSwipeDown.appPackage.isNotEmpty())
+        if (prefs.appSwipeDown.appPackage.isNotEmpty()) {
             launchApp(prefs.appSwipeDown)
-        else openDialerApp(requireContext())
+        } else {
+            openDialerApp(requireContext())
+        }
     }
 
     private fun openSwipeUpApp() {
-        if (prefs.appSwipeUp.appPackage.isNotEmpty())
+        if (prefs.appSwipeUp.appPackage.isNotEmpty()) {
             launchApp(prefs.appSwipeUp)
-        else showAppList(AppDrawerFlag.LaunchApp)
+        } else {
+            showAppList(AppDrawerFlag.LaunchApp)
+        }
     }
 
     private fun openSwipeLeftApp() {
-        if (prefs.appSwipeLeft.appPackage.isNotEmpty())
+        if (prefs.appSwipeLeft.appPackage.isNotEmpty()) {
             launchApp(prefs.appSwipeLeft)
-        else openCameraApp(requireContext())
+        } else {
+            openCameraApp(requireContext())
+        }
     }
 
     private fun openDoubleTapApp() {
-        if (prefs.appDoubleTap.appPackage.isNotEmpty())
+        if (prefs.appDoubleTap.appPackage.isNotEmpty()) {
             launchApp(prefs.appDoubleTap)
-        else openCameraApp(requireContext())
+        } else {
+            openCameraApp(requireContext())
+        }
     }
 
     // This function handles all swipe actions that a independent of the actual swipe direction
     @SuppressLint("NewApi")
     private fun handleOtherAction(action: Action) {
-        when(action) {
-            Action.ShowNotification -> expandNotificationDrawer(requireContext())
-            Action.LockScreen -> lockPhone()
-            Action.ShowAppList -> showAppList(AppDrawerFlag.LaunchApp)
-            Action.OpenApp -> {} // this should be handled in the respective onSwipe[Down,Right,Left] functions
-            Action.OpenQuickSettings -> expandQuickSettings(requireContext())
-            Action.ShowRecents -> initActionService(requireContext())?.showRecents()
+        when (action) {
+            Action.ShowNotification -> {
+                expandNotificationDrawer(requireContext())
+            }
+
+            Action.LockScreen -> {
+                lockPhone()
+            }
+
+            Action.ShowAppList -> {
+                showAppList(AppDrawerFlag.LaunchApp)
+            }
+
+            Action.OpenApp -> {}
+
+            // this should be handled in the respective onSwipe[Down,Right,Left] functions
+            Action.OpenQuickSettings -> {
+                expandQuickSettings(requireContext())
+            }
+
+            Action.ShowRecents -> {
+                initActionService(requireContext())?.showRecents()
+            }
+
             Action.Disabled -> {}
         }
     }
@@ -343,12 +391,20 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         }
     }
 
-    private fun getHomeScreenGestureListener(context: Context): View.OnTouchListener {
-        return object : SwipeTouchListener(context, enableDelayedLongPress = true) {
+    private fun getHomeScreenGestureListener(context: Context): View.OnTouchListener =
+        object : SwipeTouchListener(context, enableDelayedLongPress = true) {
             override fun onSwipeLeft() = handleSwipeLeft()
+
             override fun onSwipeRight() = handleSwipeRight()
-            override fun onSwipeUp() { handleSwipeUp() }
-            override fun onSwipeDown() { handleSwipeDown() }
+
+            override fun onSwipeUp() {
+                handleSwipeUp()
+            }
+
+            override fun onSwipeDown() {
+                handleSwipeDown()
+            }
+
             override fun onDoubleClick() = handleDoubleTap()
 
             override fun onLongClick() {
@@ -359,24 +415,37 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                 }
             }
         }
-    }
 
-    private fun getHomeAppsGestureListener(context: Context, view: View): View.OnTouchListener {
-        return object : SwipeTouchListener(context, view) {
+    private fun getHomeAppsGestureListener(
+        context: Context,
+        view: View,
+    ): View.OnTouchListener =
+        object : SwipeTouchListener(context, view) {
             override fun onSwipeLeft() = handleSwipeLeft()
-            override fun onSwipeRight() = handleSwipeRight()
-            override fun onSwipeUp() { handleSwipeUp() }
-            override fun onSwipeDown() { handleSwipeDown() }
 
-            override fun onLongClick(view: View) { this@HomeFragment.onLongClick(view) }
-            override fun onClick(view: View) { this@HomeFragment.onClick(view) }
+            override fun onSwipeRight() = handleSwipeRight()
+
+            override fun onSwipeUp() {
+                handleSwipeUp()
+            }
+
+            override fun onSwipeDown() {
+                handleSwipeDown()
+            }
+
+            override fun onLongClick(view: View) {
+                this@HomeFragment.onLongClick(view)
+            }
+
+            override fun onClick(view: View) {
+                this@HomeFragment.onClick(view)
+            }
         }
-    }
 
     // Update the number of app buttons displayed for the current page
     private fun updateAppCountForPage(appsCount: Int) {
         val currentAppCount = binding.homeAppsLayout.childCount
-        
+
         if (currentAppCount < appsCount) {
             // Add more app buttons
             for (i in currentAppCount until appsCount) {
@@ -384,10 +453,11 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                 view.apply {
                     textSize = 41f
                     setOnTouchListener(getHomeAppsGestureListener(context, this))
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
+                    layoutParams =
+                        ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                        )
                     gravity = android.view.Gravity.CENTER
                 }
                 binding.homeAppsLayout.addView(view)
@@ -402,7 +472,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     private fun getAppDisplayName(appModel: AppModel): String {
         val appName = if (appModel.appAlias.isNotEmpty()) appModel.appAlias else appModel.appLabel
         if (!prefs.showNotificationIndicator) return appName
-        
+
         val packagesWithNotifications = LumaNotificationListener.getActiveNotificationPackages()
         val hasNotification = packagesWithNotifications.contains(appModel.appPackage)
         return if (hasNotification) "$appName*" else appName
@@ -411,10 +481,10 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     private fun refreshAppNames() {
         val appsPerPage = prefs.getAppsPerPage(currentPage + 1)
         val startIndex = currentPage * 6
-        
+
         // Update the number of app buttons if needed
         updateAppCountForPage(appsPerPage)
-        
+
         for (i in 0 until appsPerPage) {
             val appIndex = startIndex + i
             val view = binding.homeAppsLayout.getChildAt(i)
@@ -424,7 +494,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                 view.id = appIndex
             }
         }
-        
+
         updatePageIndicator()
     }
 }

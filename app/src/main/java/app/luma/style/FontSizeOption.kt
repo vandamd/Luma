@@ -11,11 +11,10 @@ enum class FontSizeOption(
     Medium(
         title = "Medium (Default)",
         fontScale = 0.86f,
-    );
+    ),
+    ;
 
     companion object {
-        fun fromKey(key: String?): FontSizeOption {
-            return values().firstOrNull { it.name == key } ?: Medium
-        }
+        fun fromKey(key: String?): FontSizeOption = values().firstOrNull { it.name == key } ?: Medium
     }
 }

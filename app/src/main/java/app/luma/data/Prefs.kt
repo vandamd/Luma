@@ -10,7 +10,6 @@ import app.luma.style.FontSizeOption
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-
 private const val PREFS_FILENAME = "app.luma"
 
 private const val FIRST_SETTINGS_OPEN = "FIRST_SETTINGS_OPEN"
@@ -43,8 +42,9 @@ private const val PAGE_INDICATOR_POSITION = "page_indicator_position"
 private const val SHOW_NOTIFICATION_INDICATOR = "show_notification_indicator"
 private const val FONT_SIZE_OPTION = "font_size_option"
 
-class Prefs(val context: Context) {
-
+class Prefs(
+    val context: Context,
+) {
     enum class PageIndicatorPosition { Left, Right, Hidden }
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, 0)
@@ -59,15 +59,31 @@ class Prefs(val context: Context) {
         val all: HashMap<String, Any?> = Gson().fromJson(json, object : TypeToken<HashMap<String, Any?>>() {}.type)
         for ((key, value) in all) {
             when (value) {
-                is String -> editor.putString(key, value)
-                is Boolean -> editor.putBoolean(key, value)
-                is Int -> editor.putInt(key, value)
-                is Double -> editor.putInt(key, value.toInt())
-                is Float -> editor.putInt(key, value.toInt())
+                is String -> {
+                    editor.putString(key, value)
+                }
+
+                is Boolean -> {
+                    editor.putBoolean(key, value)
+                }
+
+                is Int -> {
+                    editor.putInt(key, value)
+                }
+
+                is Double -> {
+                    editor.putInt(key, value.toInt())
+                }
+
+                is Float -> {
+                    editor.putInt(key, value.toInt())
+                }
+
                 is MutableSet<*> -> {
                     val list = value.filterIsInstance<String>().toSet()
                     editor.putStringSet(key, list)
                 }
+
                 else -> {
                     if (BuildConfig.DEBUG) {
                         Log.d("backup error", "$value")
@@ -78,9 +94,7 @@ class Prefs(val context: Context) {
         editor.apply()
     }
 
-    fun firstSettingsOpen(): Boolean {
-        return firstTrueFalseAfter(FIRST_SETTINGS_OPEN)
-    }
+    fun firstSettingsOpen(): Boolean = firstTrueFalseAfter(FIRST_SETTINGS_OPEN)
 
     var homePages: Int
         get() {
@@ -92,15 +106,17 @@ class Prefs(val context: Context) {
         }
         set(value) = prefs.edit().putInt(HOME_PAGES, value.coerceIn(1, 5)).apply()
 
-    fun getAppsPerPage(page: Int): Int {
-        return try {
+    fun getAppsPerPage(page: Int): Int =
+        try {
             prefs.getInt("${HOME_APPS_PER_PAGE}$page", 4)
         } catch (_: Exception) {
             4
         }
-    }
 
-    fun setAppsPerPage(page: Int, count: Int) {
+    fun setAppsPerPage(
+        page: Int,
+        count: Int,
+    ) {
         prefs.edit().putInt("${HOME_APPS_PER_PAGE}$page", count).apply()
     }
 
@@ -124,15 +140,23 @@ class Prefs(val context: Context) {
         get() = loadAction(DOUBLE_TAP_ACTION, Constants.Action.Disabled)
         set(value) = storeAction(DOUBLE_TAP_ACTION, value)
 
-    private fun loadAction(prefString: String, default: Constants.Action): Constants.Action {
-        val string = prefs.getString(
-            prefString,
-            default.toString()
-        ).toString()
+    private fun loadAction(
+        prefString: String,
+        default: Constants.Action,
+    ): Constants.Action {
+        val string =
+            prefs
+                .getString(
+                    prefString,
+                    default.toString(),
+                ).toString()
         return Constants.Action.valueOf(string)
     }
 
-    private fun storeAction(prefString: String, value: Constants.Action) {
+    private fun storeAction(
+        prefString: String,
+        value: Constants.Action,
+    ) {
         prefs.edit().putString(prefString, value.name).apply()
     }
 
@@ -146,8 +170,6 @@ class Prefs(val context: Context) {
         }
         set(value) = prefs.edit().putString(APP_THEME, value.name).apply()
 
-
-
     var hiddenApps: MutableSet<String>
         get() = prefs.getStringSet(HIDDEN_APPS, mutableSetOf()) as MutableSet<String>
         set(value) = prefs.edit().putStringSet(HIDDEN_APPS, value).apply()
@@ -156,11 +178,12 @@ class Prefs(val context: Context) {
         get() = prefs.getBoolean(HIDDEN_APPS_UPDATED, false)
         set(value) = prefs.edit().putBoolean(HIDDEN_APPS_UPDATED, value).apply()
 
-    fun getHomeAppModel(i:Int): AppModel {
-        return loadApp("$i")
-    }
+    fun getHomeAppModel(i: Int): AppModel = loadApp("$i")
 
-    fun setHomeAppModel(i: Int, appModel: AppModel) {
+    fun setHomeAppModel(
+        i: Int,
+        appModel: AppModel,
+    ) {
         storeApp("$i", appModel)
     }
 
@@ -190,7 +213,12 @@ class Prefs(val context: Context) {
         val alias = prefs.getString("${APP_ALIAS}_$id", "").toString()
         val activity = prefs.getString("${APP_ACTIVITY}_$id", "").toString()
 
-        val userHandleString = try { prefs.getString("${APP_USER}_$id", "").toString() } catch (_: Exception) { "" }
+        val userHandleString =
+            try {
+                prefs.getString("${APP_USER}_$id", "").toString()
+            } catch (_: Exception) {
+                ""
+            }
         val userHandle: UserHandle = getUserHandleFromString(context, userHandleString)
 
         return AppModel(
@@ -203,7 +231,10 @@ class Prefs(val context: Context) {
         )
     }
 
-    private fun storeApp(id: String, appModel: AppModel) {
+    private fun storeApp(
+        id: String,
+        appModel: AppModel,
+    ) {
         val edit = prefs.edit()
         edit.putString("${APP_NAME}_$id", appModel.appLabel)
         edit.putString("${APP_PACKAGE}_$id", appModel.appPackage)
@@ -234,10 +265,12 @@ class Prefs(val context: Context) {
         get() = prefs.getBoolean(SHOW_NOTIFICATION_INDICATOR, true)
         set(value) = prefs.edit().putBoolean(SHOW_NOTIFICATION_INDICATOR, value).apply()
 
-    fun getAppAlias(appName: String): String {
-        return prefs.getString(appName, "").toString()
-    }
-    fun setAppAlias(appPackage: String, appAlias: String) {
+    fun getAppAlias(appName: String): String = prefs.getString(appName, "").toString()
+
+    fun setAppAlias(
+        appPackage: String,
+        appAlias: String,
+    ) {
         prefs.edit().putString(appPackage, appAlias).apply()
     }
 
@@ -246,7 +279,7 @@ class Prefs(val context: Context) {
         if (first) {
             prefs.edit().putBoolean(key, false).apply()
         }
-        return  first
+        return first
     }
 
     fun clear() {

@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Arrangement
-import isDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -28,13 +27,13 @@ import app.luma.data.Constants.Theme.*
 import app.luma.data.Prefs
 import app.luma.databinding.FragmentSettingsBinding
 import app.luma.ui.compose.CustomScrollView
-import app.luma.ui.compose.SettingsComposable.SimpleTextButton
-import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import app.luma.ui.compose.SettingsComposable.ContentContainer
+import app.luma.ui.compose.SettingsComposable.SettingsHeader
+import app.luma.ui.compose.SettingsComposable.SimpleTextButton
 import app.luma.ui.compose.SettingsComposable.ToggleTextButton
+import isDarkTheme
 
 class SettingsFragment : Fragment() {
-
     private lateinit var prefs: Prefs
     private lateinit var viewModel: MainViewModel
 
@@ -44,14 +43,17 @@ class SettingsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         prefs = Prefs(requireContext())
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = activity?.run {
@@ -69,12 +71,13 @@ class SettingsFragment : Fragment() {
     private fun Settings() {
         Column {
             SettingsHeader(
-                title = "Luma Settings (" + requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName + ")",
-                onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() }
+                title =
+                    "Luma Settings (" + requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName + ")",
+                onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() },
             )
             val isDark = isDarkTheme(prefs)
             val themeState = remember { mutableStateOf(!isDark) }
-            
+
             ContentContainer {
                 CustomScrollView(verticalArrangement = Arrangement.spacedBy(40.dp)) {
                     ToggleTextButton(
@@ -87,11 +90,13 @@ class SettingsFragment : Fragment() {
                         onClick = {
                             themeState.value = !themeState.value
                             setTheme(if (themeState.value) Light else Dark)
-                        }
+                        },
                     )
                     SimpleTextButton("Pages") { findNavController().navigate(R.id.action_settingsFragment_to_pagesFragment) }
                     SimpleTextButton("Gestures") { findNavController().navigate(R.id.action_settingsFragment_to_gesturesFragment) }
-                    SimpleTextButton("Notifications") { findNavController().navigate(R.id.action_settingsFragment_to_notificationsFragment) }
+                    SimpleTextButton(
+                        "Notifications",
+                    ) { findNavController().navigate(R.id.action_settingsFragment_to_notificationsFragment) }
                     SimpleTextButton("Hidden Apps") { showHiddenApps() }
                 }
             }
@@ -107,7 +112,7 @@ class SettingsFragment : Fragment() {
         viewModel.getHiddenApps()
         findNavController().navigate(
             R.id.action_settingsFragment_to_appListFragment,
-            bundleOf("flag" to AppDrawerFlag.HiddenApps.toString())
+            bundleOf("flag" to AppDrawerFlag.HiddenApps.toString()),
         )
     }
 
