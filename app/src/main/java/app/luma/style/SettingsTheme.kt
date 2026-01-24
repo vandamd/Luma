@@ -1,4 +1,3 @@
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material.MaterialTheme
@@ -17,7 +16,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import app.luma.R
-import app.luma.data.Constants
 import app.luma.data.Prefs
 import app.luma.style.CORNER_RADIUS
 import app.luma.style.textDark
@@ -25,12 +23,7 @@ import app.luma.style.textGray
 import app.luma.style.textLight
 
 @Composable
-fun isDarkTheme(prefs: Prefs): Boolean =
-    when (prefs.appTheme) {
-        Constants.Theme.Light -> false
-        Constants.Theme.Dark -> true
-        Constants.Theme.System -> isSystemInDarkTheme()
-    }
+fun isDarkTheme(prefs: Prefs): Boolean = !prefs.invertColours
 
 @Immutable
 data class ReplacementTypography(

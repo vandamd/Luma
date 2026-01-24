@@ -43,19 +43,4 @@ object Constants {
                 Disabled -> "Disabled"
             }
     }
-
-    enum class Theme : EnumOption {
-        System,
-        Dark,
-        Light,
-        ;
-
-        @Composable
-        override fun string(): String =
-            when (this) {
-                System -> "System"
-                Dark -> "Dark"
-                Light -> "Light"
-            }
-    }
 }

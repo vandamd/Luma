@@ -18,7 +18,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import app.luma.data.Constants
 import app.luma.data.Prefs
 import app.luma.databinding.ActivityMainBinding
 import app.luma.helper.showToast
@@ -41,10 +40,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         prefs = Prefs(this)
         val themeMode =
-            when (prefs.appTheme) {
-                Constants.Theme.Light -> AppCompatDelegate.MODE_NIGHT_NO
-                Constants.Theme.Dark -> AppCompatDelegate.MODE_NIGHT_YES
-                Constants.Theme.System -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            if (prefs.invertColours) {
+                AppCompatDelegate.MODE_NIGHT_NO
+            } else {
+                AppCompatDelegate.MODE_NIGHT_YES
             }
         AppCompatDelegate.setDefaultNightMode(themeMode)
 

@@ -21,9 +21,7 @@ import androidx.navigation.fragment.findNavController
 import app.luma.BuildConfig
 import app.luma.MainViewModel
 import app.luma.R
-import app.luma.data.Constants
 import app.luma.data.Constants.AppDrawerFlag
-import app.luma.data.Constants.Theme.*
 import app.luma.data.Prefs
 import app.luma.databinding.FragmentSettingsBinding
 import app.luma.ui.compose.CustomScrollView
@@ -75,21 +73,22 @@ class SettingsFragment : Fragment() {
                     "Luma Settings (" + requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName + ")",
                 onBack = { requireActivity().onBackPressedDispatcher.onBackPressed() },
             )
-            val isDark = isDarkTheme(prefs)
-            val themeState = remember { mutableStateOf(!isDark) }
+            val invertState = remember { mutableStateOf(prefs.invertColours) }
 
             ContentContainer {
                 CustomScrollView(verticalArrangement = Arrangement.spacedBy(40.dp)) {
                     ToggleTextButton(
                         title = "Invert Colours",
-                        checked = themeState.value,
+                        checked = invertState.value,
                         onCheckedChange = {
-                            themeState.value = it
-                            setTheme(if (it) Light else Dark)
+                            invertState.value = it
+                            prefs.invertColours = it
+                            requireActivity().recreate()
                         },
                         onClick = {
-                            themeState.value = !themeState.value
-                            setTheme(if (themeState.value) Light else Dark)
+                            invertState.value = !invertState.value
+                            prefs.invertColours = invertState.value
+                            requireActivity().recreate()
                         },
                     )
                     SimpleTextButton("Pages") { findNavController().navigate(R.id.action_settingsFragment_to_pagesFragment) }
@@ -114,10 +113,5 @@ class SettingsFragment : Fragment() {
             R.id.action_settingsFragment_to_appListFragment,
             bundleOf("flag" to AppDrawerFlag.HiddenApps.toString()),
         )
-    }
-
-    private fun setTheme(appTheme: Constants.Theme) {
-        prefs.appTheme = appTheme
-        requireActivity().recreate()
     }
 }

@@ -17,7 +17,7 @@ private const val SWIPE_LEFT_ACTION = "SWIPE_LEFT_ACTION"
 
 private const val DOUBLE_TAP_ACTION = "DOUBLE_TAP_ACTION"
 private const val HIDDEN_APPS = "HIDDEN_APPS"
-private const val APP_THEME = "APP_THEME"
+private const val INVERT_COLOURS = "INVERT_COLOURS"
 
 private const val APP_NAME = "APP_NAME"
 private const val APP_PACKAGE = "APP_PACKAGE"
@@ -108,15 +108,9 @@ class Prefs(
         prefs.edit().putString(prefString, value.name).apply()
     }
 
-    var appTheme: Constants.Theme
-        get() {
-            return try {
-                Constants.Theme.valueOf(prefs.getString(APP_THEME, Constants.Theme.Dark.name).toString())
-            } catch (_: Exception) {
-                Constants.Theme.System
-            }
-        }
-        set(value) = prefs.edit().putString(APP_THEME, value.name).apply()
+    var invertColours: Boolean
+        get() = prefs.getBoolean(INVERT_COLOURS, false)
+        set(value) = prefs.edit().putBoolean(INVERT_COLOURS, value).apply()
 
     var hiddenApps: MutableSet<String>
         get() = prefs.getStringSet(HIDDEN_APPS, mutableSetOf()) as MutableSet<String>
