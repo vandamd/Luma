@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import app.luma.MainViewModel
 import app.luma.R
 import app.luma.data.Constants
 import app.luma.data.Constants.Action
@@ -101,6 +103,8 @@ class GestureActionFragment : Fragment() {
     private fun handleActionSelection(action: Action) {
         setCurrentAction(action)
         if (action == Action.OpenApp) {
+            val viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
+            viewModel.getAppList()
             val displayInfo = getDisplayInfo()
             findNavController().navigate(
                 R.id.appListFragment,
