@@ -8,8 +8,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import app.luma.data.AppModel
-import app.luma.data.Constants
 import app.luma.data.Constants.AppDrawerFlag
+import app.luma.data.GestureType
 import app.luma.data.Prefs
 import app.luma.helper.*
 import kotlinx.coroutines.launch
@@ -32,33 +32,13 @@ class MainViewModel(
         n: Int = 0,
     ) {
         when (flag) {
-            AppDrawerFlag.LaunchApp, AppDrawerFlag.HiddenApps -> {
-                launchApp(appModel)
-            }
-
-            AppDrawerFlag.SetHomeApp -> {
-                prefs.setHomeAppModel(n, appModel)
-            }
-
-            AppDrawerFlag.SetSwipeLeft -> {
-                prefs.appSwipeLeft = appModel
-            }
-
-            AppDrawerFlag.SetSwipeRight -> {
-                prefs.appSwipeRight = appModel
-            }
-
-            AppDrawerFlag.SetSwipeUp -> {
-                prefs.appSwipeUp = appModel
-            }
-
-            AppDrawerFlag.SetSwipeDown -> {
-                prefs.appSwipeDown = appModel
-            }
-
-            AppDrawerFlag.SetDoubleTap -> {
-                prefs.appDoubleTap = appModel
-            }
+            AppDrawerFlag.LaunchApp, AppDrawerFlag.HiddenApps -> launchApp(appModel)
+            AppDrawerFlag.SetHomeApp -> prefs.setHomeAppModel(n, appModel)
+            AppDrawerFlag.SetSwipeLeft -> prefs.setGestureApp(GestureType.SWIPE_LEFT, appModel)
+            AppDrawerFlag.SetSwipeRight -> prefs.setGestureApp(GestureType.SWIPE_RIGHT, appModel)
+            AppDrawerFlag.SetSwipeUp -> prefs.setGestureApp(GestureType.SWIPE_UP, appModel)
+            AppDrawerFlag.SetSwipeDown -> prefs.setGestureApp(GestureType.SWIPE_DOWN, appModel)
+            AppDrawerFlag.SetDoubleTap -> prefs.setGestureApp(GestureType.DOUBLE_TAP, appModel)
         }
     }
 
@@ -105,7 +85,7 @@ class MainViewModel(
 
     fun getAppList() {
         viewModelScope.launch {
-            appList.value = getAppsList(appContext, true)
+            appList.value = getAppsList(appContext)
         }
     }
 

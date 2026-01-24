@@ -2,22 +2,29 @@ package app.luma.helper
 
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
+import java.lang.ref.WeakReference
 
 class LumaNotificationListener : NotificationListenerService() {
     companion object {
-        private var instance: LumaNotificationListener? = null
+        private var instance: WeakReference<LumaNotificationListener> = WeakReference(null)
 
-        fun getActiveNotificationPackages(): Set<String> = instance?.activeNotifications?.map { it.packageName }?.toSet() ?: emptySet()
+        fun getActiveNotificationPackages(): Set<String> =
+            instance
+                .get()
+                ?.activeNotifications
+                ?.map { it.packageName }
+                ?.toSet()
+                ?: emptySet()
     }
 
     override fun onCreate() {
         super.onCreate()
-        instance = this
+        instance = WeakReference(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        instance = null
+        instance = WeakReference(null)
     }
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {

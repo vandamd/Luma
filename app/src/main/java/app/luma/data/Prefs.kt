@@ -15,7 +15,6 @@ private const val INVERT_COLOURS = "INVERT_COLOURS"
 
 private const val APP_NAME = "APP_NAME"
 private const val APP_PACKAGE = "APP_PACKAGE"
-private const val APP_USER = "APP_USER"
 private const val APP_ALIAS = "APP_ALIAS"
 private const val APP_ACTIVITY = "APP_ACTIVITY"
 
@@ -45,21 +44,10 @@ class Prefs(
     fun firstSettingsOpen(): Boolean = firstTrueFalseAfter(FIRST_SETTINGS_OPEN)
 
     var homePages: Int
-        get() {
-            return try {
-                prefs.getInt(HOME_PAGES, 1)
-            } catch (_: Exception) {
-                1
-            }
-        }
+        get() = prefs.getInt(HOME_PAGES, 1)
         set(value) = prefs.edit().putInt(HOME_PAGES, value.coerceIn(1, 5)).apply()
 
-    fun getAppsPerPage(page: Int): Int =
-        try {
-            prefs.getInt("${HOME_APPS_PER_PAGE}$page", 4)
-        } catch (_: Exception) {
-            4
-        }
+    fun getAppsPerPage(page: Int): Int = prefs.getInt("${HOME_APPS_PER_PAGE}$page", 4)
 
     fun setAppsPerPage(
         page: Int,
@@ -67,26 +55,6 @@ class Prefs(
     ) {
         prefs.edit().putInt("${HOME_APPS_PER_PAGE}$page", count).apply()
     }
-
-    var swipeLeftAction: Constants.Action
-        get() = getGestureAction(GestureType.SWIPE_LEFT)
-        set(value) = setGestureAction(GestureType.SWIPE_LEFT, value)
-
-    var swipeRightAction: Constants.Action
-        get() = getGestureAction(GestureType.SWIPE_RIGHT)
-        set(value) = setGestureAction(GestureType.SWIPE_RIGHT, value)
-
-    var swipeDownAction: Constants.Action
-        get() = getGestureAction(GestureType.SWIPE_DOWN)
-        set(value) = setGestureAction(GestureType.SWIPE_DOWN, value)
-
-    var swipeUpAction: Constants.Action
-        get() = getGestureAction(GestureType.SWIPE_UP)
-        set(value) = setGestureAction(GestureType.SWIPE_UP, value)
-
-    var doubleTapAction: Constants.Action
-        get() = getGestureAction(GestureType.DOUBLE_TAP)
-        set(value) = setGestureAction(GestureType.DOUBLE_TAP, value)
 
     private fun loadAction(
         prefString: String,
@@ -138,26 +106,6 @@ class Prefs(
         storeAction(type.actionKey, action)
     }
 
-    var appSwipeRight: AppModel
-        get() = getGestureApp(GestureType.SWIPE_RIGHT)
-        set(appModel) = setGestureApp(GestureType.SWIPE_RIGHT, appModel)
-
-    var appSwipeLeft: AppModel
-        get() = getGestureApp(GestureType.SWIPE_LEFT)
-        set(appModel) = setGestureApp(GestureType.SWIPE_LEFT, appModel)
-
-    var appSwipeDown: AppModel
-        get() = getGestureApp(GestureType.SWIPE_DOWN)
-        set(appModel) = setGestureApp(GestureType.SWIPE_DOWN, appModel)
-
-    var appSwipeUp: AppModel
-        get() = getGestureApp(GestureType.SWIPE_UP)
-        set(appModel) = setGestureApp(GestureType.SWIPE_UP, appModel)
-
-    var appDoubleTap: AppModel
-        get() = getGestureApp(GestureType.DOUBLE_TAP)
-        set(appModel) = setGestureApp(GestureType.DOUBLE_TAP, appModel)
-
     private fun loadApp(id: String): AppModel {
         val name = prefs.getString("${APP_NAME}_$id", "") ?: ""
         val pack = prefs.getString("${APP_PACKAGE}_$id", "") ?: ""
@@ -178,13 +126,13 @@ class Prefs(
         id: String,
         appModel: AppModel,
     ) {
-        val edit = prefs.edit()
-        edit.putString("${APP_NAME}_$id", appModel.appLabel)
-        edit.putString("${APP_PACKAGE}_$id", appModel.appPackage)
-        edit.putString("${APP_ACTIVITY}_$id", appModel.appActivityName)
-        edit.putString("${APP_ALIAS}_$id", appModel.appAlias)
-        edit.putString("${APP_USER}_$id", appModel.user.toString())
-        edit.apply()
+        prefs
+            .edit()
+            .putString("${APP_NAME}_$id", appModel.appLabel)
+            .putString("${APP_PACKAGE}_$id", appModel.appPackage)
+            .putString("${APP_ACTIVITY}_$id", appModel.appActivityName)
+            .putString("${APP_ALIAS}_$id", appModel.appAlias)
+            .apply()
     }
 
     var fontSizeOption: FontSizeOption

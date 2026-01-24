@@ -116,7 +116,19 @@ class HomeFragment :
 
     private fun initSwipeTouchListener() {
         val context = requireContext()
-        binding.touchArea.setOnTouchListener(getHomeScreenGestureListener(context))
+        binding.touchArea.setOnTouchListener(
+            createGestureListener(
+                context = context,
+                enableDelayedLongPress = true,
+                onLongClick = {
+                    try {
+                        findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
+                    } catch (_: Exception) {
+                        // Navigation already in progress, ignore
+                    }
+                },
+            ),
+        )
     }
 
     private fun initPageNavigation() {
@@ -253,12 +265,6 @@ class HomeFragment :
         val app = prefs.getGestureApp(gestureType)
         if (app.appPackage.isNotEmpty()) {
             launchApp(app)
-            return
-        }
-        when (gestureType) {
-            GestureType.SWIPE_RIGHT, GestureType.SWIPE_DOWN -> openDialerApp(requireContext())
-            GestureType.SWIPE_UP -> showAppList(AppDrawerFlag.LaunchApp)
-            GestureType.SWIPE_LEFT, GestureType.DOUBLE_TAP -> openCameraApp(requireContext())
         }
     }
 
@@ -313,79 +319,47 @@ class HomeFragment :
         }
     }
 
-    private fun handleSwipeLeft() = handleGesture(GestureType.SWIPE_LEFT)
-
-    private fun handleSwipeRight() = handleGesture(GestureType.SWIPE_RIGHT)
-
-    private fun handleSwipeUp(): Boolean {
+    private fun handleSwipeUp() {
         if (totalPages > 1 && currentPage < totalPages - 1) {
             switchToPage(currentPage + 1)
-            return true
+        } else {
+            handleGesture(GestureType.SWIPE_UP)
         }
-        handleGesture(GestureType.SWIPE_UP)
-        return false
     }
 
-    private fun handleSwipeDown(): Boolean {
+    private fun handleSwipeDown() {
         if (totalPages > 1 && currentPage > 0) {
             switchToPage(currentPage - 1)
-            return true
+        } else {
+            handleGesture(GestureType.SWIPE_DOWN)
         }
-        handleGesture(GestureType.SWIPE_DOWN)
-        return false
     }
 
-    private fun handleDoubleTap() = handleGesture(GestureType.DOUBLE_TAP)
-
-    private fun getHomeScreenGestureListener(context: Context): View.OnTouchListener =
-        object : SwipeTouchListener(context, enableDelayedLongPress = true) {
-            override fun onSwipeLeft() = handleSwipeLeft()
-
-            override fun onSwipeRight() = handleSwipeRight()
-
-            override fun onSwipeUp() {
-                handleSwipeUp()
-            }
-
-            override fun onSwipeDown() {
-                handleSwipeDown()
-            }
-
-            override fun onDoubleClick() = handleDoubleTap()
-
-            override fun onLongClick() {
-                try {
-                    findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
-                } catch (_: Exception) {
-                    // Navigation already in progress, ignore
-                }
-            }
-        }
-
-    private fun getHomeAppsGestureListener(
+    private fun createGestureListener(
         context: Context,
-        view: View,
+        view: View? = null,
+        enableDelayedLongPress: Boolean = false,
+        onLongClick: () -> Unit = {},
+        onClick: (View) -> Unit = {},
     ): View.OnTouchListener =
-        object : SwipeTouchListener(context, view) {
-            override fun onSwipeLeft() = handleSwipeLeft()
+        object : SwipeTouchListener(context, view, enableDelayedLongPress) {
+            override fun onSwipeLeft() = handleGesture(GestureType.SWIPE_LEFT)
 
-            override fun onSwipeRight() = handleSwipeRight()
+            override fun onSwipeRight() = handleGesture(GestureType.SWIPE_RIGHT)
 
-            override fun onSwipeUp() {
-                handleSwipeUp()
-            }
+            override fun onSwipeUp() = handleSwipeUp()
 
-            override fun onSwipeDown() {
-                handleSwipeDown()
-            }
+            override fun onSwipeDown() = handleSwipeDown()
+
+            override fun onDoubleClick() = handleGesture(GestureType.DOUBLE_TAP)
+
+            override fun onLongClick() = onLongClick()
 
             override fun onLongClick(view: View) {
                 this@HomeFragment.onLongClick(view)
             }
 
-            override fun onClick(view: View) {
-                this@HomeFragment.onClick(view)
-            }
+            override fun onClick(view: View) = onClick(view)
         }
 
     // Update the number of app buttons displayed for the current page
@@ -398,7 +372,13 @@ class HomeFragment :
                 val view = layoutInflater.inflate(R.layout.home_app_button, null) as TextView
                 view.apply {
                     textSize = 41f
-                    setOnTouchListener(getHomeAppsGestureListener(context, this))
+                    setOnTouchListener(
+                        createGestureListener(
+                            context = context,
+                            view = this,
+                            onClick = { v -> this@HomeFragment.onClick(v) },
+                        ),
+                    )
                     layoutParams =
                         ViewGroup.LayoutParams(
                             ViewGroup.LayoutParams.WRAP_CONTENT,

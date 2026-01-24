@@ -27,7 +27,6 @@ fun isDarkTheme(prefs: Prefs): Boolean = !prefs.invertColours
 
 @Immutable
 data class SettingsTypography(
-    val body: TextStyle,
     val title: TextStyle,
     val item: TextStyle,
     val pageButton: TextStyle,
@@ -38,7 +37,6 @@ data class SettingsTypography(
 private val LocalTypography =
     staticCompositionLocalOf {
         SettingsTypography(
-            body = TextStyle.Default,
             title = TextStyle.Default,
             item = TextStyle.Default,
             pageButton = TextStyle.Default,
@@ -66,7 +64,6 @@ fun SettingsTheme(
     val textColor = if (isDark) textLight else textDark
     val typography =
         SettingsTypography(
-            body = TextStyle(fontSize = 16.sp),
             title = TextStyle(fontSize = 20.sp, color = textColor),
             item =
                 TextStyle(

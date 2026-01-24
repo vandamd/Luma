@@ -44,51 +44,37 @@ class GesturesFragment : Fragment() {
 
             ContentContainer {
                 CustomScrollView(verticalArrangement = Arrangement.spacedBy(26.dp)) {
-                    SelectorButton(
-                        label = "Swipe left",
-                        value = getActionText(prefs.swipeLeftAction, prefs.appSwipeLeft.appLabel),
-                        onClick = { navigateToGesture(GestureType.SWIPE_LEFT) },
-                    )
-                    SelectorButton(
-                        label = "Swipe right",
-                        value = getActionText(prefs.swipeRightAction, prefs.appSwipeRight.appLabel),
-                        onClick = { navigateToGesture(GestureType.SWIPE_RIGHT) },
-                    )
-                    SelectorButton(
-                        label = "Swipe down",
-                        value = getActionText(prefs.swipeDownAction, prefs.appSwipeDown.appLabel),
-                        onClick = { navigateToGesture(GestureType.SWIPE_DOWN) },
-                    )
-                    SelectorButton(
-                        label = "Swipe up",
-                        value = getActionText(prefs.swipeUpAction, prefs.appSwipeUp.appLabel),
-                        onClick = { navigateToGesture(GestureType.SWIPE_UP) },
-                    )
-                    SelectorButton(
-                        label = "Double tap",
-                        value = getActionText(prefs.doubleTapAction, prefs.appDoubleTap.appLabel),
-                        onClick = { navigateToGesture(GestureType.DOUBLE_TAP) },
-                    )
+                    GestureButton("Swipe left", GestureType.SWIPE_LEFT)
+                    GestureButton("Swipe right", GestureType.SWIPE_RIGHT)
+                    GestureButton("Swipe down", GestureType.SWIPE_DOWN)
+                    GestureButton("Swipe up", GestureType.SWIPE_UP)
+                    GestureButton("Double tap", GestureType.DOUBLE_TAP)
                 }
             }
         }
     }
 
-    private fun navigateToGesture(gestureType: GestureType) {
-        findNavController().navigate(
-            R.id.action_gesturesFragment_to_gestureActionFragment,
-            bundleOf(GestureActionFragment.GESTURE_TYPE to gestureType.name),
+    @Composable
+    private fun GestureButton(
+        label: String,
+        type: GestureType,
+    ) {
+        val action = prefs.getGestureAction(type)
+        val value =
+            when (action) {
+                Constants.Action.OpenApp -> "Open ${prefs.getGestureApp(type).appLabel}"
+                Constants.Action.Disabled -> "Disabled"
+                else -> action.displayName()
+            }
+        SelectorButton(
+            label = label,
+            value = value,
+            onClick = {
+                findNavController().navigate(
+                    R.id.action_gesturesFragment_to_gestureActionFragment,
+                    bundleOf(GestureActionFragment.GESTURE_TYPE to type.name),
+                )
+            },
         )
     }
-
-    @Composable
-    private fun getActionText(
-        action: Constants.Action,
-        appLabel: String,
-    ): String =
-        when (action) {
-            Constants.Action.OpenApp -> "Open $appLabel"
-            Constants.Action.Disabled -> "Disabled"
-            else -> action.displayName()
-        }
 }
