@@ -40,7 +40,6 @@ class AppDrawerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        // return inflater.inflate(R.layout.fragment_app_drawer, container, false)
         _binding = FragmentAppDrawerBinding.inflate(inflater, container, false)
 
         val flagString = arguments?.getString("flag", AppDrawerFlag.LaunchApp.toString()) ?: AppDrawerFlag.LaunchApp.toString()
@@ -61,6 +60,11 @@ class AppDrawerFragment : Fragment() {
             }
         }
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     @SuppressLint("RtlHardcoded")

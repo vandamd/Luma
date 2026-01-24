@@ -7,7 +7,6 @@ import android.content.pm.LauncherApps
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
 import android.content.res.Configuration
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
@@ -31,8 +30,6 @@ import androidx.core.app.ActivityCompat
 import app.luma.BuildConfig
 import app.luma.R
 import app.luma.data.AppModel
-import app.luma.data.Constants.BACKUP_READ
-import app.luma.data.Constants.BACKUP_WRITE
 import app.luma.data.Prefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

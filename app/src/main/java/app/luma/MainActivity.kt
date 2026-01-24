@@ -24,10 +24,6 @@ import app.luma.databinding.ActivityMainBinding
 import app.luma.helper.isTablet
 import app.luma.helper.showToast
 import app.luma.style.DisplayDefaults.withDisplayDefaults
-import java.io.BufferedReader
-import java.io.FileOutputStream
-import java.io.InputStreamReader
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var prefs: Prefs
@@ -161,46 +157,11 @@ class MainActivity : AppCompatActivity() {
 
         if (resultCode != Activity.RESULT_OK) return
 
-        when (requestCode) {
-            Constants.REQUEST_CODE_ENABLE_ADMIN -> {
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                    showMessage(getString(R.string.double_tap_lock_is_enabled_message))
-                } else {
-                    showMessage(getString(R.string.double_tap_lock_uninstall_message))
-                }
-            }
-
-            Constants.BACKUP_READ -> {
-                data?.data?.also { uri ->
-                    applicationContext.contentResolver.openInputStream(uri).use { inputStream ->
-                        val stringBuilder = StringBuilder()
-                        BufferedReader(InputStreamReader(inputStream)).use { reader ->
-                            var line: String? = reader.readLine()
-                            while (line != null) {
-                                stringBuilder.append(line)
-                                line = reader.readLine()
-                            }
-                        }
-
-                        val string = stringBuilder.toString()
-                        val prefs = Prefs(applicationContext)
-                        prefs.clear()
-                        prefs.loadFromString(string)
-                    }
-                }
-                startActivity(Intent.makeRestartActivityTask(this.intent?.component))
-            }
-
-            Constants.BACKUP_WRITE -> {
-                data?.data?.also { uri ->
-                    applicationContext.contentResolver.openFileDescriptor(uri, "w")?.use { file ->
-                        FileOutputStream(file.fileDescriptor).use { stream ->
-                            val text = Prefs(applicationContext).saveToString()
-                            stream.channel.truncate(0)
-                            stream.write(text.toByteArray())
-                        }
-                    }
-                }
+        if (requestCode == Constants.REQUEST_CODE_ENABLE_ADMIN) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                showMessage(getString(R.string.double_tap_lock_is_enabled_message))
+            } else {
+                showMessage(getString(R.string.double_tap_lock_uninstall_message))
             }
         }
     }

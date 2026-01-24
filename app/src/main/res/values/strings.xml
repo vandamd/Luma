@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">Luma</string>
-    <string name="accessibility_service_name">Luma Actions Service</string>
     <string name="app">App</string>
-    <string name="admin_permission_message">Luma promises to use lock screen permission responsibly.</string>
     <string name="off">Off</string>
     <string name="on">On</string>
     <string name="black">Black</string>
@@ -13,15 +11,7 @@
     <string name="right">Right</string>
     <string name="center">Center</string>
     <string name="double_tap">Double Tap</string>
-    <string name="_0" translatable="false">0</string>
     <string name="_1" translatable="false">1</string>
-    <string name="_2" translatable="false">2</string>
-    <string name="_3" translatable="false">3</string>
-    <string name="_4" translatable="false">4</string>
-    <string name="_5" translatable="false">5</string>
-    <string name="_6" translatable="false">6</string>
-    <string name="_7" translatable="false">7</string>
-    <string name="_8" translatable="false">8</string>
     <string name="save">Save</string>
     <string name="okay">Okay</string>
     <string name="double_tap_lock_is_enabled_message">If double tap lock disables fingerprint or face unlock, open Luma settings, tap on \'experimental\' and follow the instructions. Thank you.</string>
@@ -32,14 +22,12 @@
     <string name="light">Light</string>
     <string name="double_tap_lock_uninstall_message">Double tap to lock enabled.
         \n\nNote: Turn this OFF first if you decide to delete Luma.</string>
+    <string name="accessibility_service_name">Luma</string>
     <string name="accessibility_service_description">This accessibility service allows Luma to do certain actions such as locking the screen or opening the quick settings.</string>
     <string name="open">Open link</string>
-    <string name="copy">Copy</string>
     <string name="close">Close</string>
 
     <string name="drawer_list_empty_hint">No apps found</string>
-
-    <string name="hidden_apps">Hidden apps</string>
 
     <string name="show">Show</string>
     <string name="reset">Reset</string>

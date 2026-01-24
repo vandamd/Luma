@@ -13,9 +13,6 @@ object Constants {
     const val REQUEST_CODE_ENABLE_ADMIN = 666
     const val LONG_PRESS_DELAY_MS = 500
 
-    const val BACKUP_WRITE = 1
-    const val BACKUP_READ = 2
-
     enum class AppDrawerFlag {
         LaunchApp,
         HiddenApps,

@@ -3,12 +3,8 @@ package app.luma.data
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.UserHandle
-import android.util.Log
-import app.luma.BuildConfig
 import app.luma.helper.getUserHandleFromString
 import app.luma.style.FontSizeOption
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 private const val PREFS_FILENAME = "app.luma"
 
@@ -48,51 +44,6 @@ class Prefs(
     enum class PageIndicatorPosition { Left, Right, Hidden }
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, 0)
-
-    fun saveToString(): String {
-        val all: HashMap<String, Any?> = HashMap(prefs.all)
-        return Gson().toJson(all)
-    }
-
-    fun loadFromString(json: String) {
-        val editor = prefs.edit()
-        val all: HashMap<String, Any?> = Gson().fromJson(json, object : TypeToken<HashMap<String, Any?>>() {}.type)
-        for ((key, value) in all) {
-            when (value) {
-                is String -> {
-                    editor.putString(key, value)
-                }
-
-                is Boolean -> {
-                    editor.putBoolean(key, value)
-                }
-
-                is Int -> {
-                    editor.putInt(key, value)
-                }
-
-                is Double -> {
-                    editor.putInt(key, value.toInt())
-                }
-
-                is Float -> {
-                    editor.putInt(key, value.toInt())
-                }
-
-                is MutableSet<*> -> {
-                    val list = value.filterIsInstance<String>().toSet()
-                    editor.putStringSet(key, list)
-                }
-
-                else -> {
-                    if (BuildConfig.DEBUG) {
-                        Log.d("backup error", "$value")
-                    }
-                }
-            }
-        }
-        editor.apply()
-    }
 
     fun firstSettingsOpen(): Boolean = firstTrueFalseAfter(FIRST_SETTINGS_OPEN)
 
