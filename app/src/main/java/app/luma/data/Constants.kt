@@ -1,10 +1,6 @@
 package app.luma.data
 
-import androidx.compose.runtime.Composable
-
 object Constants {
-    const val LONG_PRESS_DELAY_MS = 500
-
     enum class AppDrawerFlag {
         LaunchApp,
         HiddenApps,
@@ -26,7 +22,6 @@ object Constants {
         ShowNotification,
         ;
 
-        @Composable
         fun displayName(): String =
             when (this) {
                 OpenApp -> "Open App"

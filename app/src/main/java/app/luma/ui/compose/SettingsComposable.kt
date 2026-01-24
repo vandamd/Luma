@@ -41,6 +41,21 @@ import app.luma.data.Constants
 import app.luma.helper.performHapticFeedback
 import app.luma.style.CORNER_RADIUS
 
+private fun Modifier.underline(
+    color: Color,
+    yOffset: Dp = 2.dp,
+): Modifier =
+    this.drawBehind {
+        val strokeWidth = 2.dp.toPx()
+        val y = size.height + yOffset.toPx()
+        drawLine(
+            color = color,
+            start = Offset(0f, y),
+            end = Offset(size.width, y),
+            strokeWidth = strokeWidth,
+        )
+    }
+
 object SettingsComposable {
     @Composable
     fun SettingsHeader(
@@ -222,20 +237,7 @@ object SettingsComposable {
                             performHapticFeedback(context)
                             onClick()
                         }.then(
-                            if (underline) {
-                                Modifier.drawBehind {
-                                    val strokeWidth = 2.dp.toPx()
-                                    val y = size.height + 2.dp.toPx()
-                                    drawLine(
-                                        color = underlineColor,
-                                        start = Offset(0f, y),
-                                        end = Offset(size.width, y),
-                                        strokeWidth = strokeWidth,
-                                    )
-                                }
-                            } else {
-                                Modifier
-                            },
+                            if (underline) Modifier.underline(underlineColor) else Modifier,
                         ),
             )
         }
@@ -275,20 +277,7 @@ object SettingsComposable {
                     Modifier
                         .padding(bottom = 0.dp)
                         .then(
-                            if (isSelected) {
-                                Modifier.drawBehind {
-                                    val strokeWidth = 2.dp.toPx()
-                                    val y = size.height - 5.dp.toPx()
-                                    drawLine(
-                                        color = selectedColor,
-                                        start = Offset(0f, y),
-                                        end = Offset(size.width, y),
-                                        strokeWidth = strokeWidth,
-                                    )
-                                }
-                            } else {
-                                Modifier
-                            },
+                            if (isSelected) Modifier.underline(selectedColor, yOffset = (-5).dp) else Modifier,
                         ),
             )
         }

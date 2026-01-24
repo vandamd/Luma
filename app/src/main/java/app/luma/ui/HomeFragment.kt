@@ -1,7 +1,6 @@
 package app.luma.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -110,11 +109,8 @@ class HomeFragment :
     }
 
     private fun initSwipeTouchListener() {
-        val context = requireContext()
         binding.touchArea.setOnTouchListener(
             createGestureListener(
-                context = context,
-                enableDelayedLongPress = true,
                 onLongClick = {
                     try {
                         findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
@@ -321,13 +317,11 @@ class HomeFragment :
     }
 
     private fun createGestureListener(
-        context: Context,
         view: View? = null,
-        enableDelayedLongPress: Boolean = false,
         onLongClick: () -> Unit = {},
         onClick: (View) -> Unit = {},
     ): View.OnTouchListener =
-        object : SwipeTouchListener(context, view, enableDelayedLongPress) {
+        object : SwipeTouchListener(requireContext(), view) {
             override fun onSwipeLeft() = handleGesture(GestureType.SWIPE_LEFT)
 
             override fun onSwipeRight() = handleGesture(GestureType.SWIPE_RIGHT)
@@ -359,7 +353,6 @@ class HomeFragment :
                     textSize = 41f
                     setOnTouchListener(
                         createGestureListener(
-                            context = context,
                             view = this,
                             onClick = { v -> this@HomeFragment.onClick(v) },
                         ),

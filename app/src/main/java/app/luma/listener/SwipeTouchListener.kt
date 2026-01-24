@@ -1,15 +1,12 @@
 package app.luma.listener
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
-import app.luma.data.Constants
 import kotlin.math.abs
 
 private const val TAG = "SwipeTouchListener"
@@ -19,17 +16,12 @@ private const val TAG = "SwipeTouchListener"
  *
  * @param context The context
  * @param view Optional view reference for view-specific callbacks (onClick, onLongClick with view)
- * @param enableDelayedLongPress Whether to use delayed long press (500ms after system long press)
  */
 internal open class SwipeTouchListener(
     context: Context?,
     private val view: View? = null,
-    private val enableDelayedLongPress: Boolean = false,
 ) : OnTouchListener {
-    private var longPressOn = false
     private val gestureDetector: GestureDetector
-    private val handler = Handler(Looper.getMainLooper())
-    private var longPressRunnable: Runnable? = null
 
     override fun onTouch(
         v: View,
@@ -41,12 +33,6 @@ internal open class SwipeTouchListener(
                 MotionEvent.ACTION_DOWN -> view.isPressed = true
                 MotionEvent.ACTION_UP -> view.isPressed = false
             }
-        }
-
-        if (motionEvent.action == MotionEvent.ACTION_UP) {
-            longPressOn = false
-            longPressRunnable?.let { handler.removeCallbacks(it) }
-            longPressRunnable = null
         }
 
         return gestureDetector.onTouchEvent(motionEvent)
@@ -71,18 +57,7 @@ internal open class SwipeTouchListener(
         }
 
         override fun onLongPress(e: MotionEvent) {
-            if (enableDelayedLongPress) {
-                longPressOn = true
-                longPressRunnable =
-                    Runnable {
-                        if (longPressOn) {
-                            if (view != null) onLongClick(view) else onLongClick()
-                        }
-                    }
-                handler.postDelayed(longPressRunnable!!, Constants.LONG_PRESS_DELAY_MS.toLong())
-            } else {
-                if (view != null) onLongClick(view) else onLongClick()
-            }
+            if (view != null) onLongClick(view) else onLongClick()
             super.onLongPress(e)
         }
 

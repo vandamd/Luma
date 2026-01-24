@@ -77,23 +77,8 @@ class AppDrawerFragment : Fragment() {
 
         // flag, n are now determined in onCreateView
 
-        when (flag) {
-            AppDrawerFlag.SetHomeApp -> {
-                // Remove legacy rename button, keep only the pseudo rename app in the list
-                binding.drawerButton.isVisible = false
-            }
-
-            AppDrawerFlag.SetSwipeRight,
-            AppDrawerFlag.SetSwipeLeft,
-            AppDrawerFlag.SetSwipeDown,
-            -> {
-                binding.drawerButton.setOnClickListener {
-                    findNavController().popBackStack()
-                }
-            }
-
-            else -> {}
-        }
+        // No special setup needed for different flags anymore
+        // The drawerButton was removed as it was always hidden
 
         val viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
 

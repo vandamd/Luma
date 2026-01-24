@@ -4,8 +4,6 @@
         android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:animateLayoutChanges="false"
-        android:orientation="vertical"
         android:background="?attr/primaryShadeDarkColor"
         tools:context=".ui.HomeFragment">
     <FrameLayout
