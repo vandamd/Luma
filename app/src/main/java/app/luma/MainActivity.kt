@@ -148,21 +148,4 @@ class MainActivity : AppCompatActivity() {
         binding.messageLayout.visibility = View.VISIBLE
     }
 
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?,
-    ) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode != Activity.RESULT_OK) return
-
-        if (requestCode == Constants.REQUEST_CODE_ENABLE_ADMIN) {
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                showMessage(getString(R.string.double_tap_lock_is_enabled_message))
-            } else {
-                showMessage(getString(R.string.double_tap_lock_uninstall_message))
-            }
-        }
-    }
 }

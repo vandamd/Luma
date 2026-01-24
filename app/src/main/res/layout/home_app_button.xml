@@ -5,8 +5,8 @@
     style="@style/TextLarge"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:hint="@string/app"
+    android:hint="App"
     android:paddingVertical="@dimen/home_app_padding_vertical"
-    android:tag="@string/_1">
+    android:tag="1">
 
 </TextView>

@@ -215,13 +215,13 @@ class AppDrawerAdapter(
                         count: Int,
                     ) {
                         if (appRenameEdit.text.isEmpty()) {
-                            appRenameButton.text = context.getString(R.string.reset)
+                            appRenameButton.text = "Reset"
                         } else if (appRenameEdit.text.toString() == appModel.appAlias ||
                             appRenameEdit.text.toString() == appModel.appLabel
                         ) {
-                            appRenameButton.text = context.getString(R.string.cancel)
+                            appRenameButton.text = "Cancel"
                         } else {
-                            appRenameButton.text = context.getString(R.string.rename)
+                            appRenameButton.text = "Rename"
                         }
                     }
                 }

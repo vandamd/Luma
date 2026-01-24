@@ -1,8 +1,6 @@
 package app.luma.data
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
-import app.luma.R
 
 interface EnumOption {
     @Composable
@@ -37,13 +35,13 @@ object Constants {
         @Composable
         override fun string(): String =
             when (this) {
-                OpenApp -> stringResource(R.string.open_app)
-                LockScreen -> stringResource(R.string.lock_screen)
-                ShowNotification -> stringResource(R.string.show_notifications)
-                ShowAppList -> stringResource(R.string.show_app_list)
-                OpenQuickSettings -> stringResource(R.string.open_quick_settings)
-                ShowRecents -> stringResource(R.string.show_recents)
-                Disabled -> stringResource(R.string.disabled)
+                OpenApp -> "Open App"
+                LockScreen -> "Lock Screen"
+                ShowNotification -> "Show Notifications"
+                ShowAppList -> "Show App List"
+                OpenQuickSettings -> "Quick Settings"
+                ShowRecents -> "Show Recents"
+                Disabled -> "Disabled"
             }
     }
 
@@ -57,8 +55,8 @@ object Constants {
         override fun string(): String =
             when (this) {
                 System -> "System"
-                Dark -> stringResource(R.string.dark)
-                Light -> stringResource(R.string.light)
+                Dark -> "Dark"
+                Light -> "Light"
             }
     }
 }

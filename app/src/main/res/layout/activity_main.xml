@@ -54,8 +54,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:lineSpacingExtra="1dp"
-                android:text="@string/double_tap_lock_is_enabled_message"
-                android:textColor="?attr/primaryColor" />
+                android:textColor="?attr/primaryColor"
+                tools:text="Message placeholder" />
 
             <TextView
                 android:id="@+id/okay"
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="24dp"
-                android:text="@string/okay"
+                android:text="Okay"
                 android:textAllCaps="true" />
 
         </LinearLayout>
