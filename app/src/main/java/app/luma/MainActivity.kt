@@ -12,6 +12,7 @@ import android.provider.Settings
 import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
@@ -42,12 +43,6 @@ class MainActivity : AppCompatActivity() {
         super.applyOverrideConfiguration(overrideConfiguration.withDisplayDefaults(this))
     }
 
-    override fun onBackPressed() {
-        if (navController.currentDestination?.id != R.id.mainFragment) {
-            super.onBackPressed()
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         prefs = Prefs(this)
         val themeMode =
@@ -65,6 +60,17 @@ class MainActivity : AppCompatActivity() {
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (navController.currentDestination?.id != R.id.mainFragment) {
+                        navController.popBackStack()
+                    }
+                }
+            },
+        )
 
         initClickListeners()
         initObservers(viewModel)

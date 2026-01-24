@@ -14,7 +14,9 @@ import android.os.Build
 import android.os.Bundle
 import android.os.UserHandle
 import android.os.UserManager
+import android.os.VibrationEffect
 import android.os.Vibrator
+import android.os.VibratorManager
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.DisplayMetrics
@@ -42,8 +44,16 @@ import kotlin.math.sqrt
 
 fun performHapticFeedback(context: Context) {
     try {
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        vibrator.vibrate(42)
+        val vibrator =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val vibratorManager =
+                    context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                vibratorManager.defaultVibrator
+            } else {
+                @Suppress("DEPRECATION")
+                context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            }
+        vibrator.vibrate(VibrationEffect.createOneShot(42, VibrationEffect.DEFAULT_AMPLITUDE))
     } catch (e: Exception) {
         // Continue if haptic feedback fails
     }
@@ -267,13 +277,27 @@ fun openCameraApp(context: Context) {
 
 fun isTablet(context: Context): Boolean {
     val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    val metrics = DisplayMetrics()
-    windowManager.defaultDisplay.getMetrics(metrics)
-    val widthInches = metrics.widthPixels / metrics.xdpi
-    val heightInches = metrics.heightPixels / metrics.ydpi
+    val displayMetrics = context.resources.displayMetrics
+    val widthPixels: Int
+    val heightPixels: Int
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val windowMetrics = windowManager.currentWindowMetrics
+        widthPixels = windowMetrics.bounds.width()
+        heightPixels = windowMetrics.bounds.height()
+    } else {
+        @Suppress("DEPRECATION")
+        val metrics = DisplayMetrics()
+        @Suppress("DEPRECATION")
+        windowManager.defaultDisplay.getMetrics(metrics)
+        widthPixels = metrics.widthPixels
+        heightPixels = metrics.heightPixels
+    }
+
+    val widthInches = widthPixels / displayMetrics.xdpi
+    val heightInches = heightPixels / displayMetrics.ydpi
     val diagonalInches = sqrt(widthInches.toDouble().pow(2.0) + heightInches.toDouble().pow(2.0))
-    if (diagonalInches >= 7.0) return true
-    return false
+    return diagonalInches >= 7.0
 }
 
 fun initActionService(context: Context): ActionService? {
