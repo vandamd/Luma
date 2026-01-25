@@ -77,7 +77,7 @@ class Prefs(
 
     var homePages: Int
         get() = prefs.getInt(HOME_PAGES, 1)
-        set(value) = prefs.edit().putInt(HOME_PAGES, value.coerceIn(1, 5)).apply()
+        set(value) = prefs.edit().putInt(HOME_PAGES, value.coerceIn(HomeLayout.MIN_PAGES, HomeLayout.MAX_PAGES)).apply()
 
     fun getAppsPerPage(page: Int): Int = prefs.getInt("${HOME_APPS_PER_PAGE}$page", 4)
 

@@ -6,6 +6,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import app.luma.R
 
+object HomeLayout {
+    const val APPS_PER_PAGE = 6
+    const val MAX_PAGES = 5
+    const val MIN_PAGES = 1
+    const val MIN_APPS_PER_PAGE = 1
+    const val TOTAL_SLOTS = APPS_PER_PAGE * MAX_PAGES
+}
+
 object Constants {
     const val REQUEST_CONFIRM_PIN_SHORTCUT = "android.content.pm.action.CONFIRM_PIN_SHORTCUT"
     const val PINNED_SHORTCUT_PACKAGE = "__pinned_shortcut__"

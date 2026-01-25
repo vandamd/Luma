@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import app.luma.R
+import app.luma.data.HomeLayout
 import app.luma.data.Prefs
 import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.ContentContainer
@@ -43,7 +44,7 @@ class AppCountFragment : Fragment() {
 
             ContentContainer {
                 CustomScrollView {
-                    for (i in 1..6) {
+                    for (i in HomeLayout.MIN_APPS_PER_PAGE..HomeLayout.APPS_PER_PAGE) {
                         val isSelected = prefs.getAppsPerPage(pageNumber) == i
                         SimpleTextButton(
                             title = resources.getQuantityString(R.plurals.apps_count, i, i),

@@ -22,6 +22,7 @@ import app.luma.data.AppModel
 import app.luma.data.Constants.Action
 import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.GestureType
+import app.luma.data.HomeLayout
 import app.luma.data.Prefs
 import app.luma.databinding.FragmentHomeBinding
 import app.luma.helper.*
@@ -410,7 +411,7 @@ class HomeFragment :
 
     private fun refreshAppNames() {
         val appsPerPage = prefs.getAppsPerPage(currentPage + 1)
-        val startIndex = currentPage * 6
+        val startIndex = currentPage * HomeLayout.APPS_PER_PAGE
 
         // Update the number of app buttons if needed
         updateAppCountForPage(appsPerPage)

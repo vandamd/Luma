@@ -4,6 +4,7 @@ import android.content.Context
 import app.luma.data.AppModel
 import app.luma.data.Constants
 import app.luma.data.GestureType
+import app.luma.data.HomeLayout
 import app.luma.data.Prefs
 import app.luma.data.ShortcutEntry
 
@@ -27,7 +28,7 @@ object HomeCleanupHelper {
         var needsHomeRefresh = false
         var needsAppListRefresh = false
 
-        for (i in 0 until 30) {
+        for (i in 0 until HomeLayout.TOTAL_SLOTS) {
             val appModel = prefs.getHomeAppModel(i)
             if (shouldClear(appModel, packageName)) {
                 prefs.setHomeAppModel(i, emptyAppModel())

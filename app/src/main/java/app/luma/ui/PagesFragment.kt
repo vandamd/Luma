@@ -14,6 +14,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import app.luma.R
+import app.luma.data.HomeLayout
 import app.luma.data.Prefs
 import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.ContentContainer
@@ -56,7 +57,7 @@ class PagesFragment : Fragment() {
                             },
                         onClick = { findNavController().navigate(R.id.action_pagesFragment_to_pageIndicatorPositionFragment) },
                     )
-                    val pageCount = prefs.homePages.coerceIn(1, 5)
+                    val pageCount = prefs.homePages.coerceIn(HomeLayout.MIN_PAGES, HomeLayout.MAX_PAGES)
                     SelectorButton(
                         label = stringResource(R.string.pages_number_of_pages),
                         value = resources.getQuantityString(R.plurals.pages_count, pageCount, pageCount),

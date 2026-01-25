@@ -16,6 +16,7 @@ import app.luma.R
 import app.luma.data.AppModel
 import app.luma.data.Constants
 import app.luma.data.Constants.AppDrawerFlag
+import app.luma.data.HomeLayout
 import app.luma.data.Prefs
 import app.luma.helper.openAppInfo
 import app.luma.helper.uninstallApp
@@ -45,14 +46,14 @@ class AppActionsFragment : Fragment() {
 
     private val canMoveUp: Boolean by lazy {
         if (!isHomeApp) return@lazy false
-        val pageStartIndex = (homePosition / 6) * 6
+        val pageStartIndex = (homePosition / HomeLayout.APPS_PER_PAGE) * HomeLayout.APPS_PER_PAGE
         homePosition > pageStartIndex
     }
 
     private val canMoveDown: Boolean by lazy {
         if (!isHomeApp) return@lazy false
-        val page = homePosition / 6
-        val pageStartIndex = page * 6
+        val page = homePosition / HomeLayout.APPS_PER_PAGE
+        val pageStartIndex = page * HomeLayout.APPS_PER_PAGE
         val appsOnPage = prefs.getAppsPerPage(page + 1)
         homePosition < pageStartIndex + appsOnPage - 1
     }
