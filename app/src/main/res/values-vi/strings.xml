@@ -64,6 +64,8 @@
     <string name="app_actions_hide">Ẩn</string>
     <string name="app_actions_rename">Đổi tên</string>
     <string name="app_actions_replace">Thay thế</string>
+    <string name="app_actions_move_up">Di chuyển lên</string>
+    <string name="app_actions_move_down">Di chuyển xuống</string>
     <string name="app_actions_app_info">Thông tin ứng dụng</string>
     <string name="app_actions_uninstall">Gỡ cài đặt</string>
     <string name="app_actions_confirm_title">Xóa lối tắt</string>

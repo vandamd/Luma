@@ -64,6 +64,8 @@
     <string name="app_actions_hide">ซ่อน</string>
     <string name="app_actions_rename">เปลี่ยนชื่อ</string>
     <string name="app_actions_replace">แทนที่</string>
+    <string name="app_actions_move_up">ย้ายขึ้น</string>
+    <string name="app_actions_move_down">ย้ายลง</string>
     <string name="app_actions_app_info">ข้อมูลแอป</string>
     <string name="app_actions_uninstall">ถอนการติดตั้ง</string>
     <string name="app_actions_confirm_title">ลบทางลัด</string>

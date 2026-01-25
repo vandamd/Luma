@@ -64,6 +64,8 @@
     <string name="app_actions_hide">Verstecken</string>
     <string name="app_actions_rename">Umbenennen</string>
     <string name="app_actions_replace">Ersetzen</string>
+    <string name="app_actions_move_up">Nach oben</string>
+    <string name="app_actions_move_down">Nach unten</string>
     <string name="app_actions_app_info">App-Info</string>
     <string name="app_actions_uninstall">Deinstallieren</string>
     <string name="app_actions_confirm_title">Verknüpfung entfernen</string>

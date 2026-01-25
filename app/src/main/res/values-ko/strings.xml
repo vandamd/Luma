@@ -64,6 +64,8 @@
     <string name="app_actions_hide">숨기기</string>
     <string name="app_actions_rename">이름 변경</string>
     <string name="app_actions_replace">교체</string>
+    <string name="app_actions_move_up">위로 이동</string>
+    <string name="app_actions_move_down">아래로 이동</string>
     <string name="app_actions_app_info">앱 정보</string>
     <string name="app_actions_uninstall">제거</string>
     <string name="app_actions_confirm_title">바로가기 제거</string>

@@ -64,6 +64,8 @@
     <string name="app_actions_hide">Peida</string>
     <string name="app_actions_rename">Ümbernimeta</string>
     <string name="app_actions_replace">Asenda</string>
+    <string name="app_actions_move_up">Liiguta üles</string>
+    <string name="app_actions_move_down">Liiguta alla</string>
     <string name="app_actions_app_info">Rakenduse teave</string>
     <string name="app_actions_uninstall">Desinstalli</string>
     <string name="app_actions_confirm_title">Eemalda otsetee</string>

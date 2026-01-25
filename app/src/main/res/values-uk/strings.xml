@@ -64,6 +64,8 @@
     <string name="app_actions_hide">Приховати</string>
     <string name="app_actions_rename">Перейменувати</string>
     <string name="app_actions_replace">Замінити</string>
+    <string name="app_actions_move_up">Перемістити вгору</string>
+    <string name="app_actions_move_down">Перемістити вниз</string>
     <string name="app_actions_app_info">Інформація про застосунок</string>
     <string name="app_actions_uninstall">Видалити</string>
     <string name="app_actions_confirm_title">Видалити ярлик</string>

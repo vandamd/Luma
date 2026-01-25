@@ -64,6 +64,8 @@
     <string name="app_actions_hide">Ocultar</string>
     <string name="app_actions_rename">Renombrar</string>
     <string name="app_actions_replace">Reemplazar</string>
+    <string name="app_actions_move_up">Subir</string>
+    <string name="app_actions_move_down">Bajar</string>
     <string name="app_actions_app_info">Info de la app</string>
     <string name="app_actions_uninstall">Desinstalar</string>
     <string name="app_actions_confirm_title">Eliminar acceso directo</string>

@@ -64,6 +64,8 @@
     <string name="app_actions_hide">Nascondi</string>
     <string name="app_actions_rename">Rinomina</string>
     <string name="app_actions_replace">Sostituisci</string>
+    <string name="app_actions_move_up">Sposta su</string>
+    <string name="app_actions_move_down">Sposta giù</string>
     <string name="app_actions_app_info">Info app</string>
     <string name="app_actions_uninstall">Disinstalla</string>
     <string name="app_actions_confirm_title">Rimuovi collegamento</string>

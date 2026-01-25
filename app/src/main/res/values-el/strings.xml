@@ -64,6 +64,8 @@
     <string name="app_actions_hide">Απόκρυψη</string>
     <string name="app_actions_rename">Μετονομασία</string>
     <string name="app_actions_replace">Αντικατάσταση</string>
+    <string name="app_actions_move_up">Μετακίνηση επάνω</string>
+    <string name="app_actions_move_down">Μετακίνηση κάτω</string>
     <string name="app_actions_app_info">Πληροφορίες εφαρμογής</string>
     <string name="app_actions_uninstall">Απεγκατάσταση</string>
     <string name="app_actions_confirm_title">Αφαίρεση συντόμευσης</string>

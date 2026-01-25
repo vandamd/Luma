@@ -64,6 +64,8 @@
     <string name="app_actions_hide">Skrýt</string>
     <string name="app_actions_rename">Přejmenovat</string>
     <string name="app_actions_replace">Nahradit</string>
+    <string name="app_actions_move_up">Přesunout nahoru</string>
+    <string name="app_actions_move_down">Přesunout dolů</string>
     <string name="app_actions_app_info">Informace o aplikaci</string>
     <string name="app_actions_uninstall">Odinstalovat</string>
     <string name="app_actions_confirm_title">Odstranit zkratku</string>

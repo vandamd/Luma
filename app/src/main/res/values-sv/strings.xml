@@ -64,6 +64,8 @@
     <string name="app_actions_hide">Dölj</string>
     <string name="app_actions_rename">Byt namn</string>
     <string name="app_actions_replace">Ersätt</string>
+    <string name="app_actions_move_up">Flytta upp</string>
+    <string name="app_actions_move_down">Flytta ner</string>
     <string name="app_actions_app_info">Appinfo</string>
     <string name="app_actions_uninstall">Avinstallera</string>
     <string name="app_actions_confirm_title">Ta bort genväg</string>

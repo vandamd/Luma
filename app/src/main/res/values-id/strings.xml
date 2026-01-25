@@ -64,6 +64,8 @@
     <string name="app_actions_hide">Sembunyikan</string>
     <string name="app_actions_rename">Ganti nama</string>
     <string name="app_actions_replace">Ganti</string>
+    <string name="app_actions_move_up">Pindah ke Atas</string>
+    <string name="app_actions_move_down">Pindah ke Bawah</string>
     <string name="app_actions_app_info">Info aplikasi</string>
     <string name="app_actions_uninstall">Hapus instalasi</string>
     <string name="app_actions_confirm_title">Hapus pintasan</string>

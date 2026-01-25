@@ -64,6 +64,8 @@
     <string name="app_actions_hide">非表示</string>
     <string name="app_actions_rename">名前変更</string>
     <string name="app_actions_replace">置換</string>
+    <string name="app_actions_move_up">上に移動</string>
+    <string name="app_actions_move_down">下に移動</string>
     <string name="app_actions_app_info">アプリ情報</string>
     <string name="app_actions_uninstall">アンインストール</string>
     <string name="app_actions_confirm_title">ショートカットを削除</string>

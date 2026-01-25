@@ -64,6 +64,8 @@
     <string name="app_actions_hide">مخفی کردن</string>
     <string name="app_actions_rename">تغییر نام</string>
     <string name="app_actions_replace">جایگزین</string>
+    <string name="app_actions_move_up">انتقال به بالا</string>
+    <string name="app_actions_move_down">انتقال به پایین</string>
     <string name="app_actions_app_info">اطلاعات برنامه</string>
     <string name="app_actions_uninstall">حذف</string>
     <string name="app_actions_confirm_title">حذف میانبر</string>

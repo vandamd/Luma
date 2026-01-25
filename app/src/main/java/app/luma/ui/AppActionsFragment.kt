@@ -32,6 +32,8 @@ class AppActionsFragment : Fragment() {
     private val homePosition: Int by lazy { arguments?.getInt("homePosition", -1) ?: -1 }
     private val isAppHidden: Boolean by lazy { arguments?.getBoolean("isHidden", false) ?: false }
 
+    private val prefs: Prefs by lazy { Prefs.getInstance(requireContext()) }
+
     private val displayName: String
         get() = appAlias.ifEmpty { appLabel }
 
@@ -40,6 +42,20 @@ class AppActionsFragment : Fragment() {
 
     private val isHomeApp: Boolean
         get() = homePosition >= 0
+
+    private val canMoveUp: Boolean by lazy {
+        if (!isHomeApp) return@lazy false
+        val pageStartIndex = (homePosition / 6) * 6
+        homePosition > pageStartIndex
+    }
+
+    private val canMoveDown: Boolean by lazy {
+        if (!isHomeApp) return@lazy false
+        val page = homePosition / 6
+        val pageStartIndex = page * 6
+        val appsOnPage = prefs.getAppsPerPage(page + 1)
+        homePosition < pageStartIndex + appsOnPage - 1
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -142,6 +158,24 @@ class AppActionsFragment : Fragment() {
                                     "n" to homePosition,
                                 ),
                             )
+                        }
+                        if (canMoveUp) {
+                            SimpleTextButton(stringResource(R.string.app_actions_move_up)) {
+                                val above = prefs.getHomeAppModel(homePosition - 1)
+                                val current = prefs.getHomeAppModel(homePosition)
+                                prefs.setHomeAppModel(homePosition - 1, current)
+                                prefs.setHomeAppModel(homePosition, above)
+                                findNavController().popBackStack(R.id.mainFragment, false)
+                            }
+                        }
+                        if (canMoveDown) {
+                            SimpleTextButton(stringResource(R.string.app_actions_move_down)) {
+                                val below = prefs.getHomeAppModel(homePosition + 1)
+                                val current = prefs.getHomeAppModel(homePosition)
+                                prefs.setHomeAppModel(homePosition + 1, current)
+                                prefs.setHomeAppModel(homePosition, below)
+                                findNavController().popBackStack(R.id.mainFragment, false)
+                            }
                         }
                     }
                     if (isPinnedShortcut) {

@@ -64,6 +64,8 @@
     <string name="app_actions_hide">隐藏</string>
     <string name="app_actions_rename">重命名</string>
     <string name="app_actions_replace">替换</string>
+    <string name="app_actions_move_up">上移</string>
+    <string name="app_actions_move_down">下移</string>
     <string name="app_actions_app_info">应用信息</string>
     <string name="app_actions_uninstall">卸载</string>
     <string name="app_actions_confirm_title">移除快捷方式</string>

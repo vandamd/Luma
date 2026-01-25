@@ -64,6 +64,8 @@
     <string name="app_actions_hide">Sakrij</string>
     <string name="app_actions_rename">Preimenuj</string>
     <string name="app_actions_replace">Zamijeni</string>
+    <string name="app_actions_move_up">Pomakni gore</string>
+    <string name="app_actions_move_down">Pomakni dolje</string>
     <string name="app_actions_app_info">Info aplikacije</string>
     <string name="app_actions_uninstall">Deinstaliraj</string>
     <string name="app_actions_confirm_title">Ukloni prečac</string>

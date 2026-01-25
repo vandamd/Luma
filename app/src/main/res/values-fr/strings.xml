@@ -64,6 +64,8 @@
     <string name="app_actions_hide">Masquer</string>
     <string name="app_actions_rename">Renommer</string>
     <string name="app_actions_replace">Remplacer</string>
+    <string name="app_actions_move_up">Déplacer vers le haut</string>
+    <string name="app_actions_move_down">Déplacer vers le bas</string>
     <string name="app_actions_app_info">Infos de l\'application</string>
     <string name="app_actions_uninstall">Désinstaller</string>
     <string name="app_actions_confirm_title">Supprimer le raccourci</string>
