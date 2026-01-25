@@ -99,30 +99,17 @@ class AppActionsFragment : Fragment() {
                         )
                     }
                     if (!isHomeApp) {
-                        if (isAppHidden) {
-                            SimpleTextButton(stringResource(R.string.app_actions_show)) {
-                                val prefs = Prefs.getInstance(requireContext())
-                                if (isPinnedShortcut) {
-                                    prefs.unhideShortcut(appActivityName)
-                                } else {
-                                    val newSet = prefs.hiddenApps.toMutableSet()
-                                    newSet.remove(appPackage)
-                                    prefs.hiddenApps = newSet
-                                }
-                                findNavController().popBackStack(R.id.mainFragment, false)
+                        val buttonText = if (isAppHidden) R.string.app_actions_show else R.string.app_actions_hide
+                        SimpleTextButton(stringResource(buttonText)) {
+                            val prefs = Prefs.getInstance(requireContext())
+                            if (isPinnedShortcut) {
+                                if (isAppHidden) prefs.unhideShortcut(appActivityName) else prefs.hideShortcut(appActivityName)
+                            } else {
+                                val newSet = prefs.hiddenApps.toMutableSet()
+                                if (isAppHidden) newSet.remove(appPackage) else newSet.add(appPackage)
+                                prefs.hiddenApps = newSet
                             }
-                        } else {
-                            SimpleTextButton(stringResource(R.string.app_actions_hide)) {
-                                val prefs = Prefs.getInstance(requireContext())
-                                if (isPinnedShortcut) {
-                                    prefs.hideShortcut(appActivityName)
-                                } else {
-                                    val newSet = prefs.hiddenApps.toMutableSet()
-                                    newSet.add(appPackage)
-                                    prefs.hiddenApps = newSet
-                                }
-                                findNavController().popBackStack(R.id.mainFragment, false)
-                            }
+                            findNavController().popBackStack(R.id.mainFragment, false)
                         }
                     }
                     if (isHomeApp) {

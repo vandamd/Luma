@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import app.luma.R
-import app.luma.data.AppModel
 import app.luma.data.Prefs
 import app.luma.helper.performHapticFeedback
 import app.luma.style.SettingsTheme

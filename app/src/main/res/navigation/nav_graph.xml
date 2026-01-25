@@ -124,6 +124,10 @@
             android:name="homePosition"
             app:argType="integer"
             android:defaultValue="-1" />
+        <argument
+            android:name="isHidden"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/confirmFragment"

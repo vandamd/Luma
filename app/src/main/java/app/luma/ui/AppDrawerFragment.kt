@@ -69,11 +69,6 @@ class AppDrawerFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        // flag, n are now determined in onCreateView
-
-        // No special setup needed for different flags anymore
-        // The drawerButton was removed as it was always hidden
-
         val viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
 
         val appAdapter =
