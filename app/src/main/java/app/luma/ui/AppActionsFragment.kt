@@ -77,7 +77,10 @@ class AppActionsFragment : Fragment() {
         savedStateHandle.getLiveData<Boolean>("confirmed").observe(viewLifecycleOwner) { confirmed ->
             if (confirmed != true) return@observe
 
-            when (savedStateHandle.get<String>("action")) {
+            savedStateHandle.remove<Boolean>("confirmed")
+            val action = savedStateHandle.remove<String>("action")
+
+            when (action) {
                 "removeShortcut" -> {
                     val prefs = Prefs.getInstance(requireContext())
                     prefs.removePinnedShortcut(appActivityName)
@@ -110,9 +113,6 @@ class AppActionsFragment : Fragment() {
                     findNavController().popBackStack(R.id.mainFragment, false)
                 }
             }
-
-            savedStateHandle.remove<Boolean>("confirmed")
-            savedStateHandle.remove<String>("action")
         }
     }
 
