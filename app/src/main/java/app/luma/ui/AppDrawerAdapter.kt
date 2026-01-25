@@ -323,9 +323,7 @@ class AppDrawerAdapter(
             }
             binding.appTitleFrame.setOnLongClickListener {
                 performHapticFeedback(context)
-                if (appLongPressListener != null) {
-                    appLongPressListener(appModel)
-                } else {
+                appLongPressListener?.invoke(appModel) ?: run {
                     binding.appHideLayout.visibility = View.VISIBLE
                 }
                 true

@@ -63,14 +63,10 @@ class ConfirmFragment : Fragment() {
                     modifier =
                         Modifier.clickable {
                             performHapticFeedback(context)
-                            findNavController()
-                                .previousBackStackEntry
-                                ?.savedStateHandle
-                                ?.set("confirmed", true)
-                            findNavController()
-                                .previousBackStackEntry
-                                ?.savedStateHandle
-                                ?.set("action", action)
+                            findNavController().previousBackStackEntry?.savedStateHandle?.apply {
+                                set("confirmed", true)
+                                set("action", action)
+                            }
                             findNavController().popBackStack()
                         },
                 )

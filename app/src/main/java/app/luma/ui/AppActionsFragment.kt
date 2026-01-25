@@ -50,45 +50,31 @@ class AppActionsFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
+        observeConfirmationResult()
+    }
 
-        // Listen for confirmation result
-        findNavController()
-            .currentBackStackEntry
-            ?.savedStateHandle
-            ?.getLiveData<Boolean>("confirmed")
-            ?.observe(viewLifecycleOwner) { confirmed ->
-                if (confirmed == true) {
-                    val action =
-                        findNavController()
-                            .currentBackStackEntry
-                            ?.savedStateHandle
-                            ?.get<String>("action")
+    private fun observeConfirmationResult() {
+        val savedStateHandle = findNavController().currentBackStackEntry?.savedStateHandle ?: return
+        savedStateHandle.getLiveData<Boolean>("confirmed").observe(viewLifecycleOwner) { confirmed ->
+            if (confirmed != true) return@observe
 
-                    when (action) {
-                        "removeShortcut" -> {
-                            val prefs = Prefs.getInstance(requireContext())
-                            prefs.removePinnedShortcut(appActivityName)
-                            prefs.unhideShortcut(appActivityName)
-                            findNavController().popBackStack(R.id.mainFragment, false)
-                        }
+            when (savedStateHandle.get<String>("action")) {
+                "removeShortcut" -> {
+                    val prefs = Prefs.getInstance(requireContext())
+                    prefs.removePinnedShortcut(appActivityName)
+                    prefs.unhideShortcut(appActivityName)
+                    findNavController().popBackStack(R.id.mainFragment, false)
+                }
 
-                        "uninstallApp" -> {
-                            uninstallApp(requireContext(), appPackage)
-                            findNavController().popBackStack(R.id.mainFragment, false)
-                        }
-                    }
-
-                    // Clear the state
-                    findNavController()
-                        .currentBackStackEntry
-                        ?.savedStateHandle
-                        ?.remove<Boolean>("confirmed")
-                    findNavController()
-                        .currentBackStackEntry
-                        ?.savedStateHandle
-                        ?.remove<String>("action")
+                "uninstallApp" -> {
+                    uninstallApp(requireContext(), appPackage)
+                    findNavController().popBackStack(R.id.mainFragment, false)
                 }
             }
+
+            savedStateHandle.remove<Boolean>("confirmed")
+            savedStateHandle.remove<String>("action")
+        }
     }
 
     @Composable

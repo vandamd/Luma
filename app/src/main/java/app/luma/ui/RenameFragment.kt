@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -45,7 +44,6 @@ import app.luma.helper.performHapticFeedback
 import app.luma.style.SettingsTheme
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
-import kotlinx.coroutines.launch
 
 class RenameFragment : Fragment() {
     private val appPackage: String by lazy { arguments?.getString("appPackage") ?: "" }
@@ -60,7 +58,7 @@ class RenameFragment : Fragment() {
     ): View = composeView { RenameContent() }
 
     @Composable
-    fun RenameContent() {
+    private fun RenameContent() {
         val initialName = appAlias.ifEmpty { appLabel }
         val textState =
             remember {
@@ -72,14 +70,11 @@ class RenameFragment : Fragment() {
                 )
             }
         val focusRequester = remember { FocusRequester() }
-        val coroutineScope = rememberCoroutineScope()
         val underlineColor = SettingsTheme.typography.item.color
         val context = LocalContext.current
 
         LaunchedEffect(Unit) {
-            coroutineScope.launch {
-                focusRequester.requestFocus()
-            }
+            focusRequester.requestFocus()
         }
 
         fun saveAndReturn(newName: String) {
@@ -89,20 +84,9 @@ class RenameFragment : Fragment() {
             val newAlias = if (trimmedName.isEmpty() || trimmedName == appLabel) "" else trimmedName
 
             if (homePosition >= 0) {
-                // Renaming from home screen - update the home app model
-                val homeAppModel = prefs.getHomeAppModel(homePosition)
-                val updatedAppModel =
-                    AppModel(
-                        appLabel = homeAppModel.appLabel,
-                        appPackage = homeAppModel.appPackage,
-                        appAlias = newAlias,
-                        appActivityName = homeAppModel.appActivityName,
-                        user = homeAppModel.user,
-                        key = homeAppModel.key,
-                    )
+                val updatedAppModel = prefs.getHomeAppModel(homePosition).copy(appAlias = newAlias)
                 prefs.setHomeAppModel(homePosition, updatedAppModel)
             } else {
-                // Renaming from app drawer - update the global alias
                 prefs.setAppAlias(appPackage, newAlias)
             }
 
