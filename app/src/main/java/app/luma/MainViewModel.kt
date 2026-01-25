@@ -14,9 +14,7 @@ import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.GestureType
 import app.luma.data.Prefs
 import app.luma.helper.getAppsList
-import app.luma.helper.getDefaultLauncherPackage
 import app.luma.helper.getHiddenAppsList
-import app.luma.helper.resetDefaultLauncher
 import app.luma.helper.showToast
 import kotlinx.coroutines.launch
 
@@ -28,7 +26,6 @@ class MainViewModel(
 
     val appList = MutableLiveData<List<AppModel>?>()
     val hiddenApps = MutableLiveData<List<AppModel>?>()
-    val launcherResetFailed = MutableLiveData<Boolean>()
 
     fun selectedApp(
         appModel: AppModel,
@@ -120,10 +117,5 @@ class MainViewModel(
         viewModelScope.launch {
             hiddenApps.value = getHiddenAppsList(appContext)
         }
-    }
-
-    fun resetDefaultLauncherApp(context: Context) {
-        resetDefaultLauncher(context)
-        launcherResetFailed.value = getDefaultLauncherPackage(appContext).contains(".")
     }
 }

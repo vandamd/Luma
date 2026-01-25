@@ -1,6 +1,8 @@
 package app.luma.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -72,8 +74,19 @@ class SettingsFragment : Fragment() {
                         "Notifications",
                     ) { findNavController().navigate(R.id.action_settingsFragment_to_notificationsFragment) }
                     SimpleTextButton("Hidden Apps") { showHiddenApps() }
+                    SimpleTextButton("Default Launcher") { openDefaultLauncherSettings() }
                 }
             }
+        }
+    }
+
+    private fun openDefaultLauncherSettings() {
+        try {
+            val intent = Intent(Settings.ACTION_HOME_SETTINGS)
+            startActivity(intent)
+        } catch (e: Exception) {
+            val intent = Intent(Settings.ACTION_SETTINGS)
+            startActivity(intent)
         }
     }
 
