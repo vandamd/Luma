@@ -26,7 +26,6 @@ import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import app.luma.ui.compose.SettingsComposable.SimpleTextButton
 import app.luma.ui.compose.SettingsComposable.ToggleTextButton
 
-
 class SettingsFragment : Fragment() {
     private lateinit var prefs: Prefs
     private lateinit var viewModel: MainViewModel
