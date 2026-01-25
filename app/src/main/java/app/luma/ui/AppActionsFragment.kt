@@ -13,6 +13,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import app.luma.R
+import app.luma.data.AppModel
 import app.luma.data.Constants
 import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.Prefs
@@ -64,6 +65,26 @@ class AppActionsFragment : Fragment() {
                     val prefs = Prefs.getInstance(requireContext())
                     prefs.removePinnedShortcut(appActivityName)
                     prefs.unhideShortcut(appActivityName)
+
+                    if (homePosition >= 0) {
+                        val currentHomeApp = prefs.getHomeAppModel(homePosition)
+                        if (currentHomeApp.appActivityName == appActivityName &&
+                            currentHomeApp.appPackage == Constants.PINNED_SHORTCUT_PACKAGE
+                        ) {
+                            prefs.setHomeAppModel(
+                                homePosition,
+                                AppModel(
+                                    appLabel = "",
+                                    appPackage = "",
+                                    appAlias = "",
+                                    appActivityName = "",
+                                    user = android.os.Process.myUserHandle(),
+                                    key = null,
+                                ),
+                            )
+                        }
+                    }
+
                     findNavController().popBackStack(R.id.mainFragment, false)
                 }
 

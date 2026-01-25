@@ -86,11 +86,17 @@ class HomeFragment :
 
     override fun onResume() {
         super.onResume()
+        HomeCleanupHelper.setOnHomeCleanupCallback { refreshAppNames() }
         totalPages = prefs.homePages
         if (currentPage >= totalPages) currentPage = totalPages - 1
         pageIndicatorLayout = null
         updatePageIndicator()
         refreshAppNames()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        HomeCleanupHelper.setOnHomeCleanupCallback(null)
     }
 
     override fun onClick(view: View) {
@@ -109,10 +115,8 @@ class HomeFragment :
         val appModel = prefs.getHomeAppModel(position)
 
         if (appModel.appLabel.isEmpty()) {
-            // Placeholder - go directly to app drawer to pick an app
             showAppList(AppDrawerFlag.SetHomeApp, position)
         } else {
-            // Real app - show app actions with replace option
             findNavController().navigate(
                 R.id.appActionsFragment,
                 bundleOf(
