@@ -1,6 +1,8 @@
 package app.luma.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +25,7 @@ import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import app.luma.ui.compose.SettingsComposable.SimpleTextButton
 import app.luma.ui.compose.SettingsComposable.ToggleTextButton
+
 
 class SettingsFragment : Fragment() {
     private lateinit var prefs: Prefs
@@ -72,9 +75,15 @@ class SettingsFragment : Fragment() {
                         "Notifications",
                     ) { findNavController().navigate(R.id.action_settingsFragment_to_notificationsFragment) }
                     SimpleTextButton("Hidden Apps") { showHiddenApps() }
+                    SimpleTextButton("Default Launcher") { openDefaultLauncherSettings() }
                 }
             }
         }
+    }
+
+    private fun openDefaultLauncherSettings() {
+        val intent = Intent(Settings.ACTION_HOME_SETTINGS)
+        startActivity(intent)
     }
 
     private fun showHiddenApps() {
