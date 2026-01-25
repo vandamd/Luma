@@ -48,7 +48,12 @@ class PagesFragment : Fragment() {
                 CustomScrollView(verticalArrangement = Arrangement.spacedBy(26.dp)) {
                     SelectorButton(
                         label = stringResource(R.string.pages_page_indicator_position),
-                        value = prefs.pageIndicatorPosition.name,
+                        value =
+                            when (prefs.pageIndicatorPosition) {
+                                Prefs.PageIndicatorPosition.Left -> stringResource(R.string.position_left)
+                                Prefs.PageIndicatorPosition.Right -> stringResource(R.string.position_right)
+                                Prefs.PageIndicatorPosition.Hidden -> stringResource(R.string.position_hidden)
+                            },
                         onClick = { findNavController().navigate(R.id.action_pagesFragment_to_pageIndicatorPositionFragment) },
                     )
                     val pageCount = prefs.homePages.coerceIn(1, 5)
