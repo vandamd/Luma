@@ -52,12 +52,25 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">Rakenduste menüü</string>
-    <string name="app_drawer_select_rename">Vali/Nimeta rakendus ümber</string>
+    <string name="app_drawer_select_rename">Vali rakendus</string>
     <string name="app_drawer_hidden_apps">Peidetud rakendused</string>
     <string name="app_drawer_no_apps">Rakendusi ei leitud</string>
     <string name="app_drawer_rename">Ümbernimeta</string>
     <string name="app_drawer_reset">Lähtesta</string>
     <string name="app_drawer_cancel">Tühista</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">Näita</string>
+    <string name="app_actions_hide">Peida</string>
+    <string name="app_actions_rename">Ümbernimeta</string>
+    <string name="app_actions_replace">Asenda</string>
+    <string name="app_actions_move_up">Liiguta üles</string>
+    <string name="app_actions_move_down">Liiguta alla</string>
+    <string name="app_actions_app_info">Rakenduse teave</string>
+    <string name="app_actions_uninstall">Desinstalli</string>
+    <string name="app_actions_confirm_title">Eemalda otsetee</string>
+    <string name="app_actions_uninstall_title">Desinstalli rakendus</string>
+    <string name="app_actions_confirm_message">Kas olete kindel, et soovite eemaldada %1$s?</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">Tõmba vasakule kõigi rakenduste jaoks</string>

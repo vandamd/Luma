@@ -52,12 +52,25 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">Gaveta de aplicações</string>
-    <string name="app_drawer_select_rename">Selecionar/Renomear aplicação</string>
+    <string name="app_drawer_select_rename">Selecionar aplicação</string>
     <string name="app_drawer_hidden_apps">Aplicações escondidas</string>
     <string name="app_drawer_no_apps">Nenhuma aplicação encontrada</string>
     <string name="app_drawer_rename">Renomear</string>
     <string name="app_drawer_reset">Repor</string>
     <string name="app_drawer_cancel">Cancelar</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">Mostrar</string>
+    <string name="app_actions_hide">Ocultar</string>
+    <string name="app_actions_rename">Renomear</string>
+    <string name="app_actions_replace">Substituir</string>
+    <string name="app_actions_move_up">Mover para cima</string>
+    <string name="app_actions_move_down">Mover para baixo</string>
+    <string name="app_actions_app_info">Info da aplicação</string>
+    <string name="app_actions_uninstall">Desinstalar</string>
+    <string name="app_actions_confirm_title">Remover atalho</string>
+    <string name="app_actions_uninstall_title">Desinstalar aplicação</string>
+    <string name="app_actions_confirm_message">Tem a certeza de que pretende remover %1$s?</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">Deslize para a esquerda para todas as aplicações</string>

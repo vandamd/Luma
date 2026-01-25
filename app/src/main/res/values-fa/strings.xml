@@ -52,12 +52,25 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">کشوی برنامه</string>
-    <string name="app_drawer_select_rename">انتخاب/تغییر نام برنامه</string>
+    <string name="app_drawer_select_rename">انتخاب برنامه</string>
     <string name="app_drawer_hidden_apps">برنامه های مخفی</string>
     <string name="app_drawer_no_apps">برنامه‌ای یافت نشد</string>
     <string name="app_drawer_rename">تغییرنام</string>
     <string name="app_drawer_reset">بازگردانی</string>
     <string name="app_drawer_cancel">لغو</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">نمایش</string>
+    <string name="app_actions_hide">مخفی کردن</string>
+    <string name="app_actions_rename">تغییر نام</string>
+    <string name="app_actions_replace">جایگزین</string>
+    <string name="app_actions_move_up">انتقال به بالا</string>
+    <string name="app_actions_move_down">انتقال به پایین</string>
+    <string name="app_actions_app_info">اطلاعات برنامه</string>
+    <string name="app_actions_uninstall">حذف</string>
+    <string name="app_actions_confirm_title">حذف میانبر</string>
+    <string name="app_actions_uninstall_title">حذف برنامه</string>
+    <string name="app_actions_confirm_message">آیا مطمئن هستید که می‌خواهید %1$s را حذف کنید؟</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">برای همه برنامه‌ها به چپ بکشید</string>

@@ -52,12 +52,25 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">Lista applicazioni</string>
-    <string name="app_drawer_select_rename">Seleziona/Rinomina App</string>
+    <string name="app_drawer_select_rename">Seleziona App</string>
     <string name="app_drawer_hidden_apps">App nascoste</string>
     <string name="app_drawer_no_apps">Nessuna app trovata</string>
     <string name="app_drawer_rename">Rinomina</string>
     <string name="app_drawer_reset">Reimposta</string>
     <string name="app_drawer_cancel">Annulla</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">Mostra</string>
+    <string name="app_actions_hide">Nascondi</string>
+    <string name="app_actions_rename">Rinomina</string>
+    <string name="app_actions_replace">Sostituisci</string>
+    <string name="app_actions_move_up">Sposta su</string>
+    <string name="app_actions_move_down">Sposta giù</string>
+    <string name="app_actions_app_info">Info app</string>
+    <string name="app_actions_uninstall">Disinstalla</string>
+    <string name="app_actions_confirm_title">Rimuovi collegamento</string>
+    <string name="app_actions_uninstall_title">Disinstalla app</string>
+    <string name="app_actions_confirm_message">Sei sicuro di voler rimuovere %1$s?</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">Scorri a sinistra per tutte le app</string>

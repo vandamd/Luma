@@ -52,12 +52,25 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">应用抽屉</string>
-    <string name="app_drawer_select_rename">选择/重命名应用</string>
+    <string name="app_drawer_select_rename">选择应用</string>
     <string name="app_drawer_hidden_apps">隐藏的应用</string>
     <string name="app_drawer_no_apps">未找到应用</string>
     <string name="app_drawer_rename">重命名</string>
     <string name="app_drawer_reset">重置</string>
     <string name="app_drawer_cancel">取消</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">显示</string>
+    <string name="app_actions_hide">隐藏</string>
+    <string name="app_actions_rename">重命名</string>
+    <string name="app_actions_replace">替换</string>
+    <string name="app_actions_move_up">上移</string>
+    <string name="app_actions_move_down">下移</string>
+    <string name="app_actions_app_info">应用信息</string>
+    <string name="app_actions_uninstall">卸载</string>
+    <string name="app_actions_confirm_title">移除快捷方式</string>
+    <string name="app_actions_uninstall_title">卸载应用</string>
+    <string name="app_actions_confirm_message">确定要移除 %1$s 吗？</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">左滑查看所有应用</string>

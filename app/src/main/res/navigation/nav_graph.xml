@@ -28,16 +28,18 @@
         android:label="RenameFragment">
         <argument
             android:name="appPackage"
-            app:argType="string"
-            app:nullable="true" />
+            app:argType="string" />
         <argument
             android:name="appLabel"
+            app:argType="string" />
+        <argument
+            android:name="appAlias"
             app:argType="string"
-            app:nullable="true" />
+            android:defaultValue="" />
         <argument
             android:name="homePosition"
             app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="-1" />
     </fragment>
     <fragment
         android:id="@+id/pagesFragment"
@@ -100,4 +102,48 @@
         android:id="@+id/notificationsFragment"
         android:name="app.luma.ui.NotificationsFragment"
         android:label="NotificationsFragment" />
+    <fragment
+        android:id="@+id/appActionsFragment"
+        android:name="app.luma.ui.AppActionsFragment"
+        android:label="AppActionsFragment">
+        <argument
+            android:name="appPackage"
+            app:argType="string" />
+        <argument
+            android:name="appLabel"
+            app:argType="string" />
+        <argument
+            android:name="appAlias"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="appActivityName"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="homePosition"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="isHidden"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/confirmFragment"
+        android:name="app.luma.ui.ConfirmFragment"
+        android:label="ConfirmFragment">
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="message"
+            app:argType="string" />
+        <argument
+            android:name="confirmText"
+            app:argType="string" />
+        <argument
+            android:name="action"
+            app:argType="string" />
+    </fragment>
 </navigation>

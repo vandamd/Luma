@@ -52,12 +52,25 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">App-låda</string>
-    <string name="app_drawer_select_rename">Välj/Byt namn på app</string>
+    <string name="app_drawer_select_rename">Välj app</string>
     <string name="app_drawer_hidden_apps">Dolda appar</string>
     <string name="app_drawer_no_apps">Inga appar hittades</string>
     <string name="app_drawer_rename">Byt namn</string>
     <string name="app_drawer_reset">Återställ</string>
     <string name="app_drawer_cancel">Avbryt</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">Visa</string>
+    <string name="app_actions_hide">Dölj</string>
+    <string name="app_actions_rename">Byt namn</string>
+    <string name="app_actions_replace">Ersätt</string>
+    <string name="app_actions_move_up">Flytta upp</string>
+    <string name="app_actions_move_down">Flytta ner</string>
+    <string name="app_actions_app_info">Appinfo</string>
+    <string name="app_actions_uninstall">Avinstallera</string>
+    <string name="app_actions_confirm_title">Ta bort genväg</string>
+    <string name="app_actions_uninstall_title">Avinstallera app</string>
+    <string name="app_actions_confirm_message">Är du säker på att du vill ta bort %1$s?</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">Svep vänster för alla appar</string>

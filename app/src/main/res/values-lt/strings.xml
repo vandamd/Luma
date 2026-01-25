@@ -52,12 +52,25 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">Programėlių saugykla</string>
-    <string name="app_drawer_select_rename">Pasirinkti/Pervadinti programėlę</string>
+    <string name="app_drawer_select_rename">Pasirinkti programėlę</string>
     <string name="app_drawer_hidden_apps">Paslėptos programėlės</string>
     <string name="app_drawer_no_apps">Nerasta jokių programėlių</string>
     <string name="app_drawer_rename">Pervadyti</string>
     <string name="app_drawer_reset">Nustatyti iš naujo</string>
     <string name="app_drawer_cancel">Atšaukti</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">Rodyti</string>
+    <string name="app_actions_hide">Slėpti</string>
+    <string name="app_actions_rename">Pervadinti</string>
+    <string name="app_actions_replace">Pakeisti</string>
+    <string name="app_actions_move_up">Perkelti aukštyn</string>
+    <string name="app_actions_move_down">Perkelti žemyn</string>
+    <string name="app_actions_app_info">Programėlės informacija</string>
+    <string name="app_actions_uninstall">Pašalinti</string>
+    <string name="app_actions_confirm_title">Pašalinti nuorodą</string>
+    <string name="app_actions_uninstall_title">Pašalinti programėlę</string>
+    <string name="app_actions_confirm_message">Ar tikrai norite pašalinti %1$s?</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">Braukite kairėn visoms programėlėms</string>

@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import app.luma.R
+import app.luma.data.HomeLayout
 import app.luma.data.Prefs
 import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.ContentContainer
@@ -41,7 +42,7 @@ class PageCountFragment : Fragment() {
 
             ContentContainer {
                 CustomScrollView {
-                    for (i in 1..5) {
+                    for (i in HomeLayout.MIN_PAGES..HomeLayout.MAX_PAGES) {
                         val isSelected = prefs.homePages == i
                         SimpleTextButton(
                             title = resources.getQuantityString(R.plurals.pages_count, i, i),

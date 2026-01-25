@@ -22,6 +22,7 @@ import app.luma.data.AppModel
 import app.luma.data.Constants.Action
 import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.GestureType
+import app.luma.data.HomeLayout
 import app.luma.data.Prefs
 import app.luma.databinding.FragmentHomeBinding
 import app.luma.helper.*
@@ -86,11 +87,17 @@ class HomeFragment :
 
     override fun onResume() {
         super.onResume()
+        HomeCleanupHelper.setOnHomeCleanupCallback { refreshAppNames() }
         totalPages = prefs.homePages
         if (currentPage >= totalPages) currentPage = totalPages - 1
         pageIndicatorLayout = null
         updatePageIndicator()
         refreshAppNames()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        HomeCleanupHelper.setOnHomeCleanupCallback(null)
     }
 
     override fun onClick(view: View) {
@@ -105,8 +112,23 @@ class HomeFragment :
 
     override fun onLongClick(view: View): Boolean {
         performHapticFeedback(requireContext())
-        val n = view.id
-        showAppList(AppDrawerFlag.SetHomeApp, n)
+        val position = view.id
+        val appModel = prefs.getHomeAppModel(position)
+
+        if (appModel.appLabel.isEmpty()) {
+            showAppList(AppDrawerFlag.SetHomeApp, position)
+        } else {
+            findNavController().navigate(
+                R.id.appActionsFragment,
+                bundleOf(
+                    "appPackage" to appModel.appPackage,
+                    "appLabel" to appModel.appLabel,
+                    "appAlias" to appModel.appAlias,
+                    "appActivityName" to appModel.appActivityName,
+                    "homePosition" to position,
+                ),
+            )
+        }
         return true
     }
 
@@ -389,7 +411,7 @@ class HomeFragment :
 
     private fun refreshAppNames() {
         val appsPerPage = prefs.getAppsPerPage(currentPage + 1)
-        val startIndex = currentPage * 6
+        val startIndex = currentPage * HomeLayout.APPS_PER_PAGE
 
         // Update the number of app buttons if needed
         updateAppCountForPage(appsPerPage)

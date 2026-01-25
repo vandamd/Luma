@@ -52,12 +52,25 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">ลิ้นชักแอป</string>
-    <string name="app_drawer_select_rename">เลือก/เปลี่ยนชื่อแอป</string>
+    <string name="app_drawer_select_rename">เลือกแอป</string>
     <string name="app_drawer_hidden_apps">แอพที่ซ่อนอยู่</string>
     <string name="app_drawer_no_apps">ไม่พบแอป</string>
     <string name="app_drawer_rename">เปลี่ยนชื่อ</string>
     <string name="app_drawer_reset">รีเซ็ต</string>
     <string name="app_drawer_cancel">ยกเลิก</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">แสดง</string>
+    <string name="app_actions_hide">ซ่อน</string>
+    <string name="app_actions_rename">เปลี่ยนชื่อ</string>
+    <string name="app_actions_replace">แทนที่</string>
+    <string name="app_actions_move_up">ย้ายขึ้น</string>
+    <string name="app_actions_move_down">ย้ายลง</string>
+    <string name="app_actions_app_info">ข้อมูลแอป</string>
+    <string name="app_actions_uninstall">ถอนการติดตั้ง</string>
+    <string name="app_actions_confirm_title">ลบทางลัด</string>
+    <string name="app_actions_uninstall_title">ถอนการติดตั้งแอป</string>
+    <string name="app_actions_confirm_message">คุณแน่ใจหรือไม่ว่าต้องการลบ %1$s?</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">ปัดซ้ายสำหรับแอปทั้งหมด</string>

@@ -52,12 +52,25 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">App-Übersicht</string>
-    <string name="app_drawer_select_rename">App auswählen/umbenennen</string>
+    <string name="app_drawer_select_rename">App auswählen</string>
     <string name="app_drawer_hidden_apps">Versteckte Apps</string>
     <string name="app_drawer_no_apps">Keine Apps gefunden</string>
     <string name="app_drawer_rename">Umbenennen</string>
     <string name="app_drawer_reset">Zurücksetzen</string>
     <string name="app_drawer_cancel">Abbrechen</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">Anzeigen</string>
+    <string name="app_actions_hide">Verstecken</string>
+    <string name="app_actions_rename">Umbenennen</string>
+    <string name="app_actions_replace">Ersetzen</string>
+    <string name="app_actions_move_up">Nach oben</string>
+    <string name="app_actions_move_down">Nach unten</string>
+    <string name="app_actions_app_info">App-Info</string>
+    <string name="app_actions_uninstall">Deinstallieren</string>
+    <string name="app_actions_confirm_title">Verknüpfung entfernen</string>
+    <string name="app_actions_uninstall_title">App deinstallieren</string>
+    <string name="app_actions_confirm_message">Möchten Sie %1$s wirklich entfernen?</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">Links swipen für alle Apps</string>

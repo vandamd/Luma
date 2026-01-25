@@ -58,12 +58,25 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">App Drawer</string>
-    <string name="app_drawer_select_rename">Select/Rename App</string>
+    <string name="app_drawer_select_rename">Select App</string>
     <string name="app_drawer_hidden_apps">Hidden Apps</string>
     <string name="app_drawer_no_apps">No apps found</string>
     <string name="app_drawer_rename">Rename</string>
     <string name="app_drawer_reset">Reset</string>
     <string name="app_drawer_cancel">Cancel</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">Show</string>
+    <string name="app_actions_hide">Hide</string>
+    <string name="app_actions_rename">Rename</string>
+    <string name="app_actions_replace">Replace</string>
+    <string name="app_actions_move_up">Move Up</string>
+    <string name="app_actions_move_down">Move Down</string>
+    <string name="app_actions_app_info">App Info</string>
+    <string name="app_actions_uninstall">Uninstall</string>
+    <string name="app_actions_confirm_title">Remove Shortcut</string>
+    <string name="app_actions_uninstall_title">Uninstall App</string>
+    <string name="app_actions_confirm_message">Are you sure you want to remove %1$s?</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">Swipe left for all apps</string>

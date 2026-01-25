@@ -52,12 +52,25 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">Tiroir d\'applications</string>
-    <string name="app_drawer_select_rename">Sélectionner/Renommer App</string>
+    <string name="app_drawer_select_rename">Sélectionner App</string>
     <string name="app_drawer_hidden_apps">Applications masquées</string>
     <string name="app_drawer_no_apps">Aucune application trouvée</string>
     <string name="app_drawer_rename">Renommer</string>
     <string name="app_drawer_reset">Réinitialiser</string>
     <string name="app_drawer_cancel">Annuler</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">Afficher</string>
+    <string name="app_actions_hide">Masquer</string>
+    <string name="app_actions_rename">Renommer</string>
+    <string name="app_actions_replace">Remplacer</string>
+    <string name="app_actions_move_up">Déplacer vers le haut</string>
+    <string name="app_actions_move_down">Déplacer vers le bas</string>
+    <string name="app_actions_app_info">Infos de l\'application</string>
+    <string name="app_actions_uninstall">Désinstaller</string>
+    <string name="app_actions_confirm_title">Supprimer le raccourci</string>
+    <string name="app_actions_uninstall_title">Désinstaller l\'application</string>
+    <string name="app_actions_confirm_message">Voulez-vous vraiment supprimer %1$s ?</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">Balayez vers la gauche pour toutes les apps</string>

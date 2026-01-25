@@ -52,12 +52,25 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">Drawer Aplikasi</string>
-    <string name="app_drawer_select_rename">Pilih/Ganti nama aplikasi</string>
+    <string name="app_drawer_select_rename">Pilih aplikasi</string>
     <string name="app_drawer_hidden_apps">Aplikasi tersembunyi</string>
     <string name="app_drawer_no_apps">Tidak ada aplikasi ditemukan</string>
     <string name="app_drawer_rename">Ganti nama</string>
     <string name="app_drawer_reset">Reset</string>
     <string name="app_drawer_cancel">Batal</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">Tampilkan</string>
+    <string name="app_actions_hide">Sembunyikan</string>
+    <string name="app_actions_rename">Ganti nama</string>
+    <string name="app_actions_replace">Ganti</string>
+    <string name="app_actions_move_up">Pindah ke Atas</string>
+    <string name="app_actions_move_down">Pindah ke Bawah</string>
+    <string name="app_actions_app_info">Info aplikasi</string>
+    <string name="app_actions_uninstall">Hapus instalasi</string>
+    <string name="app_actions_confirm_title">Hapus pintasan</string>
+    <string name="app_actions_uninstall_title">Hapus instalasi aplikasi</string>
+    <string name="app_actions_confirm_message">Apakah Anda yakin ingin menghapus %1$s?</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">Geser kiri untuk semua aplikasi</string>

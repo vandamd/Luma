@@ -52,12 +52,25 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">Cajón de aplicaciones</string>
-    <string name="app_drawer_select_rename">Seleccionar/Renombrar App</string>
+    <string name="app_drawer_select_rename">Seleccionar App</string>
     <string name="app_drawer_hidden_apps">Aplicaciones ocultas</string>
     <string name="app_drawer_no_apps">Sin aplicaciones</string>
     <string name="app_drawer_rename">Renombrar</string>
     <string name="app_drawer_reset">Restablecer</string>
     <string name="app_drawer_cancel">Cancelar</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">Mostrar</string>
+    <string name="app_actions_hide">Ocultar</string>
+    <string name="app_actions_rename">Renombrar</string>
+    <string name="app_actions_replace">Reemplazar</string>
+    <string name="app_actions_move_up">Subir</string>
+    <string name="app_actions_move_down">Bajar</string>
+    <string name="app_actions_app_info">Info de la app</string>
+    <string name="app_actions_uninstall">Desinstalar</string>
+    <string name="app_actions_confirm_title">Eliminar acceso directo</string>
+    <string name="app_actions_uninstall_title">Desinstalar app</string>
+    <string name="app_actions_confirm_message">¿Estás seguro de que quieres eliminar %1$s?</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">Deslice a la izquierda para todas las apps</string>

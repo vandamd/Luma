@@ -18,6 +18,7 @@ import androidx.navigation.Navigation
 import app.luma.data.Constants
 import app.luma.data.Prefs
 import app.luma.databinding.ActivityMainBinding
+import app.luma.helper.HomeCleanupHelper
 import app.luma.helper.showToast
 import app.luma.style.DisplayDefaults.withDisplayDefaults
 
@@ -70,7 +71,14 @@ class MainActivity : AppCompatActivity() {
 
         window.addFlags(FLAG_LAYOUT_NO_LIMITS)
 
+        HomeCleanupHelper.setOnAppListCleanupCallback { viewModel.getAppList() }
+
         handlePinShortcutRequest(intent)
+    }
+
+    override fun onDestroy() {
+        HomeCleanupHelper.setOnAppListCleanupCallback(null)
+        super.onDestroy()
     }
 
     override fun onStop() {

@@ -52,12 +52,25 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">App-lade</string>
-    <string name="app_drawer_select_rename">App selecteren/hernoemen</string>
+    <string name="app_drawer_select_rename">App selecteren</string>
     <string name="app_drawer_hidden_apps">Verborgen apps</string>
     <string name="app_drawer_no_apps">Geen apps gevonden</string>
     <string name="app_drawer_rename">Hernoemen</string>
     <string name="app_drawer_reset">Resetten</string>
     <string name="app_drawer_cancel">Annuleren</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">Tonen</string>
+    <string name="app_actions_hide">Verbergen</string>
+    <string name="app_actions_rename">Hernoemen</string>
+    <string name="app_actions_replace">Vervangen</string>
+    <string name="app_actions_move_up">Omhoog</string>
+    <string name="app_actions_move_down">Omlaag</string>
+    <string name="app_actions_app_info">App-info</string>
+    <string name="app_actions_uninstall">Verwijderen</string>
+    <string name="app_actions_confirm_title">Snelkoppeling verwijderen</string>
+    <string name="app_actions_uninstall_title">App verwijderen</string>
+    <string name="app_actions_confirm_message">Weet u zeker dat u %1$s wilt verwijderen?</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">Sleep links voor alle apps</string>
