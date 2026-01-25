@@ -153,10 +153,14 @@ class AppDrawerAdapter(
                 performHapticFeedback(context)
                 listener(appModel)
             }
-            binding.appTitleFrame.setOnLongClickListener {
-                performHapticFeedback(context)
-                appLongPressListener?.invoke(appModel)
-                true
+            if (appLongPressListener != null) {
+                binding.appTitleFrame.setOnLongClickListener {
+                    performHapticFeedback(context)
+                    appLongPressListener(appModel)
+                    true
+                }
+            } else {
+                binding.appTitleFrame.setOnLongClickListener(null)
             }
         }
     }
