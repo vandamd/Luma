@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App identity -->
+    <string name="app_name">Luma</string>
+    <string name="accessibility_service_name">Luma</string>
+    <string name="accessibility_service_description">Ce service d\'accessibilité permet à Luma d\'effectuer certaines actions comme verrouiller l\'écran ou ouvrir les paramètres rapides.</string>
+
+    <!-- Translations adapted from OlauncherCF (French) -->
+
+    <!-- Settings screen -->
+    <string name="settings_title">Paramètres Luma (%1$s)</string>
+    <string name="settings_invert_colours">Inverser les couleurs</string>
+    <string name="settings_pages">Pages</string>
+    <string name="settings_gestures">Gestes</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_hidden_apps">Applications masquées</string>
+    <string name="settings_default_launcher">Lanceur par défaut</string>
+
+    <!-- Gesture actions -->
+    <string name="action_open_app">Ouvrir l\'application</string>
+    <string name="action_lock_screen">Verrouiller l\'écran</string>
+    <string name="action_show_notifications">Afficher les notifications</string>
+    <string name="action_show_app_list">Afficher la liste des apps</string>
+    <string name="action_quick_settings">Paramètres rapides</string>
+    <string name="action_show_recents">Afficher les récents</string>
+    <string name="action_disabled">Désactivé</string>
+    <string name="action_open_app_name">Ouvrir %1$s</string>
+
+    <!-- Gestures screen -->
+    <string name="gesture_swipe_left">Balayage vers la gauche</string>
+    <string name="gesture_swipe_right">Balayage vers la droite</string>
+    <string name="gesture_swipe_down">Balayage vers le bas</string>
+    <string name="gesture_swipe_up">Balayage vers le haut</string>
+    <string name="gesture_double_tap">Double appui</string>
+
+    <!-- Pages screen -->
+    <string name="pages_page_indicator_position">Position de l\'indicateur</string>
+    <string name="pages_number_of_pages">Nombre de pages</string>
+    <string name="pages_page_number_of_apps">Page %1$d, nombre d\'apps</string>
+
+    <!-- Page indicator positions -->
+    <string name="position_left">Gauche</string>
+    <string name="position_right">Droite</string>
+    <string name="position_hidden">Masqué</string>
+
+    <!-- Notifications screen -->
+    <string name="notifications_grant_permissions">Accorder les permissions</string>
+    <string name="notifications_indicator">Indicateur (*)</string>
+    <string name="notifications_visible_next_to_apps">visible à côté des apps</string>
+    <string name="notifications_not_visible">non visible</string>
+    <string name="notifications_not_visible_permission_required">non visible (permission requise)</string>
+
+    <!-- App drawer -->
+    <string name="app_drawer_title">Tiroir d\'applications</string>
+    <string name="app_drawer_select_rename">Sélectionner/Renommer App</string>
+    <string name="app_drawer_hidden_apps">Applications masquées</string>
+    <string name="app_drawer_no_apps">Aucune application trouvée</string>
+    <string name="app_drawer_rename">Renommer</string>
+    <string name="app_drawer_reset">Réinitialiser</string>
+    <string name="app_drawer_cancel">Annuler</string>
+
+    <!-- Home screen tips -->
+    <string name="tip_swipe_left">Balayez vers la gauche pour toutes les apps</string>
+    <string name="tip_long_press">Appuyez longuement pour les paramètres</string>
+
+    <!-- Toast messages -->
+    <string name="toast_app_not_found">Application non trouvée</string>
+    <string name="toast_unable_to_launch_app">Impossible de lancer l\'application</string>
+    <string name="toast_unable_to_launch_shortcut">Impossible de lancer le raccourci</string>
+    <string name="toast_shortcuts_require_android">Les raccourcis nécessitent Android 7.1+</string>
+    <string name="toast_unable_to_open_app_info">Impossible d\'ouvrir les infos de l\'app</string>
+    <string name="toast_action_requires_android_p">Cette action nécessite Android P (9) ou supérieur</string>
+    <string name="toast_lock_requires_android_9">Verrouillage de l\'écran nécessite Android 9 ou supérieur</string>
+    <string name="toast_long_press_to_select">Appui long pour sélectionner une app</string>
+    <string name="toast_unable_to_add_shortcut">Impossible d\'ajouter le raccourci</string>
+    <string name="toast_added_to_app_drawer">Ajouté au tiroir d\'applications</string>
+
+    <!-- Misc -->
+    <string name="app_placeholder">App</string>
+
+    <!-- Content descriptions -->
+    <string name="content_desc_back">Retour</string>
+    <string name="content_desc_save">Enregistrer</string>
+    <string name="content_desc_clear">Effacer</string>
+    <string name="content_desc_hide">Masquer</string>
+    <string name="content_desc_app_info">Infos de l\'application</string>
+
+    <plurals name="pages_count">
+        <item quantity="one">%d Page</item>
+        <item quantity="other">%d Pages</item>
+    </plurals>
+    <plurals name="apps_count">
+        <item quantity="one">%d App</item>
+        <item quantity="other">%d Apps</item>
+    </plurals>
+</resources>
