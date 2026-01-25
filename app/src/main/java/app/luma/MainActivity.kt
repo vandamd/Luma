@@ -8,9 +8,7 @@ import android.content.pm.LauncherApps
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -98,9 +96,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initObservers(viewModel: MainViewModel) {
-        viewModel.launcherResetFailed.observe(this) {
-            openLauncherChooser(it)
-        }
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -159,16 +154,4 @@ class MainActivity : AppCompatActivity() {
         showToast(this, "Added to app drawer")
     }
 
-    private fun openLauncherChooser(resetFailed: Boolean) {
-        if (resetFailed) {
-            val intent =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
-                } else {
-                    showToast(this, "Search for launcher or home app", Toast.LENGTH_LONG)
-                    Intent(Settings.ACTION_SETTINGS)
-                }
-            startActivity(intent)
-        }
-    }
 }
