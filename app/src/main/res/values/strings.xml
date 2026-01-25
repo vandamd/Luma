@@ -66,6 +66,8 @@
     <string name="app_drawer_cancel">Cancel</string>
 
     <!-- App actions -->
+    <string name="app_actions_show">Show</string>
+    <string name="app_actions_hide">Hide</string>
     <string name="app_actions_rename">Rename</string>
     <string name="app_actions_replace">Replace</string>
     <string name="app_actions_app_info">App Info</string>

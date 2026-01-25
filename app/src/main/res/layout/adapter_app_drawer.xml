@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
->
+    android:layout_height="wrap_content">
 
     <FrameLayout
         android:id="@+id/appTitleFrame"
@@ -21,66 +19,5 @@
             android:text="@string/app_placeholder" />
 
     </FrameLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/appHideLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
-        android:background="?attr/primaryColorInverseTrans90"
-        android:clickable="true"
-        android:focusable="true"
-        android:paddingHorizontal="@dimen/app_padding_vertical">
-
-        <EditText
-            android:id="@+id/appRenameEdit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/appRename"
-            android:imeOptions="actionDone"
-            android:padding="@dimen/app_padding_vertical"
-            android:inputType="textShortMessage"
-            android:importantForAutofill="no" />
-
-        <TextView
-            android:id="@+id/appRename"
-            style="@style/TextSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/appHide"
-            android:padding="@dimen/app_padding_vertical"
-            android:text="@string/app_drawer_rename"
-            android:textAllCaps="true" />
-
-        <ImageView
-            android:id="@+id/appHide"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/appInfo"
-            android:contentDescription="@string/content_desc_hide"
-            android:padding="@dimen/app_padding_vertical"
-            android:src="@drawable/visibility_off"
-            app:tint="?attr/primaryColor" />
-
-        <ImageView
-            android:id="@+id/appInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:contentDescription="@string/content_desc_app_info"
-            android:padding="@dimen/app_padding_vertical"
-            android:src="@drawable/ic_outline_info_24"
-            app:tint="?attr/primaryColor" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

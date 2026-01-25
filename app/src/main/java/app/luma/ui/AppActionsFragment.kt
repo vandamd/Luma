@@ -29,6 +29,7 @@ class AppActionsFragment : Fragment() {
     private val appAlias: String by lazy { arguments?.getString("appAlias") ?: "" }
     private val appActivityName: String by lazy { arguments?.getString("appActivityName") ?: "" }
     private val homePosition: Int by lazy { arguments?.getInt("homePosition", -1) ?: -1 }
+    private val isAppHidden: Boolean by lazy { arguments?.getBoolean("isHidden", false) ?: false }
 
     private val displayName: String
         get() = appAlias.ifEmpty { appLabel }
@@ -96,6 +97,33 @@ class AppActionsFragment : Fragment() {
                                 "homePosition" to homePosition,
                             ),
                         )
+                    }
+                    if (!isHomeApp) {
+                        if (isAppHidden) {
+                            SimpleTextButton(stringResource(R.string.app_actions_show)) {
+                                val prefs = Prefs.getInstance(requireContext())
+                                if (isPinnedShortcut) {
+                                    prefs.unhideShortcut(appActivityName)
+                                } else {
+                                    val newSet = prefs.hiddenApps.toMutableSet()
+                                    newSet.remove(appPackage)
+                                    prefs.hiddenApps = newSet
+                                }
+                                findNavController().popBackStack(R.id.mainFragment, false)
+                            }
+                        } else {
+                            SimpleTextButton(stringResource(R.string.app_actions_hide)) {
+                                val prefs = Prefs.getInstance(requireContext())
+                                if (isPinnedShortcut) {
+                                    prefs.hideShortcut(appActivityName)
+                                } else {
+                                    val newSet = prefs.hiddenApps.toMutableSet()
+                                    newSet.add(appPackage)
+                                    prefs.hiddenApps = newSet
+                                }
+                                findNavController().popBackStack(R.id.mainFragment, false)
+                            }
+                        }
                     }
                     if (isHomeApp) {
                         SimpleTextButton(stringResource(R.string.app_actions_replace)) {
