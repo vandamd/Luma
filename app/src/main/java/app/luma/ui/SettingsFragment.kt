@@ -81,8 +81,13 @@ class SettingsFragment : Fragment() {
     }
 
     private fun openDefaultLauncherSettings() {
-        val intent = Intent(Settings.ACTION_HOME_SETTINGS)
-        startActivity(intent)
+        try {
+            val intent = Intent(Settings.ACTION_HOME_SETTINGS)
+            startActivity(intent)
+        } catch (e: Exception) {
+            val intent = Intent(Settings.ACTION_SETTINGS)
+            startActivity(intent)
+        }
     }
 
     private fun showHiddenApps() {
