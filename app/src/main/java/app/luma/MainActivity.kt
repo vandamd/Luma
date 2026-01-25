@@ -153,5 +153,4 @@ class MainActivity : AppCompatActivity() {
 
         showToast(this, "Added to app drawer")
     }
-
 }
