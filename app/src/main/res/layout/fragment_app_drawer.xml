@@ -27,7 +27,7 @@
 
         <TextView
             android:id="@+id/listEmptyHint"
-            android:text="No apps found"
+            android:text="@string/app_drawer_no_apps"
             android:textSize="20sp"
             android:textColor="?attr/primaryColor"
             android:layout_gravity="center"

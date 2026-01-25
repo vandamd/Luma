@@ -23,6 +23,7 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
 import app.luma.BuildConfig
+import app.luma.R
 import app.luma.data.AppModel
 import app.luma.data.Constants
 import app.luma.data.Prefs
@@ -202,7 +203,7 @@ fun openAppInfo(
     val intent: Intent? = context.packageManager.getLaunchIntentForPackage(packageName)
     intent?.let {
         launcher.startAppDetailsActivity(intent.component, userHandle, null, null)
-    } ?: showToast(context, "Unable to open app info")
+    } ?: showToast(context, context.getString(R.string.toast_unable_to_open_app_info))
 }
 
 fun initActionService(context: Context): ActionService? {
@@ -214,7 +215,7 @@ fun initActionService(context: Context): ActionService? {
             openAccessibilitySettings(context)
         }
     } else {
-        showToast(context, "This action requires Android P (9) or higher", Toast.LENGTH_LONG)
+        showToast(context, context.getString(R.string.toast_action_requires_android_p), Toast.LENGTH_LONG)
     }
 
     return null

@@ -22,6 +22,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -81,7 +82,7 @@ class RenameFragment : Fragment() {
 
         Column {
             SettingsHeader(
-                title = "Rename",
+                title = stringResource(R.string.app_drawer_rename),
                 onBack = ::goBack,
                 onAction = { saveAndReturn(textState.value, homePosition) },
             )
@@ -109,7 +110,7 @@ class RenameFragment : Fragment() {
                                 ) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.close_24px),
-                                        contentDescription = "Clear",
+                                        contentDescription = stringResource(R.string.content_desc_clear),
                                         tint = SettingsTheme.typography.item.color,
                                     )
                                 }

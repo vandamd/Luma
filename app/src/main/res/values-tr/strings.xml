@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App identity -->
+    <string name="app_name">Luma</string>
+    <string name="accessibility_service_name">Luma</string>
+    <string name="accessibility_service_description">Bu erişilebilirlik hizmeti, Luma\'nın ekranı kilitleme veya hızlı ayarları açma gibi belirli eylemleri gerçekleştirmesine olanak tanır.</string>
+
+    <!-- Translations adapted from OlauncherCF (Turkish) -->
+
+    <!-- Settings screen -->
+    <string name="settings_title">Luma Ayarları (%1$s)</string>
+    <string name="settings_invert_colours">Renkleri ters çevir</string>
+    <string name="settings_pages">Sayfalar</string>
+    <string name="settings_gestures">Kaydırma</string>
+    <string name="settings_notifications">Bildirimler</string>
+    <string name="settings_hidden_apps">Gizli uygulamalar</string>
+    <string name="settings_default_launcher">Varsayılan başlatıcı</string>
+
+    <!-- Gesture actions -->
+    <string name="action_open_app">Uygulama Çalıştır</string>
+    <string name="action_lock_screen">Kilit Ekranı</string>
+    <string name="action_show_notifications">Bildirimleri Göster</string>
+    <string name="action_show_app_list">Uygulamaları Göster</string>
+    <string name="action_quick_settings">Hızlı Ayarlar</string>
+    <string name="action_show_recents">Son Uygulamaları Göster</string>
+    <string name="action_disabled">Devre dışı</string>
+    <string name="action_open_app_name">%1$s Aç</string>
+
+    <!-- Gestures screen -->
+    <string name="gesture_swipe_left">Sola kaydır</string>
+    <string name="gesture_swipe_right">Sağa kaydır</string>
+    <string name="gesture_swipe_down">Aşağı kaydır</string>
+    <string name="gesture_swipe_up">Yukarı kaydır</string>
+    <string name="gesture_double_tap">Çift tıkla</string>
+
+    <!-- Pages screen -->
+    <string name="pages_page_indicator_position">Sayfa göstergesi konumu</string>
+    <string name="pages_number_of_pages">Sayfa sayısı</string>
+    <string name="pages_page_number_of_apps">Sayfa %1$d, uygulama sayısı</string>
+
+    <!-- Page indicator positions -->
+    <string name="position_left">Sol</string>
+    <string name="position_right">Sağ</string>
+    <string name="position_hidden">Gizli</string>
+
+    <!-- Notifications screen -->
+    <string name="notifications_grant_permissions">İzinleri ver</string>
+    <string name="notifications_indicator">Gösterge (*)</string>
+    <string name="notifications_visible_next_to_apps">uygulamaların yanında görünür</string>
+    <string name="notifications_not_visible">görünmez</string>
+    <string name="notifications_not_visible_permission_required">görünmez (izin gerekli)</string>
+
+    <!-- App drawer -->
+    <string name="app_drawer_title">Uygulama Çekmecesi</string>
+    <string name="app_drawer_select_rename">Uygulama Seç/Yeniden Adlandır</string>
+    <string name="app_drawer_hidden_apps">Gizli uygulamalar</string>
+    <string name="app_drawer_no_apps">Herhangi bir uygulama bulunamadı</string>
+    <string name="app_drawer_rename">Yeniden adlandır</string>
+    <string name="app_drawer_reset">Sıfırla</string>
+    <string name="app_drawer_cancel">İptal</string>
+
+    <!-- Home screen tips -->
+    <string name="tip_swipe_left">Tüm uygulamalar için sola kaydırın</string>
+    <string name="tip_long_press">Ayarlar için uzun basın</string>
+
+    <!-- Toast messages -->
+    <string name="toast_app_not_found">Uygulama bulunamadı</string>
+    <string name="toast_unable_to_launch_app">Uygulama başlatılamadı</string>
+    <string name="toast_unable_to_launch_shortcut">Kısayol başlatılamadı</string>
+    <string name="toast_shortcuts_require_android">Kısayollar Android 7.1+ gerektirir</string>
+    <string name="toast_unable_to_open_app_info">Uygulama bilgisi açılamadı</string>
+    <string name="toast_action_requires_android_p">Bu işlem Android P (9) veya üstünü gerektirir</string>
+    <string name="toast_lock_requires_android_9">Ekran kilidi Android 9 veya üstünü gerektirir</string>
+    <string name="toast_long_press_to_select">Uygulama seçmek için uzun basın</string>
+    <string name="toast_unable_to_add_shortcut">Kısayol eklenemedi</string>
+    <string name="toast_added_to_app_drawer">Uygulama çekmecesine eklendi</string>
+
+    <!-- Misc -->
+    <string name="app_placeholder">Uygulama</string>
+
+    <!-- Content descriptions -->
+    <string name="content_desc_back">Geri</string>
+    <string name="content_desc_save">Kaydet</string>
+    <string name="content_desc_clear">Temizle</string>
+    <string name="content_desc_hide">Gizle</string>
+    <string name="content_desc_app_info">Uygulama bilgisi</string>
+
+    <plurals name="pages_count">
+        <item quantity="one">%d Sayfa</item>
+        <item quantity="other">%d Sayfa</item>
+    </plurals>
+    <plurals name="apps_count">
+        <item quantity="one">%d Uygulama</item>
+        <item quantity="other">%d Uygulama</item>
+    </plurals>
+</resources>

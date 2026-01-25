@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -44,10 +45,10 @@ class SettingsFragment : Fragment() {
 
     @Composable
     private fun Settings() {
+        val versionName = requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName ?: ""
         Column {
             SettingsHeader(
-                title =
-                    "Luma Settings (" + requireContext().packageManager.getPackageInfo(requireContext().packageName, 0).versionName + ")",
+                title = stringResource(R.string.settings_title, versionName),
                 onBack = ::goBack,
             )
             val invertState = remember { mutableStateOf(prefs.invertColours) }
@@ -55,7 +56,7 @@ class SettingsFragment : Fragment() {
             ContentContainer {
                 CustomScrollView(verticalArrangement = Arrangement.spacedBy(40.dp)) {
                     ToggleTextButton(
-                        title = "Invert Colours",
+                        title = stringResource(R.string.settings_invert_colours),
                         checked = invertState.value,
                         onCheckedChange = {
                             invertState.value = it
@@ -68,13 +69,17 @@ class SettingsFragment : Fragment() {
                             requireActivity().recreate()
                         },
                     )
-                    SimpleTextButton("Pages") { findNavController().navigate(R.id.action_settingsFragment_to_pagesFragment) }
-                    SimpleTextButton("Gestures") { findNavController().navigate(R.id.action_settingsFragment_to_gesturesFragment) }
                     SimpleTextButton(
-                        "Notifications",
+                        stringResource(R.string.settings_pages),
+                    ) { findNavController().navigate(R.id.action_settingsFragment_to_pagesFragment) }
+                    SimpleTextButton(stringResource(R.string.settings_gestures)) {
+                        findNavController().navigate(R.id.action_settingsFragment_to_gesturesFragment)
+                    }
+                    SimpleTextButton(
+                        stringResource(R.string.settings_notifications),
                     ) { findNavController().navigate(R.id.action_settingsFragment_to_notificationsFragment) }
-                    SimpleTextButton("Hidden Apps") { showHiddenApps() }
-                    SimpleTextButton("Default Launcher") { openDefaultLauncherSettings() }
+                    SimpleTextButton(stringResource(R.string.settings_hidden_apps)) { showHiddenApps() }
+                    SimpleTextButton(stringResource(R.string.settings_default_launcher)) { openDefaultLauncherSettings() }
                 }
             }
         }

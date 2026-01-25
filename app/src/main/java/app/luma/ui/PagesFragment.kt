@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -34,29 +36,38 @@ class PagesFragment : Fragment() {
 
     @Composable
     fun PagesScreen() {
+        val context = LocalContext.current
+        val resources = context.resources
         Column {
             SettingsHeader(
-                title = "Pages",
+                title = stringResource(R.string.settings_pages),
                 onBack = ::goBack,
             )
 
             ContentContainer {
                 CustomScrollView(verticalArrangement = Arrangement.spacedBy(26.dp)) {
                     SelectorButton(
-                        label = "Page Indicator Position",
-                        value = prefs.pageIndicatorPosition.name,
+                        label = stringResource(R.string.pages_page_indicator_position),
+                        value =
+                            when (prefs.pageIndicatorPosition) {
+                                Prefs.PageIndicatorPosition.Left -> stringResource(R.string.position_left)
+                                Prefs.PageIndicatorPosition.Right -> stringResource(R.string.position_right)
+                                Prefs.PageIndicatorPosition.Hidden -> stringResource(R.string.position_hidden)
+                            },
                         onClick = { findNavController().navigate(R.id.action_pagesFragment_to_pageIndicatorPositionFragment) },
                     )
+                    val pageCount = prefs.homePages.coerceIn(1, 5)
                     SelectorButton(
-                        label = "Number of Pages",
-                        value = "${prefs.homePages.coerceIn(1,5)} Pages",
+                        label = stringResource(R.string.pages_number_of_pages),
+                        value = resources.getQuantityString(R.plurals.pages_count, pageCount, pageCount),
                         onClick = { findNavController().navigate(R.id.action_pagesFragment_to_pageCountFragment) },
                     )
                     for (i in 1..prefs.homePages) {
                         val page = i
+                        val appCount = prefs.getAppsPerPage(i)
                         SelectorButton(
-                            label = "Page $i, Number of Apps",
-                            value = "${prefs.getAppsPerPage(i)} Apps",
+                            label = stringResource(R.string.pages_page_number_of_apps, i),
+                            value = resources.getQuantityString(R.plurals.apps_count, appCount, appCount),
                             onClick = {
                                 val bundle = bundleOf("pageNumber" to page)
                                 findNavController().navigate(R.id.action_pagesFragment_to_appCountFragment, bundle)

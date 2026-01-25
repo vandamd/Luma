@@ -8,6 +8,7 @@ import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import app.luma.R
 import app.luma.data.AppModel
 import app.luma.data.Constants
 import app.luma.data.Constants.AppDrawerFlag
@@ -59,7 +60,7 @@ class MainViewModel(
         val component =
             when (activityInfo.size) {
                 0 -> {
-                    showToast(appContext, "App not found")
+                    showToast(appContext, appContext.getString(R.string.toast_app_not_found))
                     return
                 }
 
@@ -82,16 +83,16 @@ class MainViewModel(
             try {
                 launcher.startMainActivity(component, android.os.Process.myUserHandle(), null, null)
             } catch (e: Exception) {
-                showToast(appContext, "Unable to launch app")
+                showToast(appContext, appContext.getString(R.string.toast_unable_to_launch_app))
             }
         } catch (e: Exception) {
-            showToast(appContext, "Unable to launch app")
+            showToast(appContext, appContext.getString(R.string.toast_unable_to_launch_app))
         }
     }
 
     private fun launchPinnedShortcut(payload: String) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
-            showToast(appContext, "Shortcuts require Android 7.1+")
+            showToast(appContext, appContext.getString(R.string.toast_shortcuts_require_android))
             return
         }
 
@@ -103,7 +104,7 @@ class MainViewModel(
             val launcher = appContext.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
             launcher.startShortcut(shortcutPackage, shortcutId, null, null, android.os.Process.myUserHandle())
         } catch (_: Exception) {
-            showToast(appContext, "Unable to launch shortcut")
+            showToast(appContext, appContext.getString(R.string.toast_unable_to_launch_shortcut))
         }
     }
 

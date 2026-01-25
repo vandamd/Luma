@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
+import app.luma.R
 import app.luma.data.Prefs
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
@@ -38,12 +40,12 @@ class NotificationsFragment : Fragment() {
     fun NotificationsScreen() {
         Column {
             SettingsHeader(
-                title = "Notifications",
+                title = stringResource(R.string.settings_notifications),
                 onBack = ::goBack,
             )
 
             ContentContainer(verticalArrangement = Arrangement.spacedBy(45.dp)) {
-                SimpleTextButton("Grant Permissions") {
+                SimpleTextButton(stringResource(R.string.notifications_grant_permissions)) {
                     openNotificationListenerSettings()
                 }
 
@@ -55,12 +57,16 @@ class NotificationsFragment : Fragment() {
                         ).contains(requireContext().packageName)
 
                 ToggleSelectorButton(
-                    label = "Indicator (*)",
+                    label = stringResource(R.string.notifications_indicator),
                     value =
                         if (hasNotificationPermission) {
-                            if (notificationIndicatorState.value) "visible next to apps" else "not visible"
+                            if (notificationIndicatorState.value) {
+                                stringResource(R.string.notifications_visible_next_to_apps)
+                            } else {
+                                stringResource(R.string.notifications_not_visible)
+                            }
                         } else {
-                            "not visible (permission required)"
+                            stringResource(R.string.notifications_not_visible_permission_required)
                         },
                     checked = hasNotificationPermission && notificationIndicatorState.value,
                     onCheckedChange = {

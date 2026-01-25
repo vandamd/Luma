@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
+import app.luma.R
 import app.luma.data.Prefs
 import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.ContentContainer
@@ -31,23 +33,23 @@ class PageIndicatorPositionFragment : Fragment() {
     fun Screen() {
         Column {
             SettingsHeader(
-                title = "Page Indicator Position",
+                title = stringResource(R.string.pages_page_indicator_position),
                 onBack = ::goBack,
             )
             ContentContainer {
                 CustomScrollView {
                     SimpleTextButton(
-                        title = "Left",
+                        title = stringResource(R.string.position_left),
                         underline = prefs.pageIndicatorPosition == Prefs.PageIndicatorPosition.Left,
                         onClick = { selectPosition(Prefs.PageIndicatorPosition.Left) },
                     )
                     SimpleTextButton(
-                        title = "Right",
+                        title = stringResource(R.string.position_right),
                         underline = prefs.pageIndicatorPosition == Prefs.PageIndicatorPosition.Right,
                         onClick = { selectPosition(Prefs.PageIndicatorPosition.Right) },
                     )
                     SimpleTextButton(
-                        title = "Hidden",
+                        title = stringResource(R.string.position_hidden),
                         underline = prefs.pageIndicatorPosition == Prefs.PageIndicatorPosition.Hidden,
                         onClick = { selectPosition(Prefs.PageIndicatorPosition.Hidden) },
                     )

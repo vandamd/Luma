@@ -145,12 +145,12 @@ class MainActivity : AppCompatActivity() {
             }
 
         if (!accepted) {
-            showToast(this, "Unable to add shortcut")
+            showToast(this, getString(R.string.toast_unable_to_add_shortcut))
             return
         }
 
         prefs.addPinnedShortcut(shortcutPackage, shortcutId, label)
 
-        showToast(this, "Added to app drawer")
+        showToast(this, getString(R.string.toast_added_to_app_drawer))
     }
 }
