@@ -93,6 +93,7 @@ class AppDrawerFragment : Fragment() {
                     appHideListener = appShowHideListener(),
                     appDeleteShortcutListener = appDeleteShortcutListener(),
                     appRenameListener = appRenameListener(),
+                    appLongPressListener = if (flag == AppDrawerFlag.LaunchApp) appLongPressListener() else null,
                 ),
             )
 
@@ -149,24 +150,11 @@ class AppDrawerFragment : Fragment() {
         n: Int = 0,
     ): (appModel: AppModel) -> Unit =
         { appModel ->
-            if (flag == AppDrawerFlag.SetHomeApp && appModel.appPackage == "__rename__") {
-                // We need to pass the home app information to rename
-                val homeAppModel = Prefs.getInstance(requireContext()).getHomeAppModel(n)
-                findNavController().navigate(
-                    R.id.renameFragment,
-                    bundleOf(
-                        "appPackage" to homeAppModel.appPackage,
-                        "appLabel" to homeAppModel.appLabel,
-                        "homePosition" to n,
-                    ),
-                )
+            viewModel.selectedApp(appModel, flag, n)
+            if (flag == AppDrawerFlag.LaunchApp || flag == AppDrawerFlag.HiddenApps || flag == AppDrawerFlag.SetHomeApp) {
+                findNavController().popBackStack(R.id.mainFragment, false)
             } else {
-                viewModel.selectedApp(appModel, flag, n)
-                if (flag == AppDrawerFlag.LaunchApp || flag == AppDrawerFlag.HiddenApps) {
-                    findNavController().popBackStack(R.id.mainFragment, false)
-                } else {
-                    findNavController().popBackStack()
-                }
+                findNavController().popBackStack()
             }
         }
 
@@ -225,5 +213,18 @@ class AppDrawerFragment : Fragment() {
         { appPackage, appAlias ->
             val prefs = Prefs.getInstance(requireContext())
             prefs.setAppAlias(appPackage, appAlias)
+        }
+
+    private fun appLongPressListener(): (AppModel) -> Unit =
+        { appModel ->
+            findNavController().navigate(
+                R.id.appActionsFragment,
+                bundleOf(
+                    "appPackage" to appModel.appPackage,
+                    "appLabel" to appModel.appLabel,
+                    "appAlias" to appModel.appAlias,
+                    "appActivityName" to appModel.appActivityName,
+                ),
+            )
         }
 }

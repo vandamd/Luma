@@ -216,6 +216,19 @@ object SettingsComposable {
     }
 
     @Composable
+    fun MessageText(
+        text: String,
+        modifier: Modifier = Modifier,
+    ) {
+        Text(
+            text = text,
+            style = SettingsTheme.typography.item,
+            fontSize = 18.sp,
+            modifier = modifier,
+        )
+    }
+
+    @Composable
     fun SimpleTextButton(
         title: String,
         fontSize: TextUnit = TextUnit.Unspecified,

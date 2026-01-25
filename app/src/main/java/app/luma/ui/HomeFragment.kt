@@ -105,8 +105,25 @@ class HomeFragment :
 
     override fun onLongClick(view: View): Boolean {
         performHapticFeedback(requireContext())
-        val n = view.id
-        showAppList(AppDrawerFlag.SetHomeApp, n)
+        val position = view.id
+        val appModel = prefs.getHomeAppModel(position)
+
+        if (appModel.appLabel.isEmpty()) {
+            // Placeholder - go directly to app drawer to pick an app
+            showAppList(AppDrawerFlag.SetHomeApp, position)
+        } else {
+            // Real app - show app actions with replace option
+            findNavController().navigate(
+                R.id.appActionsFragment,
+                bundleOf(
+                    "appPackage" to appModel.appPackage,
+                    "appLabel" to appModel.appLabel,
+                    "appAlias" to appModel.appAlias,
+                    "appActivityName" to appModel.appActivityName,
+                    "homePosition" to position,
+                ),
+            )
+        }
         return true
     }
 

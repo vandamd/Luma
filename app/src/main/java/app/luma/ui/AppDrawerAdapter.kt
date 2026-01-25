@@ -35,6 +35,7 @@ data class AppDrawerConfig(
     val appHideListener: (AppDrawerFlag, AppModel) -> Unit,
     val appDeleteShortcutListener: (AppModel) -> Unit,
     val appRenameListener: (String, String) -> Unit,
+    val appLongPressListener: ((AppModel) -> Unit)? = null,
 )
 
 class AppDrawerAdapter(
@@ -85,6 +86,7 @@ class AppDrawerAdapter(
             config.clickListener,
             config.appInfoListener,
             deleteShortcutAction,
+            config.appLongPressListener,
         )
         setupHideButton(holder, appModel)
         setupRenameListeners(holder, appModel)
@@ -185,19 +187,6 @@ class AppDrawerAdapter(
     fun setAppList(appsList: MutableList<AppModel>) {
         normalizedNameCache.clear()
         this.appsList = appsList
-        if (config.flag == AppDrawerFlag.SetHomeApp && appsList.isNotEmpty()) {
-            val first = appsList[0]
-            val pseudo =
-                AppModel(
-                    appLabel = context.getString(R.string.app_drawer_rename),
-                    key = first.key,
-                    appPackage = "__rename__",
-                    appActivityName = "",
-                    user = first.user,
-                    appAlias = "",
-                )
-            this.appsList.add(0, pseudo)
-        }
         this.appFilteredList = this.appsList
         notifyDataSetChanged()
     }
@@ -214,6 +203,7 @@ class AppDrawerAdapter(
             listener: (AppModel) -> Unit,
             appInfoListener: (AppModel) -> Unit,
             deleteShortcutAction: () -> Unit,
+            appLongPressListener: ((AppModel) -> Unit)? = null,
         ) {
             val context = itemView.context
             binding.appHideLayout.visibility = View.GONE
@@ -222,7 +212,7 @@ class AppDrawerAdapter(
             setupTextWatcher(context, appModel)
             configureAppTitle(context, appModel, appLabelGravity)
             configureWorkProfileIcon(context, appModel, appLabelGravity)
-            setupClickListeners(context, appModel, listener, appInfoListener, deleteShortcutAction)
+            setupClickListeners(context, appModel, listener, appInfoListener, deleteShortcutAction, appLongPressListener)
         }
 
         private fun configureHideIcon(
@@ -324,6 +314,7 @@ class AppDrawerAdapter(
             listener: (AppModel) -> Unit,
             appInfoListener: (AppModel) -> Unit,
             deleteShortcutAction: () -> Unit,
+            appLongPressListener: ((AppModel) -> Unit)? = null,
         ) {
             binding.appTitleFrame.isHapticFeedbackEnabled = false
             binding.appTitleFrame.setOnClickListener {
@@ -331,13 +322,13 @@ class AppDrawerAdapter(
                 listener(appModel)
             }
             binding.appTitleFrame.setOnLongClickListener {
-                if (appModel.appPackage == "__rename__") {
-                    false
+                performHapticFeedback(context)
+                if (appLongPressListener != null) {
+                    appLongPressListener(appModel)
                 } else {
-                    performHapticFeedback(context)
                     binding.appHideLayout.visibility = View.VISIBLE
-                    true
                 }
+                true
             }
 
             val isPinnedShortcut = appModel.appPackage == Constants.PINNED_SHORTCUT_PACKAGE
