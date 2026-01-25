@@ -290,11 +290,11 @@ class HomeFragment :
                 openAccessibilitySettings(requireContext())
             }
         } else {
-            showToast(requireContext(), "Lock screen requires Android 9 or higher", Toast.LENGTH_LONG)
+            showToast(requireContext(), getString(R.string.toast_lock_requires_android_9), Toast.LENGTH_LONG)
         }
     }
 
-    private fun showLongPressToast() = showToast(requireContext(), "Long press to select app")
+    private fun showLongPressToast() = showToast(requireContext(), getString(R.string.toast_long_press_to_select))
 
     private fun handleGesture(gestureType: GestureType) {
         val action = prefs.getGestureAction(gestureType)

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -38,17 +39,17 @@ class GesturesFragment : Fragment() {
     fun GesturesScreen() {
         Column {
             SettingsHeader(
-                title = "Gestures",
+                title = stringResource(R.string.settings_gestures),
                 onBack = ::goBack,
             )
 
             ContentContainer {
                 CustomScrollView(verticalArrangement = Arrangement.spacedBy(26.dp)) {
-                    GestureButton("Swipe left", GestureType.SWIPE_LEFT)
-                    GestureButton("Swipe right", GestureType.SWIPE_RIGHT)
-                    GestureButton("Swipe down", GestureType.SWIPE_DOWN)
-                    GestureButton("Swipe up", GestureType.SWIPE_UP)
-                    GestureButton("Double tap", GestureType.DOUBLE_TAP)
+                    GestureButton(stringResource(R.string.gesture_swipe_left), GestureType.SWIPE_LEFT)
+                    GestureButton(stringResource(R.string.gesture_swipe_right), GestureType.SWIPE_RIGHT)
+                    GestureButton(stringResource(R.string.gesture_swipe_down), GestureType.SWIPE_DOWN)
+                    GestureButton(stringResource(R.string.gesture_swipe_up), GestureType.SWIPE_UP)
+                    GestureButton(stringResource(R.string.gesture_double_tap), GestureType.DOUBLE_TAP)
                 }
             }
         }
@@ -62,8 +63,8 @@ class GesturesFragment : Fragment() {
         val action = prefs.getGestureAction(type)
         val value =
             when (action) {
-                Constants.Action.OpenApp -> "Open ${prefs.getGestureApp(type).appLabel}"
-                Constants.Action.Disabled -> "Disabled"
+                Constants.Action.OpenApp -> stringResource(R.string.action_open_app_name, prefs.getGestureApp(type).appLabel)
+                Constants.Action.Disabled -> stringResource(R.string.action_disabled)
                 else -> action.displayName()
             }
         SelectorButton(

@@ -38,6 +38,7 @@ data class AppDrawerConfig(
 )
 
 class AppDrawerAdapter(
+    private val context: Context,
     private val config: AppDrawerConfig,
 ) : RecyclerView.Adapter<AppDrawerAdapter.ViewHolder>(),
     Filterable {
@@ -188,7 +189,7 @@ class AppDrawerAdapter(
             val first = appsList[0]
             val pseudo =
                 AppModel(
-                    appLabel = "Rename",
+                    appLabel = context.getString(R.string.app_drawer_rename),
                     key = first.key,
                     appPackage = "__rename__",
                     appActivityName = "",
@@ -218,7 +219,7 @@ class AppDrawerAdapter(
             binding.appHideLayout.visibility = View.GONE
 
             configureHideIcon(context, flag)
-            setupTextWatcher(appModel)
+            setupTextWatcher(context, appModel)
             configureAppTitle(context, appModel, appLabelGravity)
             configureWorkProfileIcon(context, appModel, appLabelGravity)
             setupClickListeners(context, appModel, listener, appInfoListener, deleteShortcutAction)
@@ -237,7 +238,10 @@ class AppDrawerAdapter(
             binding.appHide.setImageDrawable(AppCompatResources.getDrawable(context, drawable))
         }
 
-        private fun setupTextWatcher(appModel: AppModel) {
+        private fun setupTextWatcher(
+            context: Context,
+            appModel: AppModel,
+        ) {
             textWatcher?.let { binding.appRenameEdit.removeTextChangedListener(it) }
             textWatcher =
                 object : TextWatcher {
@@ -256,18 +260,21 @@ class AppDrawerAdapter(
                         before: Int,
                         count: Int,
                     ) {
-                        binding.appRename.text = computeRenameButtonText(appModel)
+                        binding.appRename.text = computeRenameButtonText(context, appModel)
                     }
                 }
             binding.appRenameEdit.addTextChangedListener(textWatcher)
         }
 
-        private fun computeRenameButtonText(appModel: AppModel): String {
+        private fun computeRenameButtonText(
+            context: Context,
+            appModel: AppModel,
+        ): String {
             val currentText = binding.appRenameEdit.text.toString()
             return when {
-                currentText.isEmpty() -> "Reset"
-                currentText == appModel.appAlias || currentText == appModel.appLabel -> "Cancel"
-                else -> "Rename"
+                currentText.isEmpty() -> context.getString(R.string.app_drawer_reset)
+                currentText == appModel.appAlias || currentText == appModel.appLabel -> context.getString(R.string.app_drawer_cancel)
+                else -> context.getString(R.string.app_drawer_rename)
             }
         }
 

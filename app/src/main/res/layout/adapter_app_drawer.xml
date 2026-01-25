@@ -18,7 +18,7 @@
             android:maxLines="1"
             android:paddingHorizontal="24dp"
             android:paddingVertical="@dimen/app_padding_vertical"
-            android:text="App" />
+            android:text="@string/app_placeholder" />
 
     </FrameLayout>
 
@@ -54,7 +54,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/appHide"
             android:padding="@dimen/app_padding_vertical"
-            android:text="Rename"
+            android:text="@string/app_drawer_rename"
             android:textAllCaps="true" />
 
         <ImageView
@@ -64,7 +64,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/appInfo"
-            android:contentDescription="Hide"
+            android:contentDescription="@string/content_desc_hide"
             android:padding="@dimen/app_padding_vertical"
             android:src="@drawable/visibility_off"
             app:tint="?attr/primaryColor" />
@@ -76,7 +76,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:contentDescription="App"
+            android:contentDescription="@string/content_desc_app_info"
             android:padding="@dimen/app_padding_vertical"
             android:src="@drawable/ic_outline_info_24"
             app:tint="?attr/primaryColor" />

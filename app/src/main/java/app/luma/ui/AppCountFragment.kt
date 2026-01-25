@@ -6,7 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
+import app.luma.R
 import app.luma.data.Prefs
 import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.ContentContainer
@@ -31,9 +34,10 @@ class AppCountFragment : Fragment() {
 
     @Composable
     fun AppCountScreen() {
+        val resources = LocalContext.current.resources
         Column {
             SettingsHeader(
-                title = "Page $pageNumber, Number of Apps",
+                title = stringResource(R.string.pages_page_number_of_apps, pageNumber),
                 onBack = ::goBack,
             )
 
@@ -42,7 +46,7 @@ class AppCountFragment : Fragment() {
                     for (i in 1..6) {
                         val isSelected = prefs.getAppsPerPage(pageNumber) == i
                         SimpleTextButton(
-                            title = "$i App${if (i > 1) "s" else ""}",
+                            title = resources.getQuantityString(R.plurals.apps_count, i, i),
                             underline = isSelected,
                             onClick = { updateAppsPerPage(pageNumber, i) },
                         )

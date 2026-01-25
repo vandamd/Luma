@@ -6,7 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
+import app.luma.R
 import app.luma.data.Prefs
 import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.ContentContainer
@@ -29,9 +32,10 @@ class PageCountFragment : Fragment() {
 
     @Composable
     fun PageCountScreen() {
+        val resources = LocalContext.current.resources
         Column {
             SettingsHeader(
-                title = "Number of Pages",
+                title = stringResource(R.string.pages_number_of_pages),
                 onBack = ::goBack,
             )
 
@@ -40,7 +44,7 @@ class PageCountFragment : Fragment() {
                     for (i in 1..5) {
                         val isSelected = prefs.homePages == i
                         SimpleTextButton(
-                            title = "$i Page${if (i > 1) "s" else ""}",
+                            title = resources.getQuantityString(R.plurals.pages_count, i, i),
                             underline = isSelected,
                             onClick = { updateHomePages(i) },
                         )

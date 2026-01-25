@@ -72,7 +72,7 @@ object SettingsComposable {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.arrow_back_ios_new_24px),
-                contentDescription = "Back",
+                contentDescription = stringResource(R.string.content_desc_back),
                 modifier =
                     Modifier
                         .size(38.dp)
@@ -93,7 +93,7 @@ object SettingsComposable {
             if (onAction != null) {
                 Image(
                     painter = painterResource(id = R.drawable.check_24px),
-                    contentDescription = "Save",
+                    contentDescription = stringResource(R.string.content_desc_save),
                     modifier =
                         Modifier
                             .size(38.dp)

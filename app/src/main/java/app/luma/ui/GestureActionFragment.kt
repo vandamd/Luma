@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -32,16 +34,16 @@ class GestureActionFragment : Fragment() {
 
         private val gestureDisplayInfo =
             mapOf(
-                GestureType.SWIPE_LEFT to GestureDisplayInfo("Swipe left", AppDrawerFlag.SetSwipeLeft),
-                GestureType.SWIPE_RIGHT to GestureDisplayInfo("Swipe right", AppDrawerFlag.SetSwipeRight),
-                GestureType.SWIPE_UP to GestureDisplayInfo("Swipe up", AppDrawerFlag.SetSwipeUp),
-                GestureType.SWIPE_DOWN to GestureDisplayInfo("Swipe down", AppDrawerFlag.SetSwipeDown),
-                GestureType.DOUBLE_TAP to GestureDisplayInfo("Double tap", AppDrawerFlag.SetDoubleTap),
+                GestureType.SWIPE_LEFT to GestureDisplayInfo(R.string.gesture_swipe_left, AppDrawerFlag.SetSwipeLeft),
+                GestureType.SWIPE_RIGHT to GestureDisplayInfo(R.string.gesture_swipe_right, AppDrawerFlag.SetSwipeRight),
+                GestureType.SWIPE_UP to GestureDisplayInfo(R.string.gesture_swipe_up, AppDrawerFlag.SetSwipeUp),
+                GestureType.SWIPE_DOWN to GestureDisplayInfo(R.string.gesture_swipe_down, AppDrawerFlag.SetSwipeDown),
+                GestureType.DOUBLE_TAP to GestureDisplayInfo(R.string.gesture_double_tap, AppDrawerFlag.SetDoubleTap),
             )
     }
 
     private data class GestureDisplayInfo(
-        val title: String,
+        @StringRes val titleRes: Int,
         val appDrawerFlag: AppDrawerFlag,
     )
 
@@ -68,7 +70,7 @@ class GestureActionFragment : Fragment() {
         val displayInfo = getDisplayInfo()
         Column {
             SettingsHeader(
-                title = displayInfo.title,
+                title = stringResource(displayInfo.titleRes),
                 onBack = ::goBack,
             )
 
@@ -78,7 +80,7 @@ class GestureActionFragment : Fragment() {
                         val isSelected = getCurrentAction() == action
                         val buttonText =
                             when (action) {
-                                Constants.Action.OpenApp -> "Open ${getAppLabel()}"
+                                Constants.Action.OpenApp -> stringResource(R.string.action_open_app_name, getAppLabel())
                                 else -> action.displayName()
                             }
                         SimpleTextButton(

@@ -52,9 +52,9 @@ class AppDrawerFragment : Fragment() {
         header?.setContent {
             val headerTitle =
                 when (flag) {
-                    AppDrawerFlag.SetHomeApp -> "Select/Rename App"
-                    AppDrawerFlag.HiddenApps -> "Hidden Apps"
-                    else -> "App Drawer"
+                    AppDrawerFlag.SetHomeApp -> requireContext().getString(R.string.app_drawer_select_rename)
+                    AppDrawerFlag.HiddenApps -> requireContext().getString(R.string.app_drawer_hidden_apps)
+                    else -> requireContext().getString(R.string.app_drawer_title)
                 }
             SettingsTheme(isDarkTheme(Prefs.getInstance(requireContext()))) {
                 SettingsHeader(title = headerTitle, onBack = { findNavController().popBackStack() })
@@ -84,6 +84,7 @@ class AppDrawerFragment : Fragment() {
 
         val appAdapter =
             AppDrawerAdapter(
+                requireContext(),
                 AppDrawerConfig(
                     flag = flag,
                     gravity = Gravity.CENTER,
