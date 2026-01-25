@@ -52,12 +52,23 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">Ящик приложений</string>
-    <string name="app_drawer_select_rename">Выбрать/Переименовать</string>
+    <string name="app_drawer_select_rename">Выбрать</string>
     <string name="app_drawer_hidden_apps">Скрытые приложения</string>
     <string name="app_drawer_no_apps">Приложения не найдены</string>
     <string name="app_drawer_rename">Переименовать</string>
     <string name="app_drawer_reset">Сбросить</string>
     <string name="app_drawer_cancel">Отмена</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">Показать</string>
+    <string name="app_actions_hide">Скрыть</string>
+    <string name="app_actions_rename">Переименовать</string>
+    <string name="app_actions_replace">Заменить</string>
+    <string name="app_actions_app_info">Информация о приложении</string>
+    <string name="app_actions_uninstall">Удалить</string>
+    <string name="app_actions_confirm_title">Удалить ярлык</string>
+    <string name="app_actions_uninstall_title">Удалить приложение</string>
+    <string name="app_actions_confirm_message">Вы уверены, что хотите удалить %1$s?</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">Свайп влево для всех приложений</string>

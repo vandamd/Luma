@@ -52,12 +52,23 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">アプリドロワー</string>
-    <string name="app_drawer_select_rename">アプリを選択/名前変更</string>
+    <string name="app_drawer_select_rename">アプリを選択</string>
     <string name="app_drawer_hidden_apps">非表示のアプリ</string>
     <string name="app_drawer_no_apps">アプリが見つかりません</string>
     <string name="app_drawer_rename">名前を変更</string>
     <string name="app_drawer_reset">リセット</string>
     <string name="app_drawer_cancel">キャンセル</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">表示</string>
+    <string name="app_actions_hide">非表示</string>
+    <string name="app_actions_rename">名前変更</string>
+    <string name="app_actions_replace">置換</string>
+    <string name="app_actions_app_info">アプリ情報</string>
+    <string name="app_actions_uninstall">アンインストール</string>
+    <string name="app_actions_confirm_title">ショートカットを削除</string>
+    <string name="app_actions_uninstall_title">アプリをアンインストール</string>
+    <string name="app_actions_confirm_message">%1$s を削除してもよろしいですか？</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">左にスワイプですべてのアプリ</string>

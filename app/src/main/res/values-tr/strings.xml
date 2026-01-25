@@ -52,12 +52,23 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">Uygulama Çekmecesi</string>
-    <string name="app_drawer_select_rename">Uygulama Seç/Yeniden Adlandır</string>
+    <string name="app_drawer_select_rename">Uygulama Seç</string>
     <string name="app_drawer_hidden_apps">Gizli uygulamalar</string>
     <string name="app_drawer_no_apps">Herhangi bir uygulama bulunamadı</string>
     <string name="app_drawer_rename">Yeniden adlandır</string>
     <string name="app_drawer_reset">Sıfırla</string>
     <string name="app_drawer_cancel">İptal</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">Göster</string>
+    <string name="app_actions_hide">Gizle</string>
+    <string name="app_actions_rename">Yeniden adlandır</string>
+    <string name="app_actions_replace">Değiştir</string>
+    <string name="app_actions_app_info">Uygulama bilgisi</string>
+    <string name="app_actions_uninstall">Kaldır</string>
+    <string name="app_actions_confirm_title">Kısayolu kaldır</string>
+    <string name="app_actions_uninstall_title">Uygulamayı kaldır</string>
+    <string name="app_actions_confirm_message">%1$s uygulamasını kaldırmak istediğinizden emin misiniz?</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">Tüm uygulamalar için sola kaydırın</string>

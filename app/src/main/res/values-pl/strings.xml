@@ -52,12 +52,23 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">Lista aplikacji</string>
-    <string name="app_drawer_select_rename">Wybierz/Zmień nazwę aplikacji</string>
+    <string name="app_drawer_select_rename">Wybierz aplikację</string>
     <string name="app_drawer_hidden_apps">Ukryte aplikacje</string>
     <string name="app_drawer_no_apps">Nie znaleziono aplikacji</string>
     <string name="app_drawer_rename">Zmień nazwę</string>
     <string name="app_drawer_reset">Zresetuj</string>
     <string name="app_drawer_cancel">Anuluj</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">Pokaż</string>
+    <string name="app_actions_hide">Ukryj</string>
+    <string name="app_actions_rename">Zmień nazwę</string>
+    <string name="app_actions_replace">Zamień</string>
+    <string name="app_actions_app_info">Informacje o aplikacji</string>
+    <string name="app_actions_uninstall">Odinstaluj</string>
+    <string name="app_actions_confirm_title">Usuń skrót</string>
+    <string name="app_actions_uninstall_title">Odinstaluj aplikację</string>
+    <string name="app_actions_confirm_message">Czy na pewno chcesz usunąć %1$s?</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">Przesuń w lewo, aby zobaczyć wszystkie aplikacje</string>

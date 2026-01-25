@@ -52,12 +52,23 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">앱 서랍</string>
-    <string name="app_drawer_select_rename">앱 선택/이름 변경</string>
+    <string name="app_drawer_select_rename">앱 선택</string>
     <string name="app_drawer_hidden_apps">숨겨진 앱</string>
     <string name="app_drawer_no_apps">앱을 찾을 수 없습니다</string>
     <string name="app_drawer_rename">이름 변경</string>
     <string name="app_drawer_reset">초기화</string>
     <string name="app_drawer_cancel">취소</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">표시</string>
+    <string name="app_actions_hide">숨기기</string>
+    <string name="app_actions_rename">이름 변경</string>
+    <string name="app_actions_replace">교체</string>
+    <string name="app_actions_app_info">앱 정보</string>
+    <string name="app_actions_uninstall">제거</string>
+    <string name="app_actions_confirm_title">바로가기 제거</string>
+    <string name="app_actions_uninstall_title">앱 제거</string>
+    <string name="app_actions_confirm_message">%1$s을(를) 제거하시겠습니까?</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">왼쪽으로 스와이프하여 모든 앱 보기</string>

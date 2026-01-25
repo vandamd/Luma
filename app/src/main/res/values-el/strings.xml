@@ -52,12 +52,23 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">Συρτάρι εφαρμογών</string>
-    <string name="app_drawer_select_rename">Επιλογή/Μετονομασία εφαρμογής</string>
+    <string name="app_drawer_select_rename">Επιλογή εφαρμογής</string>
     <string name="app_drawer_hidden_apps">Κρυφές εφαρμογές</string>
     <string name="app_drawer_no_apps">Δεν βρέθηκαν εφαρμογές</string>
     <string name="app_drawer_rename">Μετονομασία</string>
     <string name="app_drawer_reset">Επαναφορά</string>
     <string name="app_drawer_cancel">Ακύρωση</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">Εμφάνιση</string>
+    <string name="app_actions_hide">Απόκρυψη</string>
+    <string name="app_actions_rename">Μετονομασία</string>
+    <string name="app_actions_replace">Αντικατάσταση</string>
+    <string name="app_actions_app_info">Πληροφορίες εφαρμογής</string>
+    <string name="app_actions_uninstall">Απεγκατάσταση</string>
+    <string name="app_actions_confirm_title">Αφαίρεση συντόμευσης</string>
+    <string name="app_actions_uninstall_title">Απεγκατάσταση εφαρμογής</string>
+    <string name="app_actions_confirm_message">Είστε σίγουροι ότι θέλετε να αφαιρέσετε το %1$s;</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">Σύρετε αριστερά για όλες τις εφαρμογές</string>

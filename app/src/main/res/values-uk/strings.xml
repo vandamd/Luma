@@ -52,12 +52,23 @@
 
     <!-- App drawer -->
     <string name="app_drawer_title">Панель застосунків</string>
-    <string name="app_drawer_select_rename">Вибрати/Перейменувати застосунок</string>
+    <string name="app_drawer_select_rename">Вибрати застосунок</string>
     <string name="app_drawer_hidden_apps">Приховані додатки</string>
     <string name="app_drawer_no_apps">Додатків не знайдено</string>
     <string name="app_drawer_rename">Перейменувати</string>
     <string name="app_drawer_reset">Скинути</string>
     <string name="app_drawer_cancel">Скасувати</string>
+
+    <!-- App actions -->
+    <string name="app_actions_show">Показати</string>
+    <string name="app_actions_hide">Приховати</string>
+    <string name="app_actions_rename">Перейменувати</string>
+    <string name="app_actions_replace">Замінити</string>
+    <string name="app_actions_app_info">Інформація про застосунок</string>
+    <string name="app_actions_uninstall">Видалити</string>
+    <string name="app_actions_confirm_title">Видалити ярлик</string>
+    <string name="app_actions_uninstall_title">Видалити застосунок</string>
+    <string name="app_actions_confirm_message">Ви впевнені, що хочете видалити %1$s?</string>
 
     <!-- Home screen tips -->
     <string name="tip_swipe_left">Свайп вліво для всіх застосунків</string>
