@@ -3,7 +3,6 @@ package app.luma.ui
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Gravity
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +21,6 @@ import app.luma.data.Constants
 import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.Prefs
 import app.luma.databinding.AdapterAppDrawerBinding
-import app.luma.helper.dp2px
 import app.luma.helper.performHapticFeedback
 import app.luma.helper.uninstallApp
 import java.text.Normalizer
@@ -211,7 +209,6 @@ class AppDrawerAdapter(
             configureHideIcon(context, flag)
             setupTextWatcher(context, appModel)
             configureAppTitle(context, appModel, appLabelGravity)
-            configureWorkProfileIcon(context, appModel, appLabelGravity)
             setupClickListeners(context, appModel, listener, appInfoListener, deleteShortcutAction, appLongPressListener)
         }
 
@@ -283,29 +280,6 @@ class AppDrawerAdapter(
             val params = binding.appTitle.layoutParams as FrameLayout.LayoutParams
             params.gravity = gravity
             binding.appTitle.layoutParams = params
-        }
-
-        private fun configureWorkProfileIcon(
-            context: Context,
-            appModel: AppModel,
-            gravity: Int,
-        ) {
-            val isWorkProfile = appModel.user != android.os.Process.myUserHandle()
-            if (!isWorkProfile) {
-                binding.appTitle.setCompoundDrawables(null, null, null, null)
-                return
-            }
-
-            val icon = AppCompatResources.getDrawable(context, R.drawable.work_profile)
-            val px = dp2px(itemView.resources, 41)
-            icon?.setBounds(0, 0, px, px)
-
-            if (gravity == Gravity.LEFT) {
-                binding.appTitle.setCompoundDrawables(null, null, icon, null)
-            } else {
-                binding.appTitle.setCompoundDrawables(icon, null, null, null)
-            }
-            binding.appTitle.compoundDrawablePadding = 20
         }
 
         private fun setupClickListeners(
