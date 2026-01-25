@@ -87,7 +87,7 @@ fun CustomScrollView(
                             .width(0.8.dp)
                             .fillMaxHeight()
                             .align(Alignment.TopEnd)
-                            .offset(x = -17.7.dp)
+                            .offset(x = (-17.7).dp)
                             .background(Color.White),
                 )
                 Box(
@@ -101,7 +101,7 @@ fun CustomScrollView(
                                     x = 0,
                                     y = scrollIndicatorPositionPx,
                                 )
-                            }.offset(x = -16.dp)
+                            }.offset(x = (-15.8).dp)
                             .background(Color.White),
                 )
             }
