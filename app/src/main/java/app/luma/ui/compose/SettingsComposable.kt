@@ -68,15 +68,15 @@ object SettingsComposable {
                 Modifier
                     .fillMaxWidth()
                     .background(SettingsTheme.backgroundColor, SettingsTheme.shape)
-                    .padding(horizontal = 7.dp, vertical = 0.dp),
+                    .padding(horizontal = 6.dp, vertical = 0.dp),
         ) {
             Image(
                 painter = painterResource(id = R.drawable.arrow_back_ios_new_24px),
                 contentDescription = stringResource(R.string.content_desc_back),
                 modifier =
                     Modifier
-                        .size(38.dp)
-                        .padding(top = 10.dp, bottom = 0.dp)
+                        .size(32.dp)
+                        .padding(top = 9.dp, bottom = 0.dp)
                         .clickable {
                             performHapticFeedback(context)
                             onBack()
@@ -87,7 +87,7 @@ object SettingsComposable {
             )
             Spacer(modifier = Modifier.width(16.dp))
             Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                Text(text = title, style = SettingsTheme.typography.title, modifier = Modifier.padding(top = 10.dp, bottom = 25.dp))
+                Text(text = title, style = SettingsTheme.typography.title, modifier = Modifier.padding(top = 9.dp, bottom = 24.dp))
             }
             Spacer(modifier = Modifier.width(16.dp))
             if (onAction != null) {
@@ -97,7 +97,7 @@ object SettingsComposable {
                     modifier =
                         Modifier
                             .size(38.dp)
-                            .padding(top = 10.dp, bottom = 0.dp)
+                            .padding(top = 9.dp, bottom = 0.dp)
                             .clickable {
                                 performHapticFeedback(context)
                                 onAction()
@@ -113,7 +113,7 @@ object SettingsComposable {
                     modifier =
                         Modifier
                             .size(38.dp)
-                            .padding(top = 10.dp, bottom = 0.dp),
+                            .padding(top = 9.dp, bottom = 0.dp),
                     alpha = 0f,
                     colorFilter =
                         androidx.compose.ui.graphics.ColorFilter
@@ -134,12 +134,11 @@ object SettingsComposable {
         Row(
             modifier =
                 Modifier
-                    .padding(top = 8.dp, bottom = 0.dp)
+                    .padding(top = 2.dp, bottom = 0.dp)
                     .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             CustomToggleSwitch(checked = checked, onCheckedChange = onCheckedChange)
-            Spacer(modifier = Modifier.width(12.dp))
             SimpleTextButton(title = title, fontSize = fontSize, onClick = onClick)
         }
     }
@@ -151,9 +150,9 @@ object SettingsComposable {
         enabled: Boolean = true,
     ) {
         val context = LocalContext.current
-        val circleDiameter = 9.8.dp
-        val circleBorder = 2.5.dp
-        val lineWidth = 14.5.dp
+        val circleDiameter = 8.dp
+        val circleBorder = 2.dp
+        val lineWidth = 12.dp
         val lineHeight = 2.22.dp
 
         val switchColor = if (enabled) SettingsTheme.typography.title.color else Color.Gray
@@ -164,7 +163,7 @@ object SettingsComposable {
                     .clickable(enabled = enabled) {
                         performHapticFeedback(context)
                         onCheckedChange(!checked)
-                    }.padding(8.5.dp, 10.dp, 20.dp, 0.dp),
+                    }.padding(7.4.dp, 10.dp, 13.dp, 10.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (!checked) {
@@ -208,7 +207,7 @@ object SettingsComposable {
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(top = 0.dp, bottom = 20.dp, start = 37.dp, end = 0.dp),
+                    .padding(top = 0.dp, bottom = 20.dp, start = 26.dp, end = 0.dp),
             verticalArrangement = verticalArrangement,
         ) {
             content()
@@ -237,7 +236,7 @@ object SettingsComposable {
     ) {
         val context = LocalContext.current
         val underlineColor = SettingsTheme.typography.pageButton.color
-        Box(modifier = Modifier.fillMaxWidth().padding(vertical = 0.dp)) {
+        Box(modifier = Modifier.fillMaxWidth().padding(bottom = 0.dp)) {
             Text(
                 title,
                 style = SettingsTheme.typography.pageButton,

@@ -54,21 +54,21 @@ class SettingsFragment : Fragment() {
             val invertState = remember { mutableStateOf(prefs.invertColours) }
 
             ContentContainer {
-                CustomScrollView(verticalArrangement = Arrangement.spacedBy(40.dp)) {
-                    ToggleTextButton(
-                        title = stringResource(R.string.settings_invert_colours),
-                        checked = invertState.value,
-                        onCheckedChange = {
-                            invertState.value = it
-                            prefs.invertColours = it
-                            requireActivity().recreate()
-                        },
-                        onClick = {
-                            invertState.value = !invertState.value
-                            prefs.invertColours = invertState.value
-                            requireActivity().recreate()
-                        },
-                    )
+                CustomScrollView(verticalArrangement = Arrangement.spacedBy(24.dp)) {
+                    // ToggleTextButton(
+                    //     title = stringResource(R.string.settings_invert_colours),
+                    //     checked = invertState.value,
+                    //     onCheckedChange = {
+                    //         invertState.value = it
+                    //         prefs.invertColours = it
+                    //         requireActivity().recreate()
+                    //     },
+                    //     onClick = {
+                    //         invertState.value = !invertState.value
+                    //         prefs.invertColours = invertState.value
+                    //         requireActivity().recreate()
+                    //     },
+                    // )
                     SimpleTextButton(
                         stringResource(R.string.settings_pages),
                     ) { findNavController().navigate(R.id.action_settingsFragment_to_pagesFragment) }
