@@ -139,7 +139,9 @@ object SettingsComposable {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             CustomToggleSwitch(checked = checked, onCheckedChange = onCheckedChange)
-            SimpleTextButton(title = title, fontSize = fontSize, onClick = onClick)
+            Box(modifier = Modifier.offset(y = (5).dp)) {
+                SimpleTextButton(title = title, fontSize = fontSize, onClick = onClick)
+            }
         }
     }
 
@@ -207,7 +209,7 @@ object SettingsComposable {
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(top = 0.dp, bottom = 20.dp, start = 26.dp, end = 0.dp),
+                    .padding(top = 0.dp, bottom = 28.dp, start = 26.dp, end = 0.dp),
             verticalArrangement = verticalArrangement,
         ) {
             content()
@@ -244,6 +246,7 @@ object SettingsComposable {
                 modifier =
                     Modifier
                         .align(Alignment.CenterStart)
+                        .offset(y = (-5.5).dp)
                         .clickable {
                             performHapticFeedback(context)
                             onClick()

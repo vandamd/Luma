@@ -16,7 +16,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.sp
 import app.luma.R
 import app.luma.data.Prefs
@@ -80,12 +79,6 @@ fun SettingsTheme(
                     fontFamily = FontFamily(Font(R.font.public_sans)),
                     fontSize = 32.sp,
                     color = textColor,
-                    lineHeight = 20.sp,
-                    lineHeightStyle =
-                        LineHeightStyle(
-                            alignment = LineHeightStyle.Alignment.Bottom,
-                            trim = LineHeightStyle.Trim.Both,
-                        ),
                     platformStyle = PlatformTextStyle(includeFontPadding = false),
                 ),
             button =

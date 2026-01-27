@@ -44,7 +44,7 @@ class NotificationsFragment : Fragment() {
                 onBack = ::goBack,
             )
 
-            ContentContainer(verticalArrangement = Arrangement.spacedBy(45.dp)) {
+            ContentContainer(verticalArrangement = Arrangement.spacedBy(33.5.dp)) {
                 SimpleTextButton(stringResource(R.string.notifications_grant_permissions)) {
                     openNotificationListenerSettings()
                 }

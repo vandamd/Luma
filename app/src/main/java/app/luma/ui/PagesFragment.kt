@@ -46,7 +46,7 @@ class PagesFragment : Fragment() {
             )
 
             ContentContainer {
-                CustomScrollView(verticalArrangement = Arrangement.spacedBy(26.dp)) {
+                CustomScrollView(verticalArrangement = Arrangement.spacedBy(33.5.dp)) {
                     SelectorButton(
                         label = stringResource(R.string.pages_page_indicator_position),
                         value =
