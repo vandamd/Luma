@@ -2,11 +2,17 @@ package app.luma.helper
 
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.lang.ref.WeakReference
 
 class LumaNotificationListener : NotificationListenerService() {
     companion object {
         private var instance: WeakReference<LumaNotificationListener> = WeakReference(null)
+
+        private val _changeVersion = MutableStateFlow(0)
+        val changeVersion: StateFlow<Int> = _changeVersion.asStateFlow()
 
         fun getActiveNotificationPackages(): Set<String> =
             instance
@@ -39,10 +45,10 @@ class LumaNotificationListener : NotificationListenerService() {
     }
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
-        // Notification posted - could trigger UI update here if needed
+        _changeVersion.value++
     }
 
     override fun onNotificationRemoved(sbn: StatusBarNotification?) {
-        // Notification removed - could trigger UI update here if needed
+        _changeVersion.value++
     }
 }

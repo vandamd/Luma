@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.luma.MainViewModel
@@ -20,9 +21,11 @@ import app.luma.data.AppModel
 import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.Prefs
 import app.luma.databinding.FragmentAppDrawerBinding
+import app.luma.helper.LumaNotificationListener
 import app.luma.style.SettingsTheme
 import app.luma.style.isDarkTheme
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
+import kotlinx.coroutines.launch
 
 class AppDrawerFragment : Fragment() {
     private var _binding: FragmentAppDrawerBinding? = null
@@ -93,6 +96,15 @@ class AppDrawerFragment : Fragment() {
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = appAdapter
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            LumaNotificationListener.changeVersion.collect {
+                val packages = LumaNotificationListener.getActiveNotificationPackages()
+                appAdapter.appsList.forEach { it.hasNotification = packages.contains(it.appPackage) }
+                appAdapter.appFilteredList.forEach { it.hasNotification = packages.contains(it.appPackage) }
+                appAdapter.notifyDataSetChanged()
+            }
+        }
     }
 
     private fun initViewModel(

@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import app.luma.MainViewModel
 import app.luma.R
@@ -29,6 +30,7 @@ import app.luma.databinding.FragmentHomeBinding
 import app.luma.helper.*
 import app.luma.helper.LumaNotificationListener
 import app.luma.listener.SwipeTouchListener
+import kotlinx.coroutines.launch
 
 private const val TAG = "HomeFragment"
 
@@ -77,8 +79,8 @@ class HomeFragment :
 
         initObservers()
         initPageNavigation()
-
         initSwipeTouchListener()
+        observeNotificationChanges()
     }
 
     override fun onStart() {
@@ -242,6 +244,14 @@ class HomeFragment :
 
     private fun initObservers() {
         binding.homeAppsLayout.gravity = android.view.Gravity.CENTER
+    }
+
+    private fun observeNotificationChanges() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            LumaNotificationListener.changeVersion.collect {
+                refreshAppNames()
+            }
+        }
     }
 
     private fun homeAppClicked(location: Int) {

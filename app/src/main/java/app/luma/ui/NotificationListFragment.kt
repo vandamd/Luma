@@ -20,6 +20,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -84,8 +86,8 @@ class NotificationListFragment : Fragment() {
     @Composable
     private fun NotificationListScreen() {
         val context = LocalContext.current
-        val items = loadNotifications()
-        val notifications = remember { mutableStateListOf(*items.toTypedArray()) }
+        val version by LumaNotificationListener.changeVersion.collectAsState()
+        val notifications = remember(version) { mutableStateListOf(*loadNotifications().toTypedArray()) }
 
         Column(modifier = Modifier.fillMaxSize()) {
             SettingsHeader(
