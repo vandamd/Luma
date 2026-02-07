@@ -10,6 +10,12 @@ ktlint {
     outputColorName = "RED"
 }
 
+def localProps = new Properties()
+def localPropsFile = rootProject.file('local.properties')
+if (localPropsFile.exists()) {
+    localProps.load(new FileInputStream(localPropsFile))
+}
+
 android {
     compileSdk 35
 
@@ -20,6 +26,17 @@ android {
 
     kotlinOptions {
         jvmTarget = "11"
+    }
+
+    if (localProps['storeFile']) {
+        signingConfigs {
+            release {
+                storeFile file(localProps['storeFile'])
+                storePassword localProps['storePassword']
+                keyAlias localProps['keyAlias']
+                keyPassword localProps['keyPassword']
+            }
+        }
     }
 
     defaultConfig {
@@ -41,7 +58,9 @@ android {
             debuggable false
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            /* signingConfig signingConfigs.release */
+            if (localProps['storeFile']) {
+                signingConfig signingConfigs.release
+            }
         }
         debug {
             debuggable true

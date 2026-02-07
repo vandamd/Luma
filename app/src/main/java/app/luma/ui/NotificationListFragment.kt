@@ -78,100 +78,10 @@ class NotificationListFragment : Fragment() {
         )
     }
 
-    private fun testNotifications(): List<NotificationItem> =
-        listOf(
-            NotificationItem(
-                "1",
-                "",
-                "John sent you a message on WhatsApp",
-                "Hey, are you free for lunch today? I was thinking we could try that new Thai place on King Street",
-            ),
-            NotificationItem(
-                "2",
-                "",
-                "Mom",
-                "Don't forget to call grandma this weekend, she's been asking about you and wants to know how the new job is going",
-            ),
-            NotificationItem(
-                "3",
-                "",
-                "Your Daily Mix is ready on Spotify",
-                "Based on your recent listening: Radiohead, Thom Yorke, Everything Everything, and more",
-            ),
-            NotificationItem(
-                "4",
-                "",
-                "Gmail: Meeting rescheduled",
-                "Tomorrow's 2pm product review has been moved to 3pm in the large conference room on the 4th floor",
-            ),
-            NotificationItem(
-                "5",
-                "",
-                "WhatsApp Group: Weekend Plans",
-                "Sarah sent a photo and 3 messages in the group chat about the camping trip next Saturday",
-            ),
-            NotificationItem(
-                "6",
-                "",
-                "Slack: #engineering",
-                "Jake mentioned you in a thread about the new authentication service deployment timeline for Q2",
-            ),
-            NotificationItem(
-                "7",
-                "",
-                "Calendar reminder",
-                "Standup in 15 minutes — don't forget to prepare your update on the notification feature",
-            ),
-            NotificationItem("8", "", "Twitter", "5 new notifications from people you follow including @SwiftOnSecurity and @kelaborators"),
-            NotificationItem(
-                "9",
-                "",
-                "Commonwealth Bank",
-                "Payment of $42.50 to Woolworths Metro Town Hall processed successfully from your everyday account",
-            ),
-            NotificationItem(
-                "10",
-                "",
-                "Weather Alert for Sydney",
-                "Severe thunderstorm warning: heavy rain and possible hail expected between 3pm and 6pm this afternoon",
-            ),
-            NotificationItem(
-                "11",
-                "",
-                "Uber",
-                "Your ride with Ahmed is arriving in 3 minutes — look for a white Toyota Camry with plate XYZ 123",
-            ),
-            NotificationItem(
-                "12",
-                "",
-                "Netflix",
-                "New episode of The Bear Season 4 is now streaming — continue watching where you left off",
-            ),
-            NotificationItem(
-                "13",
-                "",
-                "Signal: Alex",
-                "Can you pick up milk and bread on your way home? Also we're out of coffee and dishwasher tablets",
-            ),
-            NotificationItem(
-                "14",
-                "",
-                "ABC News Australia",
-                "Breaking: Major announcement from Apple — new product line revealed at surprise event in Cupertino",
-            ),
-            NotificationItem(
-                "15",
-                "",
-                "Fitness: Daily Goal Progress",
-                "You've hit 8,000 steps today! Only 2,000 more to reach your daily target of 10,000 steps",
-            ),
-        )
-
     @Composable
     private fun NotificationListScreen() {
         val context = LocalContext.current
-        val real = loadNotifications()
-        val items = real.ifEmpty { testNotifications() }
+        val items = loadNotifications()
         val notifications = remember { mutableStateListOf(*items.toTypedArray()) }
 
         Column {
