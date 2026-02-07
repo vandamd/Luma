@@ -29,7 +29,7 @@ class PageCountFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = composeView { PageCountScreen() }
+    ): View = composeView(onSwipeBack = ::goBack) { PageCountScreen() }
 
     @Composable
     fun PageCountScreen() {

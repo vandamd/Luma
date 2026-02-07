@@ -27,7 +27,7 @@ class PageIndicatorPositionFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = composeView { Screen() }
+    ): View = composeView(onSwipeBack = ::goBack) { Screen() }
 
     @Composable
     fun Screen() {

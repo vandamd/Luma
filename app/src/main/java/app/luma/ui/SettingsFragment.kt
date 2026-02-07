@@ -41,7 +41,7 @@ class SettingsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = composeView { Settings() }
+    ): View = composeView(onSwipeBack = ::goBack) { Settings() }
 
     @Composable
     private fun Settings() {

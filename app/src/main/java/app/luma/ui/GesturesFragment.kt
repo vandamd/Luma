@@ -33,7 +33,7 @@ class GesturesFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = composeView { GesturesScreen() }
+    ): View = composeView(onSwipeBack = ::goBack) { GesturesScreen() }
 
     @Composable
     fun GesturesScreen() {

@@ -58,7 +58,7 @@ class NotificationListFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = composeView { NotificationListScreen() }
+    ): View = composeView(onSwipeBack = ::goBack) { NotificationListScreen() }
 
     @Suppress("DEPRECATION")
     private fun loadNotifications(): List<NotificationItem> {

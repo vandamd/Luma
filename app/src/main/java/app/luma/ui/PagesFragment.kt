@@ -33,7 +33,7 @@ class PagesFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = composeView { PagesScreen() }
+    ): View = composeView(onSwipeBack = ::goBack) { PagesScreen() }
 
     @Composable
     fun PagesScreen() {

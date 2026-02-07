@@ -34,7 +34,7 @@ class NotificationsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = composeView { NotificationsScreen() }
+    ): View = composeView(onSwipeBack = ::goBack) { NotificationsScreen() }
 
     @Composable
     fun NotificationsScreen() {
