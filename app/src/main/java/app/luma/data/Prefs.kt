@@ -74,6 +74,8 @@ class Prefs(
     enum class PageIndicatorPosition { Left, Right, Hidden }
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, 0)
+    private val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
+    val mySerial: Long = userManager.getSerialNumberForUser(android.os.Process.myUserHandle())
 
     init {
         migrateHiddenApps()
@@ -81,8 +83,6 @@ class Prefs(
 
     private fun migrateHiddenApps() {
         val stored = prefs.getStringSet(HIDDEN_APPS, null) ?: return
-        val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
-        val mySerial = userManager.getSerialNumberForUser(android.os.Process.myUserHandle())
         var changed = false
         val migrated =
             stored.mapTo(mutableSetOf()) { entry ->
@@ -211,7 +211,6 @@ class Prefs(
         val myHandle = android.os.Process.myUserHandle()
         val userHandle =
             if (serial >= 0) {
-                val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
                 userManager.getUserForSerialNumber(serial) ?: myHandle
             } else {
                 myHandle
@@ -231,7 +230,6 @@ class Prefs(
         id: String,
         appModel: AppModel,
     ) {
-        val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
         val serial = userManager.getSerialNumberForUser(appModel.user)
         prefs
             .edit()
@@ -270,19 +268,13 @@ class Prefs(
     fun getHiddenAppKey(
         packageName: String,
         userSerial: Long,
-    ): String {
-        val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
-        val mySerial = userManager.getSerialNumberForUser(android.os.Process.myUserHandle())
-        return if (userSerial == mySerial) packageName else "$packageName|$userSerial"
-    }
+    ): String = if (userSerial == mySerial) packageName else "$packageName|$userSerial"
 
     fun isAppHidden(
         packageName: String,
         userSerial: Long,
     ): Boolean {
         val hidden = hiddenApps
-        val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
-        val mySerial = userManager.getSerialNumberForUser(android.os.Process.myUserHandle())
         return if (userSerial == mySerial) {
             hidden.contains(packageName)
         } else {
