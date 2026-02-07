@@ -1,7 +1,9 @@
 package app.luma.ui
 
 import android.app.Notification
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.service.notification.StatusBarNotification
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import app.luma.R
 import app.luma.helper.LumaNotificationListener
@@ -86,6 +89,10 @@ class NotificationListFragment : Fragment() {
     @Composable
     private fun NotificationListScreen() {
         val context = LocalContext.current
+        val hasPermission =
+            NotificationManagerCompat
+                .getEnabledListenerPackages(context)
+                .contains(context.packageName)
         val version by LumaNotificationListener.changeVersion.collectAsState()
         val notifications = remember(version) { mutableStateListOf(*loadNotifications().toTypedArray()) }
 
@@ -94,7 +101,17 @@ class NotificationListFragment : Fragment() {
                 title = stringResource(R.string.notification_list_title),
                 onBack = ::goBack,
             )
-            if (notifications.isEmpty()) {
+            if (!hasPermission) {
+                Box(
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .clickable { openNotificationListenerSettings() },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    MessageText(stringResource(R.string.notification_list_no_permission))
+                }
+            } else if (notifications.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center,
@@ -181,6 +198,14 @@ class NotificationListFragment : Fragment() {
                     )
                 }
             }
+        }
+    }
+
+    private fun openNotificationListenerSettings() {
+        try {
+            startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+        } catch (_: Exception) {
+            startActivity(Intent(Settings.ACTION_SETTINGS))
         }
     }
 }
