@@ -208,10 +208,12 @@ fun openAppInfo(
     packageName: String,
 ) {
     val launcher = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
-    val intent: Intent? = context.packageManager.getLaunchIntentForPackage(packageName)
-    intent?.let {
-        launcher.startAppDetailsActivity(intent.component, userHandle, null, null)
-    } ?: showToast(context, context.getString(R.string.toast_unable_to_open_app_info))
+    val component = launcher.getActivityList(packageName, userHandle).firstOrNull()?.componentName
+    if (component != null) {
+        launcher.startAppDetailsActivity(component, userHandle, null, null)
+    } else {
+        showToast(context, context.getString(R.string.toast_unable_to_open_app_info))
+    }
 }
 
 fun initActionService(context: Context): ActionService? {
