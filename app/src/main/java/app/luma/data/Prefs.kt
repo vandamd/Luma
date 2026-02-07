@@ -265,7 +265,13 @@ class Prefs(
         userSerial: Long,
     ): Boolean {
         val hidden = hiddenApps
-        return hidden.contains(packageName) || hidden.contains("$packageName|$userSerial")
+        val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
+        val mySerial = userManager.getSerialNumberForUser(android.os.Process.myUserHandle())
+        return if (userSerial == mySerial) {
+            hidden.contains(packageName)
+        } else {
+            hidden.contains("$packageName|$userSerial")
+        }
     }
 
     fun getAppAlias(appName: String): String = prefs.getString(appName, "") ?: ""
