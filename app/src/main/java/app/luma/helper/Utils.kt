@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.UserHandle
+import android.os.UserManager
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -70,33 +71,36 @@ suspend fun getAppsList(context: Context): MutableList<AppModel> =
         try {
             val prefs = Prefs.getInstance(context)
             val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
+            val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
             val collator = Collator.getInstance()
-            val userHandle = android.os.Process.myUserHandle()
 
-            for (app in launcherApps.getActivityList(null, userHandle)) {
-                if (app.applicationInfo.packageName == BuildConfig.APPLICATION_ID) {
-                    continue
+            for (profile in userManager.userProfiles) {
+                if (userManager.isQuietModeEnabled(profile)) continue
+
+                for (app in launcherApps.getActivityList(null, profile)) {
+                    if (app.applicationInfo.packageName == BuildConfig.APPLICATION_ID) continue
+
+                    val appAlias =
+                        prefs.getAppAlias(app.applicationInfo.packageName).ifEmpty {
+                            prefs.getAppAlias(app.label.toString())
+                        }
+
+                    val appModel =
+                        AppModel(
+                            app.label.toString(),
+                            collator.getCollationKey(app.label.toString()),
+                            app.applicationInfo.packageName,
+                            app.componentName.className,
+                            profile,
+                            appAlias,
+                            false,
+                        )
+
+                    appList.add(appModel)
                 }
-
-                val appAlias =
-                    prefs.getAppAlias(app.applicationInfo.packageName).ifEmpty {
-                        prefs.getAppAlias(app.label.toString())
-                    }
-
-                val appModel =
-                    AppModel(
-                        app.label.toString(),
-                        collator.getCollationKey(app.label.toString()),
-                        app.applicationInfo.packageName,
-                        app.componentName.className,
-                        userHandle,
-                        appAlias,
-                        false,
-                    )
-
-                appList.add(appModel)
             }
 
+            val userHandle = android.os.Process.myUserHandle()
             val hiddenShortcutIds = prefs.hiddenShortcutIds
 
             for (entry in prefs.pinnedShortcuts) {
@@ -139,24 +143,28 @@ suspend fun getAppsList(context: Context): MutableList<AppModel> =
 
 suspend fun getHiddenAppsList(context: Context): MutableList<AppModel> =
     withContext(Dispatchers.IO) {
-        val pm = context.packageManager
         val prefs = Prefs.getInstance(context)
         val hiddenAppsSet = prefs.hiddenApps
         val hiddenShortcutIds = prefs.hiddenShortcutIds
         val appList: MutableList<AppModel> = mutableListOf()
 
         val collator = Collator.getInstance()
-        val userHandle = android.os.Process.myUserHandle()
+        val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
+        val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
+        val myHandle = android.os.Process.myUserHandle()
+        val mySerial = userManager.getSerialNumberForUser(myHandle)
 
-        for (appPackage in hiddenAppsSet) {
-            try {
-                val appInfo = pm.getApplicationInfo(appPackage, 0)
-                val appName = pm.getApplicationLabel(appInfo).toString()
-                val appKey = collator.getCollationKey(appName)
-                appList.add(AppModel(appName, appKey, appPackage, "", userHandle, prefs.getAppAlias(appName), false))
-            } catch (_: NameNotFoundException) {
-                // App was uninstalled, skip silently
-            }
+        for (entry in hiddenAppsSet) {
+            val parts = entry.split("|")
+            val packageName = parts[0]
+            val serial = if (parts.size == 2) parts[1].toLongOrNull() ?: mySerial else mySerial
+            val userHandle = userManager.getUserForSerialNumber(serial) ?: continue
+            val activities = launcherApps.getActivityList(packageName, userHandle)
+            if (activities.isEmpty()) continue
+            val app = activities[0]
+            val appName = app.label.toString()
+            val appKey = collator.getCollationKey(appName)
+            appList.add(AppModel(appName, appKey, packageName, "", userHandle, prefs.getAppAlias(appName), false))
         }
 
         for (entry in prefs.pinnedShortcuts) {
@@ -170,7 +178,7 @@ suspend fun getHiddenAppsList(context: Context): MutableList<AppModel> =
                     key = collator.getCollationKey(shortcut.label),
                     appPackage = Constants.PINNED_SHORTCUT_PACKAGE,
                     appActivityName = shortcut.payload,
-                    user = userHandle,
+                    user = myHandle,
                     appAlias = "",
                     hasNotification = false,
                 )

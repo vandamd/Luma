@@ -3,6 +3,7 @@ package app.luma.ui
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import android.os.UserManager
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -118,6 +119,7 @@ class HomeFragment :
         if (appModel.appLabel.isEmpty()) {
             showAppList(AppDrawerFlag.SetHomeApp, position)
         } else {
+            val userManager = requireContext().getSystemService(android.content.Context.USER_SERVICE) as UserManager
             findNavController().navigate(
                 R.id.appActionsFragment,
                 bundleOf(
@@ -126,6 +128,7 @@ class HomeFragment :
                     "appAlias" to appModel.appAlias,
                     "appActivityName" to appModel.appActivityName,
                     "homePosition" to position,
+                    "userSerial" to userManager.getSerialNumberForUser(appModel.user),
                 ),
             )
         }

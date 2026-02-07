@@ -2,6 +2,7 @@ package app.luma.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.UserManager
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -115,9 +116,9 @@ class AppDrawerFragment : Fragment() {
                         appList
                     } else {
                         val prefs = Prefs.getInstance(requireContext())
-                        val hiddenApps = prefs.hiddenApps
+                        val um = requireContext().getSystemService(android.content.Context.USER_SERVICE) as UserManager
                         appList.filter { app ->
-                            !hiddenApps.contains(app.appPackage)
+                            !prefs.isAppHidden(app.appPackage, um.getSerialNumberForUser(app.user))
                         }
                     }
 
@@ -151,6 +152,7 @@ class AppDrawerFragment : Fragment() {
 
     private fun appLongPressListener(): (AppModel) -> Unit =
         { appModel ->
+            val userManager = requireContext().getSystemService(android.content.Context.USER_SERVICE) as UserManager
             findNavController().navigate(
                 R.id.appActionsFragment,
                 bundleOf(
@@ -159,6 +161,7 @@ class AppDrawerFragment : Fragment() {
                     "appAlias" to appModel.appAlias,
                     "appActivityName" to appModel.appActivityName,
                     "isHidden" to (flag == AppDrawerFlag.HiddenApps),
+                    "userSerial" to userManager.getSerialNumberForUser(appModel.user),
                 ),
             )
         }

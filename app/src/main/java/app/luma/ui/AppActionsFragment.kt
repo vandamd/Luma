@@ -1,6 +1,8 @@
 package app.luma.ui
 
 import android.os.Bundle
+import android.os.UserHandle
+import android.os.UserManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +34,16 @@ class AppActionsFragment : Fragment() {
     private val appActivityName: String by lazy { arguments?.getString("appActivityName") ?: "" }
     private val homePosition: Int by lazy { arguments?.getInt("homePosition", -1) ?: -1 }
     private val isAppHidden: Boolean by lazy { arguments?.getBoolean("isHidden", false) ?: false }
+    private val userSerial: Long by lazy { arguments?.getLong("userSerial", -1L) ?: -1L }
+
+    private val userHandle: UserHandle by lazy {
+        if (userSerial >= 0L) {
+            val um = requireContext().getSystemService(android.content.Context.USER_SERVICE) as UserManager
+            um.getUserForSerialNumber(userSerial) ?: android.os.Process.myUserHandle()
+        } else {
+            android.os.Process.myUserHandle()
+        }
+    }
 
     private val prefs: Prefs by lazy { Prefs.getInstance(requireContext()) }
 
@@ -143,8 +155,9 @@ class AppActionsFragment : Fragment() {
                             if (isPinnedShortcut) {
                                 if (isAppHidden) prefs.unhideShortcut(appActivityName) else prefs.hideShortcut(appActivityName)
                             } else {
+                                val key = prefs.getHiddenAppKey(appPackage, userSerial)
                                 val newSet = prefs.hiddenApps.toMutableSet()
-                                if (isAppHidden) newSet.remove(appPackage) else newSet.add(appPackage)
+                                if (isAppHidden) newSet.remove(key) else newSet.add(key)
                                 prefs.hiddenApps = newSet
                             }
                             findNavController().popBackStack(R.id.mainFragment, false)
@@ -195,7 +208,7 @@ class AppActionsFragment : Fragment() {
                         SimpleTextButton(stringResource(R.string.app_actions_app_info)) {
                             openAppInfo(
                                 requireContext(),
-                                android.os.Process.myUserHandle(),
+                                userHandle,
                                 appPackage,
                             )
                             findNavController().popBackStack(R.id.mainFragment, false)
