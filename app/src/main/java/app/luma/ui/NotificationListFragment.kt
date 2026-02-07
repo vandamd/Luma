@@ -9,9 +9,11 @@ import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -58,6 +60,7 @@ class NotificationListFragment : Fragment() {
         val pm = requireContext().packageManager
         return LumaNotificationListener
             .getActiveNotifications()
+            .filter { !it.isOngoing }
             .map { sbn -> sbn.toNotificationItem(pm) }
             .sortedBy { it.title.lowercase() }
     }
@@ -84,15 +87,20 @@ class NotificationListFragment : Fragment() {
         val items = loadNotifications()
         val notifications = remember { mutableStateListOf(*items.toTypedArray()) }
 
-        Column {
+        Column(modifier = Modifier.fillMaxSize()) {
             SettingsHeader(
                 title = stringResource(R.string.notification_list_title),
                 onBack = ::goBack,
             )
-            ContentContainer {
-                if (notifications.isEmpty()) {
+            if (notifications.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
                     MessageText(stringResource(R.string.notification_list_empty))
-                } else {
+                }
+            } else {
+                ContentContainer {
                     CustomScrollView(verticalArrangement = Arrangement.spacedBy(20.dp)) {
                         notifications.forEach { item ->
                             NotificationRow(
