@@ -2,6 +2,7 @@ package app.luma.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.UserManager
 import app.luma.style.FontSizeOption
 
 private const val PREFS_FILENAME = "app.luma"
@@ -40,6 +41,7 @@ private const val APP_NAME = "APP_NAME"
 private const val APP_PACKAGE = "APP_PACKAGE"
 private const val APP_ALIAS = "APP_ALIAS"
 private const val APP_ACTIVITY = "APP_ACTIVITY"
+private const val APP_USER_SERIAL = "APP_USER_SERIAL"
 
 enum class GestureType(
     val actionKey: String,
@@ -72,6 +74,35 @@ class Prefs(
     enum class PageIndicatorPosition { Left, Right, Hidden }
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, 0)
+    private val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
+    val mySerial: Long = userManager.getSerialNumberForUser(android.os.Process.myUserHandle())
+
+    init {
+        migrateHiddenApps()
+    }
+
+    private fun migrateHiddenApps() {
+        val stored = prefs.getStringSet(HIDDEN_APPS, null) ?: return
+        var changed = false
+        val migrated =
+            stored.mapTo(mutableSetOf()) { entry ->
+                val parts = entry.split("|")
+                if (parts.size == 2) {
+                    val serial = parts[1].toLongOrNull()
+                    if (serial == null || serial == mySerial) {
+                        changed = true
+                        parts[0]
+                    } else {
+                        entry
+                    }
+                } else {
+                    entry
+                }
+            }
+        if (changed) {
+            prefs.edit().putStringSet(HIDDEN_APPS, migrated).apply()
+        }
+    }
 
     fun firstSettingsOpen(): Boolean = firstTrueFalseAfter(FIRST_SETTINGS_OPEN)
 
@@ -108,11 +139,7 @@ class Prefs(
         set(value) = prefs.edit().putBoolean(INVERT_COLOURS, value).apply()
 
     var hiddenApps: MutableSet<String>
-        get() {
-            val stored = prefs.getStringSet(HIDDEN_APPS, mutableSetOf()) ?: mutableSetOf()
-            // Migrate old format: "packageName|userHandle" -> "packageName"
-            return stored.mapTo(mutableSetOf()) { if (it.contains("|")) it.split("|")[0] else it }
-        }
+        get() = prefs.getStringSet(HIDDEN_APPS, mutableSetOf())?.toMutableSet() ?: mutableSetOf()
         set(value) = prefs.edit().putStringSet(HIDDEN_APPS, value).apply()
 
     fun getHomeAppModel(i: Int): AppModel = loadApp("$i")
@@ -180,13 +207,21 @@ class Prefs(
         val pack = prefs.getString("${APP_PACKAGE}_$id", "") ?: ""
         val alias = prefs.getString("${APP_ALIAS}_$id", "") ?: ""
         val activity = prefs.getString("${APP_ACTIVITY}_$id", "") ?: ""
+        val serial = prefs.getLong("${APP_USER_SERIAL}_$id", -1L)
+        val myHandle = android.os.Process.myUserHandle()
+        val userHandle =
+            if (serial >= 0) {
+                userManager.getUserForSerialNumber(serial) ?: myHandle
+            } else {
+                myHandle
+            }
 
         return AppModel(
             appLabel = name,
             appPackage = pack,
             appAlias = alias,
             appActivityName = activity,
-            user = android.os.Process.myUserHandle(),
+            user = userHandle,
             key = null,
         )
     }
@@ -195,12 +230,14 @@ class Prefs(
         id: String,
         appModel: AppModel,
     ) {
+        val serial = userManager.getSerialNumberForUser(appModel.user)
         prefs
             .edit()
             .putString("${APP_NAME}_$id", appModel.appLabel)
             .putString("${APP_PACKAGE}_$id", appModel.appPackage)
             .putString("${APP_ACTIVITY}_$id", appModel.appActivityName)
             .putString("${APP_ALIAS}_$id", appModel.appAlias)
+            .putLong("${APP_USER_SERIAL}_$id", serial)
             .apply()
     }
 
@@ -227,6 +264,23 @@ class Prefs(
     var showNotificationIndicator: Boolean
         get() = prefs.getBoolean(SHOW_NOTIFICATION_INDICATOR, true)
         set(value) = prefs.edit().putBoolean(SHOW_NOTIFICATION_INDICATOR, value).apply()
+
+    fun getHiddenAppKey(
+        packageName: String,
+        userSerial: Long,
+    ): String = if (userSerial == mySerial) packageName else "$packageName|$userSerial"
+
+    fun isAppHidden(
+        packageName: String,
+        userSerial: Long,
+    ): Boolean {
+        val hidden = hiddenApps
+        return if (userSerial == mySerial) {
+            hidden.contains(packageName)
+        } else {
+            hidden.contains("$packageName|$userSerial")
+        }
+    }
 
     fun getAppAlias(appName: String): String = prefs.getString(appName, "") ?: ""
 

@@ -1,6 +1,8 @@
 package app.luma.helper
 
 import android.content.Context
+import android.os.UserHandle
+import android.os.UserManager
 import app.luma.data.AppModel
 import app.luma.data.Constants
 import app.luma.data.GestureType
@@ -23,14 +25,17 @@ object HomeCleanupHelper {
     fun cleanupRemovedPackage(
         context: Context,
         packageName: String,
+        userHandle: UserHandle = android.os.Process.myUserHandle(),
     ) {
         val prefs = Prefs.getInstance(context)
+        val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
+        val userSerial = userManager.getSerialNumberForUser(userHandle)
         var needsHomeRefresh = false
         var needsAppListRefresh = false
 
         for (i in 0 until HomeLayout.TOTAL_SLOTS) {
             val appModel = prefs.getHomeAppModel(i)
-            if (shouldClear(appModel, packageName)) {
+            if (shouldClear(appModel, packageName, userHandle)) {
                 prefs.setHomeAppModel(i, emptyAppModel())
                 needsHomeRefresh = true
             }
@@ -38,15 +43,16 @@ object HomeCleanupHelper {
 
         for (gestureType in GestureType.entries) {
             val appModel = prefs.getGestureApp(gestureType)
-            if (shouldClear(appModel, packageName)) {
+            if (shouldClear(appModel, packageName, userHandle)) {
                 prefs.setGestureApp(gestureType, emptyAppModel())
                 needsHomeRefresh = true
             }
         }
 
         val hiddenApps = prefs.hiddenApps
-        if (hiddenApps.contains(packageName)) {
-            prefs.hiddenApps = hiddenApps.filterNot { it == packageName }.toMutableSet()
+        val hiddenKey = prefs.getHiddenAppKey(packageName, userSerial)
+        if (hiddenApps.contains(hiddenKey)) {
+            prefs.hiddenApps = hiddenApps.filterNot { it == hiddenKey }.toMutableSet()
             needsAppListRefresh = true
         }
 
@@ -81,9 +87,10 @@ object HomeCleanupHelper {
     private fun shouldClear(
         appModel: AppModel,
         packageName: String,
+        userHandle: UserHandle,
     ): Boolean {
         if (appModel.appLabel.isEmpty()) return false
-        if (appModel.appPackage == packageName) return true
+        if (appModel.appPackage == packageName && appModel.user == userHandle) return true
 
         if (appModel.appPackage == Constants.PINNED_SHORTCUT_PACKAGE) {
             val activityName = appModel.appActivityName
