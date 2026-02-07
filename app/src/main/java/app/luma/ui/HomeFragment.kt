@@ -302,6 +302,13 @@ class HomeFragment :
                 initActionService(requireContext())?.showRecents()
             }
 
+            Action.ShowNotificationList -> {
+                try {
+                    findNavController().navigate(R.id.notificationListFragment)
+                } catch (_: Exception) {
+                }
+            }
+
             Action.Disabled -> {}
         }
     }

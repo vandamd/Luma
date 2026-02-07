@@ -21,6 +21,7 @@
     <string name="action_show_app_list">Show App List</string>
     <string name="action_quick_settings">Quick Settings</string>
     <string name="action_show_recents">Show Recents</string>
+    <string name="action_show_notification_list">Notification List</string>
     <string name="action_disabled">Disabled</string>
     <string name="action_open_app_name">Open %1$s</string>
 
@@ -55,6 +56,11 @@
     <string name="notifications_visible_next_to_apps">visible next to apps</string>
     <string name="notifications_not_visible">not visible</string>
     <string name="notifications_not_visible_permission_required">not visible (permission required)</string>
+
+    <!-- Notification list -->
+    <string name="notification_list_title">Notifications</string>
+    <string name="notification_list_empty">No notifications</string>
+    <string name="content_desc_dismiss">Dismiss</string>
 
     <!-- App drawer -->
     <string name="app_drawer_title">App Drawer</string>

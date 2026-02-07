@@ -103,6 +103,10 @@
         android:name="app.luma.ui.NotificationsFragment"
         android:label="NotificationsFragment" />
     <fragment
+        android:id="@+id/notificationListFragment"
+        android:name="app.luma.ui.NotificationListFragment"
+        android:label="NotificationListFragment" />
+    <fragment
         android:id="@+id/appActionsFragment"
         android:name="app.luma.ui.AppActionsFragment"
         android:label="AppActionsFragment">

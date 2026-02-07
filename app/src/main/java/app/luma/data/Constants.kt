@@ -39,6 +39,7 @@ object Constants {
         OpenQuickSettings(R.string.action_quick_settings),
         ShowRecents(R.string.action_show_recents),
         ShowNotification(R.string.action_show_notifications),
+        ShowNotificationList(R.string.action_show_notification_list),
         ;
 
         fun displayName(context: Context): String = context.getString(displayNameRes)

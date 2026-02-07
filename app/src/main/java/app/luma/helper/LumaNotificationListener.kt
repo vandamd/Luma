@@ -15,6 +15,17 @@ class LumaNotificationListener : NotificationListenerService() {
                 ?.map { it.packageName }
                 ?.toSet()
                 ?: emptySet()
+
+        fun getActiveNotifications(): List<StatusBarNotification> =
+            instance
+                .get()
+                ?.activeNotifications
+                ?.toList()
+                ?: emptyList()
+
+        fun dismissNotification(key: String) {
+            instance.get()?.cancelNotification(key)
+        }
     }
 
     override fun onCreate() {
