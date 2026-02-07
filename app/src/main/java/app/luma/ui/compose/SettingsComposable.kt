@@ -96,7 +96,7 @@ object SettingsComposable {
                     contentDescription = stringResource(R.string.content_desc_save),
                     modifier =
                         Modifier
-                            .size(38.dp)
+                            .size(32.dp)
                             .padding(top = 9.dp, bottom = 0.dp)
                             .clickable {
                                 performHapticFeedback(context)
@@ -112,7 +112,7 @@ object SettingsComposable {
                     contentDescription = null,
                     modifier =
                         Modifier
-                            .size(38.dp)
+                            .size(32.dp)
                             .padding(top = 9.dp, bottom = 0.dp),
                     alpha = 0f,
                     colorFilter =
