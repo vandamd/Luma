@@ -75,6 +75,35 @@ class Prefs(
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, 0)
 
+    init {
+        migrateHiddenApps()
+    }
+
+    private fun migrateHiddenApps() {
+        val stored = prefs.getStringSet(HIDDEN_APPS, null) ?: return
+        val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
+        val mySerial = userManager.getSerialNumberForUser(android.os.Process.myUserHandle())
+        var changed = false
+        val migrated =
+            stored.mapTo(mutableSetOf()) { entry ->
+                val parts = entry.split("|")
+                if (parts.size == 2) {
+                    val serial = parts[1].toLongOrNull()
+                    if (serial == null || serial == mySerial) {
+                        changed = true
+                        parts[0]
+                    } else {
+                        entry
+                    }
+                } else {
+                    entry
+                }
+            }
+        if (changed) {
+            prefs.edit().putStringSet(HIDDEN_APPS, migrated).apply()
+        }
+    }
+
     fun firstSettingsOpen(): Boolean = firstTrueFalseAfter(FIRST_SETTINGS_OPEN)
 
     var homePages: Int
@@ -110,20 +139,7 @@ class Prefs(
         set(value) = prefs.edit().putBoolean(INVERT_COLOURS, value).apply()
 
     var hiddenApps: MutableSet<String>
-        get() {
-            val stored = prefs.getStringSet(HIDDEN_APPS, mutableSetOf()) ?: mutableSetOf()
-            val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
-            val mySerial = userManager.getSerialNumberForUser(android.os.Process.myUserHandle())
-            return stored.mapTo(mutableSetOf()) { entry ->
-                val parts = entry.split("|")
-                if (parts.size == 2) {
-                    val serial = parts[1].toLongOrNull()
-                    if (serial == null || serial == mySerial) parts[0] else entry
-                } else {
-                    entry
-                }
-            }
-        }
+        get() = prefs.getStringSet(HIDDEN_APPS, mutableSetOf())?.toMutableSet() ?: mutableSetOf()
         set(value) = prefs.edit().putStringSet(HIDDEN_APPS, value).apply()
 
     fun getHomeAppModel(i: Int): AppModel = loadApp("$i")
