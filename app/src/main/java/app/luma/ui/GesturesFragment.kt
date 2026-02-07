@@ -44,7 +44,7 @@ class GesturesFragment : Fragment() {
             )
 
             ContentContainer {
-                CustomScrollView(verticalArrangement = Arrangement.spacedBy(26.dp)) {
+                CustomScrollView(verticalArrangement = Arrangement.spacedBy(33.5.dp)) {
                     GestureButton(stringResource(R.string.gesture_swipe_left), GestureType.SWIPE_LEFT)
                     GestureButton(stringResource(R.string.gesture_swipe_right), GestureType.SWIPE_RIGHT)
                     GestureButton(stringResource(R.string.gesture_swipe_down), GestureType.SWIPE_DOWN)

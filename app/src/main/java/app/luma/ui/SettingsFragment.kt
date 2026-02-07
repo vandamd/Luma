@@ -54,7 +54,7 @@ class SettingsFragment : Fragment() {
             val invertState = remember { mutableStateOf(prefs.invertColours) }
 
             ContentContainer {
-                CustomScrollView(verticalArrangement = Arrangement.spacedBy(40.dp)) {
+                CustomScrollView(verticalArrangement = Arrangement.spacedBy(33.5.dp)) {
                     ToggleTextButton(
                         title = stringResource(R.string.settings_invert_colours),
                         checked = invertState.value,

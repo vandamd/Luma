@@ -124,7 +124,7 @@ class AppActionsFragment : Fragment() {
                 onBack = ::goBack,
             )
             ContentContainer {
-                CustomScrollView(verticalArrangement = Arrangement.spacedBy(40.dp)) {
+                CustomScrollView(verticalArrangement = Arrangement.spacedBy(33.5.dp)) {
                     SimpleTextButton(stringResource(R.string.app_actions_rename)) {
                         findNavController().navigate(
                             R.id.renameFragment,

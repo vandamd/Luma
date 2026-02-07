@@ -26,7 +26,7 @@ import kotlin.math.max
 @Composable
 fun CustomScrollView(
     modifier: Modifier = Modifier,
-    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(46.dp),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(33.5.dp),
     content: @Composable () -> Unit,
 ) {
     var contentHeightPx by remember { mutableStateOf(0) }
