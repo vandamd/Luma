@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -39,6 +38,7 @@ import app.luma.data.Constants
 import app.luma.helper.performHapticFeedback
 import app.luma.style.CORNER_RADIUS
 import app.luma.style.SettingsTheme
+import app.luma.ui.noRippleClickable
 
 private fun Modifier.underline(
     color: Color,
@@ -77,7 +77,7 @@ object SettingsComposable {
                     Modifier
                         .size(32.dp)
                         .padding(top = 9.dp, bottom = 0.dp)
-                        .clickable {
+                        .noRippleClickable {
                             performHapticFeedback(context)
                             onBack()
                         },
@@ -98,7 +98,7 @@ object SettingsComposable {
                         Modifier
                             .size(32.dp)
                             .padding(top = 9.dp, bottom = 0.dp)
-                            .clickable {
+                            .noRippleClickable {
                                 performHapticFeedback(context)
                                 onAction()
                             },
@@ -162,7 +162,7 @@ object SettingsComposable {
         Row(
             modifier =
                 Modifier
-                    .clickable(enabled = enabled) {
+                    .noRippleClickable(enabled = enabled) {
                         performHapticFeedback(context)
                         onCheckedChange(!checked)
                     }.padding(7.4.dp, 10.dp, 13.dp, 10.dp),
@@ -247,7 +247,7 @@ object SettingsComposable {
                     Modifier
                         .align(Alignment.CenterStart)
                         .offset(y = (-5.5).dp)
-                        .clickable {
+                        .noRippleClickable {
                             performHapticFeedback(context)
                             onClick()
                         }.then(
@@ -271,7 +271,7 @@ object SettingsComposable {
                 Modifier
                     .fillMaxWidth()
                     .padding(vertical = 0.dp)
-                    .clickable {
+                    .noRippleClickable {
                         performHapticFeedback(context)
                         onClick()
                     },
@@ -312,7 +312,7 @@ object SettingsComposable {
                 Modifier
                     .fillMaxWidth()
                     .padding(vertical = 0.dp)
-                    .clickable(enabled = enabled) {
+                    .noRippleClickable(enabled = enabled) {
                         performHapticFeedback(context)
                         onClick()
                     },

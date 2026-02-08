@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -50,6 +49,7 @@ import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.MessageText
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
+import app.luma.ui.noRippleClickable
 
 private data class NotificationItem(
     val key: String,
@@ -130,7 +130,7 @@ class NotificationListFragment : Fragment() {
                     modifier =
                         Modifier
                             .fillMaxSize()
-                            .clickable { openNotificationListenerSettings() },
+                            .noRippleClickable { openNotificationListenerSettings() },
                     contentAlignment = Alignment.Center,
                 ) {
                     MessageText(stringResource(R.string.notification_list_no_permission))
@@ -213,7 +213,7 @@ class NotificationListFragment : Fragment() {
                 modifier =
                     Modifier
                         .size(24.dp)
-                        .clickable {
+                        .noRippleClickable {
                             performHapticFeedback(context)
                             onDismiss()
                         },
@@ -224,7 +224,7 @@ class NotificationListFragment : Fragment() {
                 modifier =
                     Modifier
                         .weight(1f)
-                        .clickable {
+                        .noRippleClickable {
                             performHapticFeedback(context)
                             onTap()
                         },

@@ -3,7 +3,6 @@ package app.luma.ui
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -43,6 +42,7 @@ import app.luma.helper.performHapticFeedback
 import app.luma.style.SettingsTheme
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
+import app.luma.ui.noRippleClickable
 
 class RenameFragment : Fragment() {
     private val appPackage: String by lazy { arguments?.getString("appPackage") ?: "" }
@@ -153,7 +153,7 @@ class RenameFragment : Fragment() {
                                 Modifier
                                     .padding(bottom = 6.dp, end = 6.dp)
                                     .size(20.dp)
-                                    .clickable {
+                                    .noRippleClickable {
                                         performHapticFeedback(context)
                                         textState.value = TextFieldValue("")
                                     },

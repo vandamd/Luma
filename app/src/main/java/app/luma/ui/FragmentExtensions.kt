@@ -1,6 +1,7 @@
 package app.luma.ui
 
 import android.view.View
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.Box
@@ -99,3 +100,8 @@ private fun SwipeBackContainer(
 fun Fragment.goBack() {
     requireActivity().onBackPressedDispatcher.onBackPressed()
 }
+
+fun Modifier.noRippleClickable(
+    enabled: Boolean = true,
+    onClick: () -> Unit,
+): Modifier = clickable(interactionSource = null, indication = null, enabled = enabled, onClick = onClick)
