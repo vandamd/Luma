@@ -75,7 +75,6 @@ private const val TIME_ENABLED = "time_enabled"
 private const val TIME_FORMAT = "time_format"
 private const val SHOW_SECONDS = "show_seconds"
 private const val LEADING_ZERO = "leading_zero"
-private const val FLASHING_SECONDS = "flashing_seconds"
 private const val BATTERY_ENABLED = "battery_enabled"
 private const val BATTERY_PERCENTAGE = "battery_percentage"
 private const val BATTERY_ICON = "battery_icon"
@@ -374,10 +373,6 @@ class Prefs(
     var leadingZero: Boolean
         get() = prefs.getBoolean(LEADING_ZERO, false)
         set(value) = prefs.edit().putBoolean(LEADING_ZERO, value).apply()
-
-    var flashingSeconds: Boolean
-        get() = prefs.getBoolean(FLASHING_SECONDS, false)
-        set(value) = prefs.edit().putBoolean(FLASHING_SECONDS, value).apply()
 
     var batteryEnabled: Boolean
         get() = prefs.getBoolean(BATTERY_ENABLED, true)

@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
@@ -20,9 +19,6 @@ import android.provider.Settings
 import android.telephony.SignalStrength
 import android.telephony.TelephonyCallback
 import android.telephony.TelephonyManager
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
@@ -66,7 +62,6 @@ class HomeFragment :
     private var currentPage = 0
     private var totalPages = 1
     private var pageIndicatorLayout: LinearLayout? = null
-    private var colonVisible = true
     private var batteryReceiver: BroadcastReceiver? = null
     private var bluetoothReceiver: BroadcastReceiver? = null
     private var telephonyCallback: TelephonyCallback? = null
@@ -420,7 +415,6 @@ class HomeFragment :
                         }
                     val min = cal.get(Calendar.MINUTE)
                     val sec = cal.get(Calendar.SECOND)
-                    val hideColon = prefs.flashingSeconds && !colonVisible
                     val hStr =
                         if (is24Hour || prefs.leadingZero) {
                             "%02d".format(hour)
@@ -433,20 +427,7 @@ class HomeFragment :
                             if (showSec) append(":${"%02d".format(sec)}")
                             if (!is24Hour) append(if (cal.get(Calendar.AM_PM) == Calendar.AM) " AM" else " PM")
                         }
-                    if (hideColon) {
-                        val spannable = SpannableString(time)
-                        for (i in time.indices) {
-                            if (time[i] ==
-                                ':'
-                            ) {
-                                spannable.setSpan(ForegroundColorSpan(Color.TRANSPARENT), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                            }
-                        }
-                        binding.statusClock.text = spannable
-                    } else {
-                        binding.statusClock.text = time
-                    }
-                    colonVisible = !colonVisible
+                    binding.statusClock.text = time
                     repositionClockDot()
                 } else {
                     binding.statusClock.visibility = View.GONE

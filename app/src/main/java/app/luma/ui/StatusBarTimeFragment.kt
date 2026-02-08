@@ -57,7 +57,6 @@ class StatusBarTimeFragment : Fragment() {
             val enabledState = remember { mutableStateOf(prefs.timeEnabled) }
             val secondsState = remember { mutableStateOf(prefs.showSeconds) }
             val leadingZeroState = remember { mutableStateOf(prefs.leadingZero) }
-            val blinkingState = remember { mutableStateOf(prefs.flashingSeconds) }
 
             ContentContainer {
                 CustomScrollView(verticalArrangement = Arrangement.spacedBy(33.5.dp)) {
@@ -108,18 +107,6 @@ class StatusBarTimeFragment : Fragment() {
                         onClick = {
                             secondsState.value = !secondsState.value
                             prefs.showSeconds = secondsState.value
-                        },
-                    )
-                    ToggleTextButton(
-                        title = stringResource(R.string.status_bar_blinking_colon),
-                        checked = blinkingState.value,
-                        onCheckedChange = {
-                            blinkingState.value = it
-                            prefs.flashingSeconds = it
-                        },
-                        onClick = {
-                            blinkingState.value = !blinkingState.value
-                            prefs.flashingSeconds = blinkingState.value
                         },
                     )
                     SelectorButton(
