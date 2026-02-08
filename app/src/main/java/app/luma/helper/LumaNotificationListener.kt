@@ -16,6 +16,11 @@ class LumaNotificationListener : NotificationListenerService() {
         val changeVersion: StateFlow<Int> = _changeVersion.asStateFlow()
 
         @Suppress("DEPRECATION")
+        private fun StatusBarNotification.shouldFilter(): Boolean {
+            if (notification.category == Notification.CATEGORY_TRANSPORT) return true
+            return isLightOsKeepAlive()
+        }
+
         private fun StatusBarNotification.isLightOsKeepAlive(): Boolean {
             val text = notification.extras.getCharSequence(Notification.EXTRA_TEXT)?.toString()
             if (!text.isNullOrBlank()) return false
@@ -38,7 +43,7 @@ class LumaNotificationListener : NotificationListenerService() {
             instance
                 .get()
                 ?.activeNotifications
-                ?.filterNot { it.isLightOsKeepAlive() }
+                ?.filterNot { it.shouldFilter() }
                 ?.map { it.packageName }
                 ?.toSet()
                 ?: emptySet()
@@ -47,7 +52,7 @@ class LumaNotificationListener : NotificationListenerService() {
             instance
                 .get()
                 ?.activeNotifications
-                ?.filterNot { it.isLightOsKeepAlive() }
+                ?.filterNot { it.shouldFilter() }
                 ?.toList()
                 ?: emptyList()
 
