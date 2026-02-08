@@ -6,6 +6,7 @@ import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
@@ -45,6 +46,7 @@ private fun SwipeBackContainer(
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
+    val currentOnSwipeBack = rememberUpdatedState(onSwipeBack)
     val edgeThresholdPx = with(LocalDensity.current) { 30.dp.toPx() }
     val dragThresholdPx = with(LocalDensity.current) { 80.dp.toPx() }
 
@@ -81,7 +83,7 @@ private fun SwipeBackContainer(
                             if (totalX > dragThresholdPx) {
                                 triggered = true
                                 performHapticFeedback(context)
-                                onSwipeBack()
+                                currentOnSwipeBack.value()
                             }
                         }
                     }
