@@ -619,7 +619,8 @@ class HomeFragment :
 
                 override fun onLost(network: Network) {
                     if (_binding == null) return
-                    binding.statusWifi.post { hideWifi() }
+                    binding.statusWifi.post { if (_binding != null) hideWifi() }
+
                 }
             }
         wifiNetworkCallback = callback
