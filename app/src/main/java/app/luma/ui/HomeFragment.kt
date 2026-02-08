@@ -462,6 +462,7 @@ class HomeFragment :
                     context: Context,
                     intent: Intent,
                 ) {
+                    if (_binding == null) return
                     updateBatteryIcon(intent)
                 }
             }
