@@ -318,7 +318,7 @@ class HomeFragment :
     private fun createNotificationDot(): TextView =
         TextView(requireContext()).apply {
             typeface = resources.getFont(R.font.public_sans)
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 22f)
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
             val ta = requireContext().obtainStyledAttributes(intArrayOf(R.attr.primaryColor))
             setTextColor(ta.getColor(0, 0))
             ta.recycle()
