@@ -36,8 +36,8 @@ class AppDrawerAdapter(
     }
 
     private var appFilter = createAppFilter()
-    var appsList: MutableList<AppModel> = mutableListOf()
-    var appFilteredList: MutableList<AppModel> = mutableListOf()
+    private var appsList: MutableList<AppModel> = mutableListOf()
+    private var appFilteredList: MutableList<AppModel> = mutableListOf()
     private val normalizedNameCache = mutableMapOf<String, String>()
 
     override fun onCreateViewHolder(
@@ -103,6 +103,19 @@ class AppDrawerAdapter(
         if (appLabel.contains(searchChars, ignoreCase = true)) return true
         val normalized = normalizedNameCache.getOrPut(appLabel) { normalizeForSearch(appLabel) }
         return normalized.contains(searchChars, ignoreCase = true)
+    }
+
+    fun updateNotifications(packages: Set<String>) {
+        appFilteredList.forEachIndexed { i, app ->
+            val had = app.hasNotification
+            app.hasNotification = packages.contains(app.appPackage)
+            if (had != app.hasNotification) notifyItemChanged(i)
+        }
+        appsList.forEach {
+            if (it !in appFilteredList) {
+                it.hasNotification = packages.contains(it.appPackage)
+            }
+        }
     }
 
     fun setAppList(appsList: MutableList<AppModel>) {
