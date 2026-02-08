@@ -25,8 +25,8 @@ import app.luma.ui.compose.SettingsComposable.ToggleTextButton
 
 class StatusBarTimeFragment : Fragment() {
     private lateinit var prefs: Prefs
-    private val formatState = mutableStateOf(Prefs.TimeFormat.Standard)
-    private val actionState = mutableStateOf(Constants.Action.Disabled)
+    private val formatState = mutableStateOf(Prefs.TimeFormat.TwentyFourHour)
+    private val actionState = mutableStateOf(Constants.Action.ShowNotificationList)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
