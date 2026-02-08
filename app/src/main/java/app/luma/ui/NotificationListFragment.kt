@@ -1,7 +1,10 @@
 package app.luma.ui
 
+import android.app.ActivityOptions
 import android.app.Notification
+import android.app.PendingIntent
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.service.notification.StatusBarNotification
@@ -52,6 +55,7 @@ private data class NotificationItem(
     val packageName: String,
     val title: String,
     val text: String?,
+    val contentIntent: PendingIntent?,
 )
 
 class NotificationListFragment : Fragment() {
@@ -84,6 +88,7 @@ class NotificationListFragment : Fragment() {
             packageName = packageName,
             title = notification.extras.getString(Notification.EXTRA_TITLE) ?: appLabel,
             text = notification.extras.getCharSequence(Notification.EXTRA_TEXT)?.toString(),
+            contentIntent = notification.contentIntent,
         )
     }
 
@@ -132,12 +137,35 @@ class NotificationListFragment : Fragment() {
                             NotificationRow(
                                 item = item,
                                 onTap = {
-                                    if (item.packageName.isNotEmpty()) {
-                                        val launchIntent = context.packageManager.getLaunchIntentForPackage(item.packageName)
-                                        if (launchIntent != null) {
-                                            launchIntent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-                                            context.startActivity(launchIntent)
+                                    val opened =
+                                        try {
+                                            if (item.contentIntent != null) {
+                                                val opts = ActivityOptions.makeBasic()
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                                                    opts.setPendingIntentBackgroundActivityStartMode(
+                                                        ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED,
+                                                    )
+                                                }
+                                                item.contentIntent.send(
+                                                    context,
+                                                    0,
+                                                    null,
+                                                    null,
+                                                    null,
+                                                    null,
+                                                    opts.toBundle(),
+                                                )
+                                                true
+                                            } else {
+                                                false
+                                            }
+                                        } catch (_: PendingIntent.CanceledException) {
+                                            false
                                         }
+                                    if (!opened) {
+                                        val launchIntent = context.packageManager.getLaunchIntentForPackage(item.packageName)
+                                        launchIntent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        launchIntent?.let { context.startActivity(it) }
                                     }
                                 },
                                 onDismiss = {
