@@ -18,6 +18,7 @@ import app.luma.R
 import app.luma.data.Constants
 import app.luma.data.Prefs
 import app.luma.data.StatusBarSectionType
+import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.SelectorButton
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
@@ -59,7 +60,7 @@ class StatusBarTimeFragment : Fragment() {
             val blinkingState = remember { mutableStateOf(prefs.flashingSeconds) }
 
             ContentContainer {
-                Column(verticalArrangement = Arrangement.spacedBy(33.5.dp)) {
+                CustomScrollView(verticalArrangement = Arrangement.spacedBy(33.5.dp)) {
                     ToggleTextButton(
                         title = stringResource(R.string.status_bar_time_enabled),
                         checked = enabledState.value,

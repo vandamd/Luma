@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
@@ -19,6 +20,9 @@ import android.provider.Settings
 import android.telephony.SignalStrength
 import android.telephony.TelephonyCallback
 import android.telephony.TelephonyManager
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
@@ -185,7 +189,7 @@ class HomeFragment :
 
     private fun initStatusBarClickListeners() {
         binding.statusConnectivityLayout.setOnClickListener { handleSectionPress(StatusBarSectionType.CELLULAR) }
-        binding.statusClock.setOnClickListener { handleSectionPress(StatusBarSectionType.TIME) }
+        binding.statusClockLayout.setOnClickListener { handleSectionPress(StatusBarSectionType.TIME) }
         binding.statusBatteryLayout.setOnClickListener { handleSectionPress(StatusBarSectionType.BATTERY) }
     }
 
@@ -360,13 +364,15 @@ class HomeFragment :
             }
 
             Prefs.NotificationIndicatorSection.Time -> {
-                val clockIndex = binding.statusBar.indexOfChild(binding.statusClock)
-                if (before) {
-                    marginLp.marginEnd = dp4
-                    binding.statusBar.addView(dot, clockIndex, marginLp)
-                } else {
-                    marginLp.marginStart = dp4
-                    binding.statusBar.addView(dot, clockIndex + 1, marginLp)
+                val frameLp =
+                    FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        Gravity.CENTER_VERTICAL,
+                    )
+                binding.statusClockLayout.addView(dot, frameLp)
+                dot.post {
+                    dot.translationX = if (before) -(dot.width + dp4).toFloat() else (binding.statusClock.width + dp4).toFloat()
                 }
             }
 
@@ -410,7 +416,7 @@ class HomeFragment :
                         }
                     val min = cal.get(Calendar.MINUTE)
                     val sec = cal.get(Calendar.SECOND)
-                    val sep = if (prefs.flashingSeconds && !colonVisible) " " else ":"
+                    val hideColon = prefs.flashingSeconds && !colonVisible
                     val hStr =
                         if (is24Hour || prefs.leadingZero) {
                             "%02d".format(hour)
@@ -419,11 +425,23 @@ class HomeFragment :
                         }
                     val time =
                         buildString {
-                            append("$hStr$sep${"%02d".format(min)}")
-                            if (showSec) append("$sep${"%02d".format(sec)}")
+                            append("$hStr:${"%02d".format(min)}")
+                            if (showSec) append(":${"%02d".format(sec)}")
                             if (!is24Hour) append(if (cal.get(Calendar.AM_PM) == Calendar.AM) " AM" else " PM")
                         }
-                    binding.statusClock.text = time
+                    if (hideColon) {
+                        val spannable = SpannableString(time)
+                        for (i in time.indices) {
+                            if (time[i] ==
+                                ':'
+                            ) {
+                                spannable.setSpan(ForegroundColorSpan(Color.TRANSPARENT), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                            }
+                        }
+                        binding.statusClock.text = spannable
+                    } else {
+                        binding.statusClock.text = time
+                    }
                     colonVisible = !colonVisible
                 } else {
                     binding.statusClock.visibility = View.GONE
