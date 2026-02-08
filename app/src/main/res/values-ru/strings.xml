@@ -19,10 +19,14 @@
     <!-- Gesture actions -->
     <string name="action_open_app">Открыть приложение</string>
     <string name="action_lock_screen">Заблокировать экран</string>
-    <string name="action_show_notifications">Показать уведомление</string>
-    <string name="action_show_app_list">Показать список приложений</string>
-    <string name="action_quick_settings">Быстрые настройки</string>
-    <string name="action_show_recents">Показать недавние</string>
+    <string name="action_show_notifications">Уведомления (Android)</string>
+    <string name="action_show_app_list">Список приложений</string>
+    <string name="action_quick_settings">Быстрые настройки (Android)</string>
+    <string name="action_show_recents">Недавние приложения</string>
+    <string name="action_show_notification_list">Уведомления</string>
+    <string name="notification_list_title">Уведомления</string>
+    <string name="notification_list_empty">Нет уведомлений</string>
+    <string name="notification_list_no_permission">Нажмите здесь, чтобы предоставить доступ к уведомлениям</string>
     <string name="action_disabled">Отключено</string>
     <string name="action_open_app_name">Открыть %1$s</string>
 
@@ -96,6 +100,7 @@
     <string name="content_desc_save">Сохранить</string>
     <string name="content_desc_clear">Очистить</string>
     <string name="content_desc_hide">Скрыть</string>
+    <string name="content_desc_dismiss">Отклонить</string>
     <string name="content_desc_app_info">Информация о приложении</string>
 
     <plurals name="pages_count">

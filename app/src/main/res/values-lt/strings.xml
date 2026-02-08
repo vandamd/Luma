@@ -19,12 +19,17 @@
     <!-- Gesture actions -->
     <string name="action_open_app">Atidaryti programėlę</string>
     <string name="action_lock_screen">Užrakinti ekraną</string>
-    <string name="action_show_notifications">Rodyti pranešimus</string>
-    <string name="action_show_app_list">Rodyti programėlių sarašą</string>
-    <string name="action_quick_settings">Greiti nustatymai</string>
-    <string name="action_show_recents">Rodyti naujausius</string>
+    <string name="action_show_notifications">Pranešimai (Android)</string>
+    <string name="action_show_app_list">Programėlių sąrašas</string>
+    <string name="action_quick_settings">Greiti nustatymai (Android)</string>
+    <string name="action_show_recents">Naujausios programėlės</string>
+    <string name="action_show_notification_list">Pranešimai</string>
     <string name="action_disabled">Išjungtas</string>
     <string name="action_open_app_name">Atidaryti %1$s</string>
+
+    <string name="notification_list_title">Pranešimai</string>
+    <string name="notification_list_empty">Nėra pranešimų</string>
+    <string name="notification_list_no_permission">Bakstelėkite čia, kad suteiktumėte prieigą prie pranešimų</string>
 
     <!-- Gestures screen -->
     <string name="gesture_swipe_left">Braukite kairėn</string>
@@ -97,6 +102,7 @@
     <string name="content_desc_clear">Išvalyti</string>
     <string name="content_desc_hide">Slėpti</string>
     <string name="content_desc_app_info">Programėlės informacija</string>
+    <string name="content_desc_dismiss">Atmesti</string>
 
     <plurals name="pages_count">
         <item quantity="one">%d Puslapis</item>

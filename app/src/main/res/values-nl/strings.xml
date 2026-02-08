@@ -19,12 +19,17 @@
     <!-- Gesture actions -->
     <string name="action_open_app">App openen</string>
     <string name="action_lock_screen">Scherm vergrendelen</string>
-    <string name="action_show_notifications">Meldingen tonen</string>
-    <string name="action_show_app_list">Applijst tonen</string>
-    <string name="action_quick_settings">Snelinstellingen</string>
-    <string name="action_show_recents">Recente apps tonen</string>
+    <string name="action_show_notifications">Meldingen (Android)</string>
+    <string name="action_show_app_list">Applijst</string>
+    <string name="action_quick_settings">Snelinstellingen (Android)</string>
+    <string name="action_show_recents">Recente apps</string>
+    <string name="action_show_notification_list">Meldingen</string>
     <string name="action_disabled">Uit</string>
     <string name="action_open_app_name">%1$s openen</string>
+
+    <string name="notification_list_title">Meldingen</string>
+    <string name="notification_list_empty">Geen meldingen</string>
+    <string name="notification_list_no_permission">Tik hier om toegang tot meldingen te verlenen</string>
 
     <!-- Gestures screen -->
     <string name="gesture_swipe_left">Links slepen</string>
@@ -97,6 +102,7 @@
     <string name="content_desc_clear">Wissen</string>
     <string name="content_desc_hide">Verbergen</string>
     <string name="content_desc_app_info">App-info</string>
+    <string name="content_desc_dismiss">Sluiten</string>
 
     <plurals name="pages_count">
         <item quantity="one">%d Pagina</item>

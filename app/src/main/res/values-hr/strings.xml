@@ -19,12 +19,18 @@
     <!-- Gesture actions -->
     <string name="action_open_app">Otvori aplikaciju</string>
     <string name="action_lock_screen">Zaključaj ekran</string>
-    <string name="action_show_notifications">Prikaži obavijesti</string>
-    <string name="action_show_app_list">Prikaži popis aplikacija</string>
-    <string name="action_quick_settings">Brze postavke</string>
-    <string name="action_show_recents">Prikaži nedavne</string>
+    <string name="action_show_notifications">Obavijesti (Android)</string>
+    <string name="action_show_app_list">Popis aplikacija</string>
+    <string name="action_quick_settings">Brze postavke (Android)</string>
+    <string name="action_show_recents">Nedavne aplikacije</string>
+    <string name="action_show_notification_list">Obavijesti</string>
     <string name="action_disabled">Isključeno</string>
     <string name="action_open_app_name">Otvori %1$s</string>
+
+    <!-- Notification list -->
+    <string name="notification_list_title">Obavijesti</string>
+    <string name="notification_list_empty">Nema obavijesti</string>
+    <string name="notification_list_no_permission">Dodirnite ovdje za odobrenje pristupa obavijestima</string>
 
     <!-- Gestures screen -->
     <string name="gesture_swipe_left">Povuci ulijevo</string>
@@ -97,6 +103,7 @@
     <string name="content_desc_clear">Obriši</string>
     <string name="content_desc_hide">Sakrij</string>
     <string name="content_desc_app_info">Info aplikacije</string>
+    <string name="content_desc_dismiss">Odbaci</string>
 
     <plurals name="pages_count">
         <item quantity="one">%d Stranica</item>

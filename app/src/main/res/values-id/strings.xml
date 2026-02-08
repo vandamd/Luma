@@ -19,12 +19,18 @@
     <!-- Gesture actions -->
     <string name="action_open_app">Buka aplikasi</string>
     <string name="action_lock_screen">Kunci layar</string>
-    <string name="action_show_notifications">Tampilkan notifikasi</string>
-    <string name="action_show_app_list">Tampilkan daftar aplikasi</string>
-    <string name="action_quick_settings">Pengaturan cepat</string>
-    <string name="action_show_recents">Tampilkan terbaru</string>
+    <string name="action_show_notifications">Notifikasi (Android)</string>
+    <string name="action_show_app_list">Daftar aplikasi</string>
+    <string name="action_quick_settings">Pengaturan cepat (Android)</string>
+    <string name="action_show_recents">Aplikasi terbaru</string>
+    <string name="action_show_notification_list">Notifikasi</string>
     <string name="action_disabled">Dinonaktifkan</string>
     <string name="action_open_app_name">Buka %1$s</string>
+
+    <!-- Notification list -->
+    <string name="notification_list_title">Notifikasi</string>
+    <string name="notification_list_empty">Tidak ada notifikasi</string>
+    <string name="notification_list_no_permission">Ketuk di sini untuk memberikan akses notifikasi</string>
 
     <!-- Gestures screen -->
     <string name="gesture_swipe_left">Geser ke kiri</string>
@@ -97,6 +103,7 @@
     <string name="content_desc_clear">Hapus</string>
     <string name="content_desc_hide">Sembunyikan</string>
     <string name="content_desc_app_info">Info aplikasi</string>
+    <string name="content_desc_dismiss">Tutup</string>
 
     <plurals name="pages_count">
         <item quantity="other">%d Halaman</item>

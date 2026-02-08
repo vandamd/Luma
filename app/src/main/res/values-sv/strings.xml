@@ -19,10 +19,14 @@
     <!-- Gesture actions -->
     <string name="action_open_app">Öppna app</string>
     <string name="action_lock_screen">Lås skärmen</string>
-    <string name="action_show_notifications">Visa aviseringar</string>
-    <string name="action_show_app_list">Visa applista</string>
-    <string name="action_quick_settings">Snabbinställningar</string>
-    <string name="action_show_recents">Visa senaste</string>
+    <string name="action_show_notifications">Aviseringar (Android)</string>
+    <string name="action_show_app_list">Applista</string>
+    <string name="action_quick_settings">Snabbinställningar (Android)</string>
+    <string name="action_show_recents">Senaste appar</string>
+    <string name="action_show_notification_list">Aviseringar</string>
+    <string name="notification_list_title">Aviseringar</string>
+    <string name="notification_list_empty">Inga aviseringar</string>
+    <string name="notification_list_no_permission">Tryck här för att ge åtkomst till aviseringar</string>
     <string name="action_disabled">Av</string>
     <string name="action_open_app_name">Öppna %1$s</string>
 
@@ -96,6 +100,7 @@
     <string name="content_desc_save">Spara</string>
     <string name="content_desc_clear">Rensa</string>
     <string name="content_desc_hide">Dölj</string>
+    <string name="content_desc_dismiss">Avfärda</string>
     <string name="content_desc_app_info">Appinfo</string>
 
     <plurals name="pages_count">

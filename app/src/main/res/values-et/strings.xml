@@ -19,12 +19,18 @@
     <!-- Gesture actions -->
     <string name="action_open_app">Ava rakendus</string>
     <string name="action_lock_screen">Lukusta ekraan</string>
-    <string name="action_show_notifications">Näita teavitusi</string>
-    <string name="action_show_app_list">Näita rakenduste loendit</string>
-    <string name="action_quick_settings">Kiirseaded</string>
-    <string name="action_show_recents">Näita hiljutisi</string>
+    <string name="action_show_notifications">Teavitused (Android)</string>
+    <string name="action_show_app_list">Rakenduste loend</string>
+    <string name="action_quick_settings">Kiirseaded (Android)</string>
+    <string name="action_show_recents">Hiljutised rakendused</string>
+    <string name="action_show_notification_list">Teavitused</string>
     <string name="action_disabled">Keelatud</string>
     <string name="action_open_app_name">Ava %1$s</string>
+
+    <!-- Notification list -->
+    <string name="notification_list_title">Teavitused</string>
+    <string name="notification_list_empty">Teavitusi pole</string>
+    <string name="notification_list_no_permission">Puudutage siin, et anda juurdepääs teavitustele</string>
 
     <!-- Gestures screen -->
     <string name="gesture_swipe_left">Tõmba vasakule</string>
@@ -97,6 +103,7 @@
     <string name="content_desc_clear">Tühjenda</string>
     <string name="content_desc_hide">Peida</string>
     <string name="content_desc_app_info">Rakenduse teave</string>
+    <string name="content_desc_dismiss">Loobu</string>
 
     <plurals name="pages_count">
         <item quantity="one">%d Lehekülg</item>

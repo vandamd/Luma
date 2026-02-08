@@ -19,12 +19,17 @@
     <!-- Gesture actions -->
     <string name="action_open_app">アプリを開く</string>
     <string name="action_lock_screen">画面をロック</string>
-    <string name="action_show_notifications">通知を表示</string>
-    <string name="action_show_app_list">アプリ一覧を表示</string>
-    <string name="action_quick_settings">クイック設定</string>
-    <string name="action_show_recents">最近のアプリを表示</string>
+    <string name="action_show_notifications">通知 (Android)</string>
+    <string name="action_show_app_list">アプリ一覧</string>
+    <string name="action_quick_settings">クイック設定 (Android)</string>
+    <string name="action_show_recents">最近のアプリ</string>
+    <string name="action_show_notification_list">通知</string>
     <string name="action_disabled">無効</string>
     <string name="action_open_app_name">%1$s を開く</string>
+
+    <string name="notification_list_title">通知</string>
+    <string name="notification_list_empty">通知はありません</string>
+    <string name="notification_list_no_permission">タップして通知へのアクセスを許可</string>
 
     <!-- Gestures screen -->
     <string name="gesture_swipe_left">左にスワイプ</string>
@@ -97,6 +102,7 @@
     <string name="content_desc_clear">クリア</string>
     <string name="content_desc_hide">非表示</string>
     <string name="content_desc_app_info">アプリ情報</string>
+    <string name="content_desc_dismiss">閉じる</string>
 
     <plurals name="pages_count">
         <item quantity="other">%d ページ</item>
