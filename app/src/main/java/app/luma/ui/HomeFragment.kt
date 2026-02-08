@@ -382,9 +382,7 @@ class HomeFragment :
         binding.statusBatteryText.text = "$pct%"
         binding.statusBattery.visibility = if (prefs.batteryIcon) View.VISIBLE else View.GONE
         binding.statusBattery.setImageResource(icon)
-        val s = if (charging) 0.70f else 1f
-        binding.statusBattery.scaleX = if (charging) s else -s
-        binding.statusBattery.scaleY = s
+        binding.statusBattery.scaleX = if (charging) 1f else -1f
         binding.statusBattery.setColorFilter(binding.statusClock.currentTextColor)
     }
 

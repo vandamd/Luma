@@ -6,98 +6,101 @@
         android:layout_height="match_parent"
         android:background="?attr/primaryShadeDarkColor"
         tools:context=".ui.HomeFragment">
-    <TextView
-        android:id="@+id/statusClock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|center_horizontal"
-        android:paddingTop="8dp"
-        android:paddingBottom="9dp"
-        android:fontFamily="@font/public_sans"
-        android:textSize="16sp"
-        android:textColor="?attr/primaryColor" />
-
     <LinearLayout
-        android:id="@+id/statusBatteryLayout"
-        android:layout_width="wrap_content"
+        android:id="@+id/statusBar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
+        android:layout_gravity="top"
         android:gravity="center_vertical"
-        android:baselineAligned="false"
-        android:paddingTop="5.5dp"
-        android:paddingEnd="12dp"
         android:orientation="horizontal"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingHorizontal="12dp">
+
+        <LinearLayout
+            android:id="@+id/statusConnectivityLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical|start"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/statusNetworkType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/public_sans"
+                android:textSize="16sp"
+                android:textColor="?attr/primaryColor"
+                android:layout_marginEnd="4dp"
+                android:visibility="gone"
+                tools:text="LTE" />
+
+            <ImageView
+                android:id="@+id/statusSignal"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:visibility="gone"
+                android:src="@drawable/signal_4" />
+
+            <ImageView
+                android:id="@+id/statusWifi"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_marginStart="6dp"
+                android:visibility="gone"
+                android:src="@drawable/wifi_full" />
+
+            <ImageView
+                android:id="@+id/statusBluetooth"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_marginStart="6dp"
+                android:visibility="gone"
+                android:src="@drawable/bluetooth" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/statusBatteryText"
+            android:id="@+id/statusClock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/public_sans"
             android:textSize="16sp"
-            android:textColor="?attr/primaryColor"
-            android:layout_marginEnd="4dp"
-            tools:text="85%" />
+            android:textColor="?attr/primaryColor" />
 
-        <ImageView
-            android:id="@+id/statusBattery"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="0.5dp"
-            android:src="@drawable/battery_full" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/statusConnectivityLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|start"
-        android:gravity="center_vertical"
-        android:baselineAligned="false"
-        android:paddingTop="8dp"
-        android:paddingStart="12dp"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <TextView
-            android:id="@+id/statusNetworkType"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/statusBatteryLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/public_sans"
-            android:textSize="16sp"
-            android:textColor="?attr/primaryColor"
-            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|end"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
             android:visibility="gone"
-            tools:text="LTE" />
+            tools:visibility="visible">
 
-        <ImageView
-            android:id="@+id/statusSignal"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:layout_marginTop="0.5dp"
-            android:visibility="gone"
-            android:src="@drawable/signal_4" />
+            <TextView
+                android:id="@+id/statusBatteryText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/public_sans"
+                android:textSize="16sp"
+                android:textColor="?attr/primaryColor"
+                android:layout_marginEnd="4dp"
+                tools:text="85%" />
 
-        <ImageView
-            android:id="@+id/statusWifi"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:layout_marginStart="6dp"
-            android:layout_marginTop="0.5dp"
-            android:visibility="gone"
-            android:src="@drawable/wifi_full" />
+            <ImageView
+                android:id="@+id/statusBattery"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="0.5dp"
+                android:src="@drawable/battery_full" />
 
-        <ImageView
-            android:id="@+id/statusBluetooth"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:layout_marginStart="6dp"
-            android:layout_marginTop="0.5dp"
-            android:visibility="gone"
-            android:src="@drawable/bluetooth" />
+        </LinearLayout>
 
     </LinearLayout>
 
