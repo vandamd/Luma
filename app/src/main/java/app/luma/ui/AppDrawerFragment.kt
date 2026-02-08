@@ -104,11 +104,15 @@ class AppDrawerFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             LumaNotificationListener.changeVersion.collect {
                 val packages = LumaNotificationListener.getActiveNotificationPackages()
-                appAdapter.appsList.forEach { it.hasNotification = packages.contains(it.appPackage) }
                 appAdapter.appFilteredList.forEachIndexed { i, app ->
                     val had = app.hasNotification
                     app.hasNotification = packages.contains(app.appPackage)
                     if (had != app.hasNotification) appAdapter.notifyItemChanged(i)
+                }
+                appAdapter.appsList.forEach {
+                    if (it !in appAdapter.appFilteredList) {
+                        it.hasNotification = packages.contains(it.appPackage)
+                    }
                 }
             }
         }
