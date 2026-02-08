@@ -24,10 +24,24 @@ import app.luma.ui.compose.SettingsComposable.ToggleSelectorButton
 
 class NotificationsFragment : Fragment() {
     private lateinit var prefs: Prefs
+    private val hasNotificationPermission = mutableStateOf(false)
+
+    private fun checkPermission() {
+        val ctx = context ?: return
+        hasNotificationPermission.value =
+            NotificationManagerCompat
+                .getEnabledListenerPackages(ctx)
+                .contains(ctx.packageName)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         prefs = Prefs.getInstance(requireContext())
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkPermission()
     }
 
     override fun onCreateView(
@@ -50,16 +64,11 @@ class NotificationsFragment : Fragment() {
                 }
 
                 val notificationIndicatorState = remember { mutableStateOf(prefs.showNotificationIndicator) }
-                val hasNotificationPermission =
-                    NotificationManagerCompat
-                        .getEnabledListenerPackages(
-                            requireContext(),
-                        ).contains(requireContext().packageName)
 
                 ToggleSelectorButton(
                     label = stringResource(R.string.notifications_indicator),
                     value =
-                        if (hasNotificationPermission) {
+                        if (hasNotificationPermission.value) {
                             if (notificationIndicatorState.value) {
                                 stringResource(R.string.notifications_visible_next_to_apps)
                             } else {
@@ -68,20 +77,20 @@ class NotificationsFragment : Fragment() {
                         } else {
                             stringResource(R.string.notifications_not_visible_permission_required)
                         },
-                    checked = hasNotificationPermission && notificationIndicatorState.value,
+                    checked = hasNotificationPermission.value && notificationIndicatorState.value,
                     onCheckedChange = {
-                        if (hasNotificationPermission) {
+                        if (hasNotificationPermission.value) {
                             notificationIndicatorState.value = it
                             prefs.showNotificationIndicator = it
                         }
                     },
                     onClick = {
-                        if (hasNotificationPermission) {
+                        if (hasNotificationPermission.value) {
                             notificationIndicatorState.value = !notificationIndicatorState.value
                             prefs.showNotificationIndicator = notificationIndicatorState.value
                         }
                     },
-                    enabled = hasNotificationPermission,
+                    enabled = hasNotificationPermission.value,
                 )
             }
         }

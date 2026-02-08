@@ -29,6 +29,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,6 +60,21 @@ private data class NotificationItem(
 )
 
 class NotificationListFragment : Fragment() {
+    private val hasPermission = mutableStateOf(false)
+
+    private fun checkPermission() {
+        val ctx = context ?: return
+        hasPermission.value =
+            NotificationManagerCompat
+                .getEnabledListenerPackages(ctx)
+                .contains(ctx.packageName)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkPermission()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -95,10 +111,6 @@ class NotificationListFragment : Fragment() {
     @Composable
     private fun NotificationListScreen() {
         val context = LocalContext.current
-        val hasPermission =
-            NotificationManagerCompat
-                .getEnabledListenerPackages(context)
-                .contains(context.packageName)
         val version by LumaNotificationListener.changeVersion.collectAsState()
         val dismissedKeys = remember { mutableSetOf<String>() }
         val notifications = remember { mutableStateListOf<NotificationItem>() }
@@ -113,7 +125,7 @@ class NotificationListFragment : Fragment() {
                 title = stringResource(R.string.notification_list_title),
                 onBack = ::goBack,
             )
-            if (!hasPermission) {
+            if (!hasPermission.value) {
                 Box(
                     modifier =
                         Modifier
