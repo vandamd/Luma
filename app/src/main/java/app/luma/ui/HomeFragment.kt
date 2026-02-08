@@ -91,6 +91,7 @@ class HomeFragment :
 
     override fun onDestroyView() {
         super.onDestroyView()
+        notificationDotView = null
         _binding = null
     }
 
