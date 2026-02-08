@@ -664,12 +664,12 @@ class HomeFragment :
         val adapter = bm?.adapter
         if (adapter == null) {
             hideBluetooth()
-        } else {
-            try {
-                if (adapter.isEnabled) showBluetooth() else hideBluetooth()
-            } catch (_: SecurityException) {
-                hideBluetooth()
-            }
+            return
+        }
+        try {
+            if (adapter.isEnabled) showBluetooth() else hideBluetooth()
+        } catch (_: SecurityException) {
+            hideBluetooth()
         }
         val receiver =
             object : BroadcastReceiver() {
