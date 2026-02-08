@@ -1,5 +1,6 @@
 package app.luma.helper
 
+import android.app.Notification
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,10 +15,30 @@ class LumaNotificationListener : NotificationListenerService() {
         private val _changeVersion = MutableStateFlow(0)
         val changeVersion: StateFlow<Int> = _changeVersion.asStateFlow()
 
+        @Suppress("DEPRECATION")
+        private fun StatusBarNotification.isLightOsKeepAlive(): Boolean {
+            val text = notification.extras.getCharSequence(Notification.EXTRA_TEXT)?.toString()
+            if (!text.isNullOrBlank()) return false
+            val title = notification.extras.getString(Notification.EXTRA_TITLE)
+            if (title == "LightOS") return true
+            if (title == null) {
+                val pm = instance.get()?.packageManager ?: return false
+                val appLabel =
+                    try {
+                        pm.getApplicationLabel(pm.getApplicationInfo(packageName, 0)).toString()
+                    } catch (_: Exception) {
+                        null
+                    }
+                return appLabel == "LightOS"
+            }
+            return false
+        }
+
         fun getActiveNotificationPackages(): Set<String> =
             instance
                 .get()
                 ?.activeNotifications
+                ?.filterNot { it.isLightOsKeepAlive() }
                 ?.map { it.packageName }
                 ?.toSet()
                 ?: emptySet()
@@ -26,6 +47,7 @@ class LumaNotificationListener : NotificationListenerService() {
             instance
                 .get()
                 ?.activeNotifications
+                ?.filterNot { it.isLightOsKeepAlive() }
                 ?.toList()
                 ?: emptyList()
 
