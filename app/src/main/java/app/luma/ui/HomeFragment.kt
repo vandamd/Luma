@@ -30,7 +30,11 @@ import app.luma.databinding.FragmentHomeBinding
 import app.luma.helper.*
 import app.luma.helper.LumaNotificationListener
 import app.luma.listener.SwipeTouchListener
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 private const val TAG = "HomeFragment"
 
@@ -43,6 +47,7 @@ class HomeFragment :
     private var currentPage = 0
     private var totalPages = 1
     private var pageIndicatorLayout: LinearLayout? = null
+    private var colonVisible = true
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -81,6 +86,7 @@ class HomeFragment :
         initPageNavigation()
         initSwipeTouchListener()
         observeNotificationChanges()
+        startClock()
     }
 
     override fun onStart() {
@@ -255,6 +261,31 @@ class HomeFragment :
                     lastPackages = current
                     refreshAppNames()
                 }
+            }
+        }
+    }
+
+    private fun startClock() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            while (true) {
+                if (prefs.statusBarEnabled) {
+                    binding.statusClock.visibility = View.VISIBLE
+                    val is24Hour = prefs.timeFormat == Prefs.TimeFormat.TwentyFourHour
+                    val pattern = if (is24Hour) "HH mm" else "h mm a"
+                    val fmt = SimpleDateFormat(pattern, Locale.getDefault())
+                    val parts = fmt.format(Date()).split(" ")
+                    val sep = if (prefs.flashingSeconds && !colonVisible) " " else ":"
+                    binding.statusClock.text =
+                        if (is24Hour) {
+                            "${parts[0]}$sep${parts[1]}"
+                        } else {
+                            "${parts[0]}$sep${parts[1]} ${parts[2]}"
+                        }
+                    colonVisible = !colonVisible
+                } else {
+                    binding.statusClock.visibility = View.GONE
+                }
+                delay(1000)
             }
         }
     }

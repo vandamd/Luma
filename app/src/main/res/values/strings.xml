@@ -57,6 +57,14 @@
     <string name="notifications_not_visible">not visible</string>
     <string name="notifications_not_visible_permission_required">not visible (permission required)</string>
 
+    <!-- Status bar -->
+    <string name="settings_status_bar">Status Bar</string>
+    <string name="status_bar_enabled">Enabled</string>
+    <string name="status_bar_time_format">Time Format</string>
+    <string name="status_bar_time_standard">Standard (AM/PM)</string>
+    <string name="status_bar_time_24h">24-Hour</string>
+    <string name="status_bar_blinking_colon">Blinking Colon</string>
+
     <!-- Notification list -->
     <string name="notification_list_title">Notifications</string>
     <string name="notification_list_empty">No notifications</string>

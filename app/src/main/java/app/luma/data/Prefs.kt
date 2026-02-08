@@ -57,6 +57,9 @@ enum class GestureType(
 
 private const val PAGE_INDICATOR_POSITION = "page_indicator_position"
 private const val SHOW_NOTIFICATION_INDICATOR = "show_notification_indicator"
+private const val STATUS_BAR_ENABLED = "status_bar_enabled"
+private const val TIME_FORMAT = "time_format"
+private const val FLASHING_SECONDS = "flashing_seconds"
 private const val FONT_SIZE_OPTION = "font_size_option"
 
 class Prefs(
@@ -70,6 +73,8 @@ class Prefs(
                 instance ?: Prefs(context.applicationContext).also { instance = it }
             }
     }
+
+    enum class TimeFormat { Standard, TwentyFourHour }
 
     enum class PageIndicatorPosition { Left, Right, Hidden }
 
@@ -268,6 +273,25 @@ class Prefs(
     var showNotificationIndicator: Boolean
         get() = prefs.getBoolean(SHOW_NOTIFICATION_INDICATOR, true)
         set(value) = prefs.edit().putBoolean(SHOW_NOTIFICATION_INDICATOR, value).apply()
+
+    var statusBarEnabled: Boolean
+        get() = prefs.getBoolean(STATUS_BAR_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(STATUS_BAR_ENABLED, value).apply()
+
+    var timeFormat: TimeFormat
+        get() {
+            val stored = prefs.getString(TIME_FORMAT, null) ?: return TimeFormat.Standard
+            return try {
+                TimeFormat.valueOf(stored)
+            } catch (_: Exception) {
+                TimeFormat.Standard
+            }
+        }
+        set(value) = prefs.edit().putString(TIME_FORMAT, value.name).apply()
+
+    var flashingSeconds: Boolean
+        get() = prefs.getBoolean(FLASHING_SECONDS, true)
+        set(value) = prefs.edit().putBoolean(FLASHING_SECONDS, value).apply()
 
     fun getHiddenAppKey(
         packageName: String,

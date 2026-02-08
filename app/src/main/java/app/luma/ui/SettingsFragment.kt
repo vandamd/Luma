@@ -78,6 +78,9 @@ class SettingsFragment : Fragment() {
                     SimpleTextButton(
                         stringResource(R.string.settings_notifications),
                     ) { findNavController().navigate(R.id.action_settingsFragment_to_notificationsFragment) }
+                    SimpleTextButton(
+                        stringResource(R.string.settings_status_bar),
+                    ) { findNavController().navigate(R.id.action_settingsFragment_to_statusBarFragment) }
                     SimpleTextButton(stringResource(R.string.settings_hidden_apps)) { showHiddenApps() }
                     SimpleTextButton(stringResource(R.string.settings_default_launcher)) { openDefaultLauncherSettings() }
                 }
