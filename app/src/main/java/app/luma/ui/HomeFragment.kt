@@ -610,11 +610,11 @@ class HomeFragment :
                 override fun onCapabilitiesChanged(
                     network: Network,
                     caps: NetworkCapabilities,
-                ) {
                     if (_binding == null) return
                     val rssi = caps.signalStrength
                     val level = WifiManager.calculateSignalLevel(rssi, 4)
-                    binding.statusWifi.post { updateWifiIcon(level) }
+                    binding.statusWifi.post { if (_binding != null) updateWifiIcon(level) }
+
                 }
 
                 override fun onLost(network: Network) {
