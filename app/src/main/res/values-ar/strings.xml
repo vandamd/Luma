@@ -19,10 +19,11 @@
     <!-- Gesture actions -->
     <string name="action_open_app">فتح تطبيق</string>
     <string name="action_lock_screen">قفل الشاشة</string>
-    <string name="action_show_notifications">إظهار الإشعارات</string>
-    <string name="action_show_app_list">إظهار قائمة التطبيقات</string>
-    <string name="action_quick_settings">فتح الاعدادت السريعة</string>
-    <string name="action_show_recents">إظهار اخر التطبيقات</string>
+    <string name="action_show_notifications">الإشعارات (Android)</string>
+    <string name="action_show_app_list">قائمة التطبيقات</string>
+    <string name="action_quick_settings">الإعدادات السريعة (Android)</string>
+    <string name="action_show_recents">التطبيقات الأخيرة</string>
+    <string name="action_show_notification_list">الإشعارات</string>
     <string name="action_disabled">مُعطل</string>
     <string name="action_open_app_name">فتح %1$s</string>
 
@@ -97,6 +98,11 @@
     <string name="content_desc_clear">مسح</string>
     <string name="content_desc_hide">إخفاء</string>
     <string name="content_desc_app_info">معلومات التطبيق</string>
+    <string name="content_desc_dismiss">رفض</string>
+
+    <string name="notification_list_title">الإشعارات</string>
+    <string name="notification_list_empty">لا توجد إشعارات</string>
+    <string name="notification_list_no_permission">اضغط هنا لمنح إذن الوصول إلى الإشعارات</string>
 
     <plurals name="pages_count">
         <item quantity="zero">لا توجد صفحات</item>

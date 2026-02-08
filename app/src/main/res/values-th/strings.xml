@@ -19,12 +19,18 @@
     <!-- Gesture actions -->
     <string name="action_open_app">เปิดแอป</string>
     <string name="action_lock_screen">ล็อคหน้าจอ</string>
-    <string name="action_show_notifications">แสดงการแจ้งเตือน</string>
-    <string name="action_show_app_list">แสดงรายการแอป</string>
-    <string name="action_quick_settings">การตั้งค่าด่วน</string>
-    <string name="action_show_recents">แสดงแอปล่าสุด</string>
+    <string name="action_show_notifications">การแจ้งเตือน (Android)</string>
+    <string name="action_show_app_list">รายการแอป</string>
+    <string name="action_quick_settings">การตั้งค่าด่วน (Android)</string>
+    <string name="action_show_recents">แอปล่าสุด</string>
+    <string name="action_show_notification_list">การแจ้งเตือน</string>
     <string name="action_disabled">ปิด</string>
     <string name="action_open_app_name">เปิด %1$s</string>
+
+    <!-- Notification list -->
+    <string name="notification_list_title">การแจ้งเตือน</string>
+    <string name="notification_list_empty">ไม่มีการแจ้งเตือน</string>
+    <string name="notification_list_no_permission">แตะที่นี่เพื่อให้สิทธิ์การเข้าถึงการแจ้งเตือน</string>
 
     <!-- Gestures screen -->
     <string name="gesture_swipe_left">ปัดไปทางซ้าย</string>
@@ -97,6 +103,7 @@
     <string name="content_desc_clear">ล้าง</string>
     <string name="content_desc_hide">ซ่อน</string>
     <string name="content_desc_app_info">ข้อมูลแอป</string>
+    <string name="content_desc_dismiss">ปิด</string>
 
     <plurals name="pages_count">
         <item quantity="other">%d หน้า</item>

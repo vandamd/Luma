@@ -19,10 +19,11 @@
     <!-- Gesture actions -->
     <string name="action_open_app">Otevřít aplikaci</string>
     <string name="action_lock_screen">Zamknout obrazovku</string>
-    <string name="action_show_notifications">Zobrazit oznámení</string>
-    <string name="action_show_app_list">Zobrazit seznam aplikací</string>
-    <string name="action_quick_settings">Rychlá nastavení</string>
-    <string name="action_show_recents">Zobrazit nedávné</string>
+    <string name="action_show_notifications">Oznámení (Android)</string>
+    <string name="action_show_app_list">Seznam aplikací</string>
+    <string name="action_quick_settings">Rychlá nastavení (Android)</string>
+    <string name="action_show_recents">Nedávné aplikace</string>
+    <string name="action_show_notification_list">Oznámení</string>
     <string name="action_disabled">Vypnuto</string>
     <string name="action_open_app_name">Otevřít %1$s</string>
 
@@ -97,6 +98,11 @@
     <string name="content_desc_clear">Vymazat</string>
     <string name="content_desc_hide">Skrýt</string>
     <string name="content_desc_app_info">Informace o aplikaci</string>
+    <string name="content_desc_dismiss">Zavřít</string>
+
+    <string name="notification_list_title">Oznámení</string>
+    <string name="notification_list_empty">Žádná oznámení</string>
+    <string name="notification_list_no_permission">Klepněte sem pro udělení přístupu k oznámením</string>
 
     <plurals name="pages_count">
         <item quantity="one">%d Stránka</item>

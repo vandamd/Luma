@@ -19,12 +19,17 @@
     <!-- Gesture actions -->
     <string name="action_open_app">앱 열기</string>
     <string name="action_lock_screen">화면 잠금</string>
-    <string name="action_show_notifications">알림 표시</string>
-    <string name="action_show_app_list">앱 목록 표시</string>
-    <string name="action_quick_settings">빠른 설정</string>
-    <string name="action_show_recents">최근 앱 표시</string>
+    <string name="action_show_notifications">알림 (Android)</string>
+    <string name="action_show_app_list">앱 목록</string>
+    <string name="action_quick_settings">빠른 설정 (Android)</string>
+    <string name="action_show_recents">최근 앱</string>
+    <string name="action_show_notification_list">알림</string>
     <string name="action_disabled">비활성화됨</string>
     <string name="action_open_app_name">%1$s 열기</string>
+
+    <string name="notification_list_title">알림</string>
+    <string name="notification_list_empty">알림 없음</string>
+    <string name="notification_list_no_permission">알림 접근 권한을 부여하려면 여기를 탭하세요</string>
 
     <!-- Gestures screen -->
     <string name="gesture_swipe_left">왼쪽 스와이프</string>
@@ -97,6 +102,7 @@
     <string name="content_desc_clear">지우기</string>
     <string name="content_desc_hide">숨기기</string>
     <string name="content_desc_app_info">앱 정보</string>
+    <string name="content_desc_dismiss">닫기</string>
 
     <plurals name="pages_count">
         <item quantity="other">%d 페이지</item>

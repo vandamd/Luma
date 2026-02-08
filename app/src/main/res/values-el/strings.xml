@@ -19,10 +19,11 @@
     <!-- Gesture actions -->
     <string name="action_open_app">Άνοιγμα εφαρμογής</string>
     <string name="action_lock_screen">Κλείδωμα οθόνης</string>
-    <string name="action_show_notifications">Εμφάνιση ειδοποιήσεων</string>
-    <string name="action_show_app_list">Εμφάνιση λίστας εφαρμογών</string>
-    <string name="action_quick_settings">Γρήγορες ρυθμίσεις</string>
-    <string name="action_show_recents">Εμφάνιση πρόσφατων</string>
+    <string name="action_show_notifications">Ειδοποιήσεις (Android)</string>
+    <string name="action_show_app_list">Λίστα εφαρμογών</string>
+    <string name="action_quick_settings">Γρήγορες ρυθμίσεις (Android)</string>
+    <string name="action_show_recents">Πρόσφατες εφαρμογές</string>
+    <string name="action_show_notification_list">Ειδοποιήσεις</string>
     <string name="action_disabled">Απενεργοποιημένο</string>
     <string name="action_open_app_name">Άνοιγμα %1$s</string>
 
@@ -97,6 +98,11 @@
     <string name="content_desc_clear">Εκκαθάριση</string>
     <string name="content_desc_hide">Απόκρυψη</string>
     <string name="content_desc_app_info">Πληροφορίες εφαρμογής</string>
+    <string name="content_desc_dismiss">Απόρριψη</string>
+
+    <string name="notification_list_title">Ειδοποιήσεις</string>
+    <string name="notification_list_empty">Δεν υπάρχουν ειδοποιήσεις</string>
+    <string name="notification_list_no_permission">Πατήστε εδώ για να παραχωρήσετε πρόσβαση στις ειδοποιήσεις</string>
 
     <plurals name="pages_count">
         <item quantity="one">%d Σελίδα</item>

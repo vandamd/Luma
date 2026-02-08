@@ -19,10 +19,14 @@
     <!-- Gesture actions -->
     <string name="action_open_app">Otwórz aplikację</string>
     <string name="action_lock_screen">Ekran blokady</string>
-    <string name="action_show_notifications">Pokaż powiadomienia</string>
-    <string name="action_show_app_list">Pokaż listę aplikacji</string>
-    <string name="action_quick_settings">Szybkie ustawienia</string>
-    <string name="action_show_recents">Pokaż ostatnie</string>
+    <string name="action_show_notifications">Powiadomienia (Android)</string>
+    <string name="action_show_app_list">Lista aplikacji</string>
+    <string name="action_quick_settings">Szybkie ustawienia (Android)</string>
+    <string name="action_show_recents">Ostatnie aplikacje</string>
+    <string name="action_show_notification_list">Powiadomienia</string>
+    <string name="notification_list_title">Powiadomienia</string>
+    <string name="notification_list_empty">Brak powiadomień</string>
+    <string name="notification_list_no_permission">Kliknij tutaj, aby przyznać dostęp do powiadomień</string>
     <string name="action_disabled">Wyłączony</string>
     <string name="action_open_app_name">Otwórz %1$s</string>
 
@@ -96,6 +100,7 @@
     <string name="content_desc_save">Zapisz</string>
     <string name="content_desc_clear">Wyczyść</string>
     <string name="content_desc_hide">Ukryj</string>
+    <string name="content_desc_dismiss">Odrzuć</string>
     <string name="content_desc_app_info">Informacje o aplikacji</string>
 
     <plurals name="pages_count">

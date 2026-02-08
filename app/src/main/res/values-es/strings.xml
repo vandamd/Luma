@@ -19,10 +19,11 @@
     <!-- Gesture actions -->
     <string name="action_open_app">Abrir aplicación</string>
     <string name="action_lock_screen">Bloquear pantalla</string>
-    <string name="action_show_notifications">Mostrar notificación</string>
+    <string name="action_show_notifications">Notificaciones (Android)</string>
     <string name="action_show_app_list">Lista de aplicaciones</string>
-    <string name="action_quick_settings">Configuración rápida</string>
-    <string name="action_show_recents">Mostrar Recientes</string>
+    <string name="action_quick_settings">Configuración rápida (Android)</string>
+    <string name="action_show_recents">Aplicaciones recientes</string>
+    <string name="action_show_notification_list">Notificaciones</string>
     <string name="action_disabled">Desactivado</string>
     <string name="action_open_app_name">Abrir %1$s</string>
 
@@ -97,6 +98,11 @@
     <string name="content_desc_clear">Borrar</string>
     <string name="content_desc_hide">Ocultar</string>
     <string name="content_desc_app_info">Información de la app</string>
+    <string name="content_desc_dismiss">Descartar</string>
+
+    <string name="notification_list_title">Notificaciones</string>
+    <string name="notification_list_empty">Sin notificaciones</string>
+    <string name="notification_list_no_permission">Toca aquí para conceder acceso a las notificaciones</string>
 
     <plurals name="pages_count">
         <item quantity="one">%d Página</item>
