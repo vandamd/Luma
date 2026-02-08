@@ -6,14 +6,15 @@ import android.service.notification.StatusBarNotification
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import java.lang.ref.WeakReference
 
 class LumaNotificationListener : NotificationListenerService() {
     companion object {
         private var instance: WeakReference<LumaNotificationListener> = WeakReference(null)
 
-        private val _changeVersion = MutableStateFlow(0)
-        val changeVersion: StateFlow<Int> = _changeVersion.asStateFlow()
+        private val _changeVersion = MutableStateFlow(0L)
+        val changeVersion: StateFlow<Long> = _changeVersion.asStateFlow()
 
         @Suppress("DEPRECATION")
         private fun StatusBarNotification.shouldFilter(): Boolean {
@@ -72,10 +73,10 @@ class LumaNotificationListener : NotificationListenerService() {
     }
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
-        _changeVersion.value++
+        _changeVersion.update { it + 1 }
     }
 
     override fun onNotificationRemoved(sbn: StatusBarNotification?) {
-        _changeVersion.value++
+        _changeVersion.update { it + 1 }
     }
 }
