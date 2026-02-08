@@ -555,7 +555,11 @@ class HomeFragment :
                 }
             }
         telephonyCallback = callback
-        tm.registerTelephonyCallback(requireContext().mainExecutor, callback)
+        try {
+            tm.registerTelephonyCallback(requireContext().mainExecutor, callback)
+        } catch (_: SecurityException) {
+            hideCellular()
+        }
     }
 
     private fun stopCellularMonitor() {
