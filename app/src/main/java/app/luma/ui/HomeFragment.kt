@@ -20,6 +20,7 @@ import android.telephony.PhoneStateListener
 import android.telephony.SignalStrength
 import android.telephony.TelephonyManager
 import android.util.Log
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +42,7 @@ import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.GestureType
 import app.luma.data.HomeLayout
 import app.luma.data.Prefs
+import app.luma.data.StatusBarSectionType
 import app.luma.databinding.FragmentHomeBinding
 import app.luma.helper.*
 import app.luma.helper.LumaNotificationListener
@@ -67,6 +69,7 @@ class HomeFragment :
     private var bluetoothReceiver: BroadcastReceiver? = null
     private var phoneStateListener: PhoneStateListener? = null
     private var wifiNetworkCallback: ConnectivityManager.NetworkCallback? = null
+    private var notificationDotView: TextView? = null
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -104,6 +107,7 @@ class HomeFragment :
         initObservers()
         initPageNavigation()
         initSwipeTouchListener()
+        initStatusBarClickListeners()
         observeNotificationChanges()
         startClock()
     }
@@ -178,6 +182,24 @@ class HomeFragment :
                 },
             ),
         )
+    }
+
+    private fun initStatusBarClickListeners() {
+        binding.statusConnectivityLayout.setOnClickListener { handleSectionPress(StatusBarSectionType.CELLULAR) }
+        binding.statusClock.setOnClickListener { handleSectionPress(StatusBarSectionType.TIME) }
+        binding.statusBatteryLayout.setOnClickListener { handleSectionPress(StatusBarSectionType.BATTERY) }
+    }
+
+    private fun handleSectionPress(section: StatusBarSectionType) {
+        val action = prefs.getSectionAction(section)
+        if (action == Action.Disabled) return
+        performHapticFeedback(requireContext())
+        if (action == Action.OpenApp) {
+            val app = prefs.getSectionApp(section)
+            if (app.appPackage.isNotEmpty()) launchApp(app)
+        } else {
+            handleOtherAction(action)
+        }
     }
 
     private fun initPageNavigation() {
@@ -289,9 +311,88 @@ class HomeFragment :
         }
     }
 
+    private fun createNotificationDot(): TextView =
+        TextView(requireContext()).apply {
+            typeface = resources.getFont(R.font.public_sans)
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 22f)
+            val ta = requireContext().obtainStyledAttributes(intArrayOf(R.attr.primaryColor))
+            setTextColor(ta.getColor(0, 0))
+            ta.recycle()
+            text = "∗"
+            visibility = View.GONE
+        }
+
+    private fun hasDotIn(layout: ViewGroup): Boolean =
+        notificationDotView?.let { it.parent == layout && it.visibility == View.VISIBLE } == true
+
     private fun updateNotificationDot(hasNotifications: Boolean) {
-        binding.statusNotificationDot.visibility =
-            if (hasNotifications && prefs.statusBarEnabled && prefs.showNotificationIndicator) View.VISIBLE else View.GONE
+        val show = hasNotifications && prefs.statusBarEnabled && prefs.showStatusBarNotificationIndicator
+        val dot = notificationDotView ?: createNotificationDot().also { notificationDotView = it }
+
+        val oldParent = dot.parent as? ViewGroup
+        oldParent?.removeView(dot)
+
+        if (!show) {
+            dot.visibility = View.GONE
+            refreshSectionVisibility(oldParent)
+            return
+        }
+
+        dot.visibility = View.VISIBLE
+        val section = prefs.notificationIndicatorSection
+        val before = prefs.notificationIndicatorAlignment == Prefs.NotificationIndicatorAlignment.Before
+        val marginLp =
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+            )
+        val dp4 = (4 * resources.displayMetrics.density).toInt()
+
+        when (section) {
+            Prefs.NotificationIndicatorSection.Cellular -> {
+                if (before) {
+                    marginLp.marginEnd = dp4
+                    binding.statusConnectivityLayout.addView(dot, 0, marginLp)
+                } else {
+                    marginLp.marginStart = dp4
+                    binding.statusConnectivityLayout.addView(dot, marginLp)
+                }
+                binding.statusConnectivityLayout.visibility = View.VISIBLE
+            }
+
+            Prefs.NotificationIndicatorSection.Time -> {
+                val clockIndex = binding.statusBar.indexOfChild(binding.statusClock)
+                if (before) {
+                    marginLp.marginEnd = dp4
+                    binding.statusBar.addView(dot, clockIndex, marginLp)
+                } else {
+                    marginLp.marginStart = dp4
+                    binding.statusBar.addView(dot, clockIndex + 1, marginLp)
+                }
+            }
+
+            Prefs.NotificationIndicatorSection.Battery -> {
+                if (before) {
+                    marginLp.marginEnd = dp4
+                    binding.statusBatteryLayout.addView(dot, 0, marginLp)
+                } else {
+                    marginLp.marginStart = dp4
+                    binding.statusBatteryLayout.addView(dot, marginLp)
+                }
+                binding.statusBatteryLayout.visibility = View.VISIBLE
+            }
+        }
+        refreshSectionVisibility(oldParent)
+    }
+
+    private fun refreshSectionVisibility(oldParent: ViewGroup?) {
+        if (oldParent == binding.statusConnectivityLayout && !hasDotIn(binding.statusConnectivityLayout)) {
+            val anyEnabled = prefs.cellularEnabled || prefs.wifiEnabled || prefs.bluetoothEnabled
+            binding.statusConnectivityLayout.visibility = if (anyEnabled) View.VISIBLE else View.INVISIBLE
+        }
+        if (oldParent == binding.statusBatteryLayout && !hasDotIn(binding.statusBatteryLayout)) {
+            binding.statusBatteryLayout.visibility = if (prefs.batteryEnabled) View.VISIBLE else View.INVISIBLE
+        }
     }
 
     private fun startClock() {
@@ -336,7 +437,8 @@ class HomeFragment :
 
     private fun startBatteryMonitor() {
         if (!prefs.statusBarEnabled || !prefs.batteryEnabled) {
-            binding.statusBatteryLayout.visibility = View.INVISIBLE
+            binding.statusBatteryLayout.visibility =
+                if (hasDotIn(binding.statusBatteryLayout)) View.VISIBLE else View.INVISIBLE
             return
         }
         binding.statusBatteryLayout.visibility = View.VISIBLE
@@ -394,11 +496,13 @@ class HomeFragment :
 
     private fun startConnectivityMonitors() {
         if (!prefs.statusBarEnabled) {
-            binding.statusConnectivityLayout.visibility = View.INVISIBLE
+            binding.statusConnectivityLayout.visibility =
+                if (hasDotIn(binding.statusConnectivityLayout)) View.VISIBLE else View.INVISIBLE
             return
         }
         val anyEnabled = prefs.cellularEnabled || prefs.wifiEnabled || prefs.bluetoothEnabled
-        binding.statusConnectivityLayout.visibility = if (anyEnabled) View.VISIBLE else View.INVISIBLE
+        binding.statusConnectivityLayout.visibility =
+            if (anyEnabled || hasDotIn(binding.statusConnectivityLayout)) View.VISIBLE else View.INVISIBLE
         if (prefs.cellularEnabled) startCellularMonitor() else hideCellular()
         if (prefs.wifiEnabled) startWifiMonitor() else hideWifi()
         if (prefs.bluetoothEnabled) startBluetoothMonitor() else hideBluetooth()

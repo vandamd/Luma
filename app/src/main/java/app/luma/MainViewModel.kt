@@ -14,6 +14,7 @@ import app.luma.data.Constants
 import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.GestureType
 import app.luma.data.Prefs
+import app.luma.data.StatusBarSectionType
 import app.luma.helper.getAppsList
 import app.luma.helper.getHiddenAppsList
 import app.luma.helper.showToast
@@ -41,6 +42,9 @@ class MainViewModel(
             AppDrawerFlag.SetSwipeUp -> prefs.setGestureApp(GestureType.SWIPE_UP, appModel)
             AppDrawerFlag.SetSwipeDown -> prefs.setGestureApp(GestureType.SWIPE_DOWN, appModel)
             AppDrawerFlag.SetDoubleTap -> prefs.setGestureApp(GestureType.DOUBLE_TAP, appModel)
+            AppDrawerFlag.SetStatusBarCellular -> prefs.setSectionApp(StatusBarSectionType.CELLULAR, appModel)
+            AppDrawerFlag.SetStatusBarTime -> prefs.setSectionApp(StatusBarSectionType.TIME, appModel)
+            AppDrawerFlag.SetStatusBarBattery -> prefs.setSectionApp(StatusBarSectionType.BATTERY, appModel)
         }
     }
 

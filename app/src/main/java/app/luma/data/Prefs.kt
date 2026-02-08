@@ -49,14 +49,27 @@ enum class GestureType(
     val defaultAction: Constants.Action,
 ) {
     SWIPE_LEFT("SWIPE_LEFT_ACTION", "SWIPE_LEFT", Constants.Action.ShowAppList),
-    SWIPE_RIGHT("SWIPE_RIGHT_ACTION", "SWIPE_RIGHT", Constants.Action.ShowNotificationList),
+    SWIPE_RIGHT("SWIPE_RIGHT_ACTION", "SWIPE_RIGHT", Constants.Action.Disabled),
     SWIPE_DOWN("SWIPE_DOWN_ACTION", "SWIPE_DOWN", Constants.Action.Disabled),
     SWIPE_UP("SWIPE_UP_ACTION", "SWIPE_UP", Constants.Action.Disabled),
     DOUBLE_TAP("DOUBLE_TAP_ACTION", "DOUBLE_TAP", Constants.Action.Disabled),
 }
 
+enum class StatusBarSectionType(
+    val actionKey: String,
+    val appKey: String,
+    val defaultAction: Constants.Action,
+) {
+    CELLULAR("SB_CELLULAR_ACTION", "SB_CELLULAR_APP", Constants.Action.Disabled),
+    TIME("SB_TIME_ACTION", "SB_TIME_APP", Constants.Action.ShowNotificationList),
+    BATTERY("SB_BATTERY_ACTION", "SB_BATTERY_APP", Constants.Action.Disabled),
+}
+
 private const val PAGE_INDICATOR_POSITION = "page_indicator_position"
 private const val SHOW_NOTIFICATION_INDICATOR = "show_notification_indicator"
+private const val SHOW_STATUS_BAR_NOTIFICATION_INDICATOR = "show_status_bar_notification_indicator"
+private const val NOTIFICATION_INDICATOR_SECTION = "notification_indicator_section"
+private const val NOTIFICATION_INDICATOR_ALIGNMENT = "notification_indicator_alignment"
 private const val STATUS_BAR_ENABLED = "status_bar_enabled"
 private const val TIME_ENABLED = "time_enabled"
 private const val TIME_FORMAT = "time_format"
@@ -86,6 +99,10 @@ class Prefs(
     enum class TimeFormat { Standard, TwentyFourHour }
 
     enum class PageIndicatorPosition { Left, Right, Hidden }
+
+    enum class NotificationIndicatorSection { Cellular, Time, Battery }
+
+    enum class NotificationIndicatorAlignment { Before, After }
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, 0)
     private val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
@@ -220,6 +237,24 @@ class Prefs(
         storeAction(type.actionKey, action)
     }
 
+    fun getSectionApp(type: StatusBarSectionType): AppModel = loadApp(type.appKey)
+
+    fun setSectionApp(
+        type: StatusBarSectionType,
+        appModel: AppModel,
+    ) {
+        storeApp(type.appKey, appModel)
+    }
+
+    fun getSectionAction(type: StatusBarSectionType): Constants.Action = loadAction(type.actionKey, type.defaultAction)
+
+    fun setSectionAction(
+        type: StatusBarSectionType,
+        action: Constants.Action,
+    ) {
+        storeAction(type.actionKey, action)
+    }
+
     private fun loadApp(id: String): AppModel {
         val name = prefs.getString("${APP_NAME}_$id", "") ?: ""
         val pack = prefs.getString("${APP_PACKAGE}_$id", "") ?: ""
@@ -282,6 +317,36 @@ class Prefs(
     var showNotificationIndicator: Boolean
         get() = prefs.getBoolean(SHOW_NOTIFICATION_INDICATOR, true)
         set(value) = prefs.edit().putBoolean(SHOW_NOTIFICATION_INDICATOR, value).apply()
+
+    var showStatusBarNotificationIndicator: Boolean
+        get() = prefs.getBoolean(SHOW_STATUS_BAR_NOTIFICATION_INDICATOR, true)
+        set(value) = prefs.edit().putBoolean(SHOW_STATUS_BAR_NOTIFICATION_INDICATOR, value).apply()
+
+    var notificationIndicatorSection: NotificationIndicatorSection
+        get() {
+            val stored =
+                prefs.getString(NOTIFICATION_INDICATOR_SECTION, null)
+                    ?: return NotificationIndicatorSection.Time
+            return try {
+                NotificationIndicatorSection.valueOf(stored)
+            } catch (_: Exception) {
+                NotificationIndicatorSection.Time
+            }
+        }
+        set(value) = prefs.edit().putString(NOTIFICATION_INDICATOR_SECTION, value.name).apply()
+
+    var notificationIndicatorAlignment: NotificationIndicatorAlignment
+        get() {
+            val stored =
+                prefs.getString(NOTIFICATION_INDICATOR_ALIGNMENT, null)
+                    ?: return NotificationIndicatorAlignment.After
+            return try {
+                NotificationIndicatorAlignment.valueOf(stored)
+            } catch (_: Exception) {
+                NotificationIndicatorAlignment.After
+            }
+        }
+        set(value) = prefs.edit().putString(NOTIFICATION_INDICATOR_ALIGNMENT, value.name).apply()
 
     var statusBarEnabled: Boolean
         get() = prefs.getBoolean(STATUS_BAR_ENABLED, true)

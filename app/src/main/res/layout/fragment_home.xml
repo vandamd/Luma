@@ -29,17 +29,6 @@
             tools:visibility="visible">
 
             <TextView
-                android:id="@+id/statusNotificationDot"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/public_sans"
-                android:textSize="22sp"
-                android:textColor="?attr/primaryColor"
-                android:layout_marginEnd="4dp"
-                android:text="∗"
-                android:visibility="gone" />
-
-            <TextView
                 android:id="@+id/statusNetworkType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

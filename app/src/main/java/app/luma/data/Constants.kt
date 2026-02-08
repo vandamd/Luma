@@ -27,6 +27,9 @@ object Constants {
         SetSwipeUp,
         SetSwipeDown,
         SetDoubleTap,
+        SetStatusBarCellular,
+        SetStatusBarTime,
+        SetStatusBarBattery,
     }
 
     enum class Action(
