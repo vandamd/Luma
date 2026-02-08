@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStop() {
-        backToHomeScreen()
+        if (!isChangingConfigurations) backToHomeScreen()
         super.onStop()
     }
 
