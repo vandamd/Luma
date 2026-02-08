@@ -330,7 +330,7 @@ class HomeFragment :
 
     private fun startBatteryMonitor() {
         if (!prefs.statusBarEnabled || !prefs.batteryEnabled) {
-            binding.statusBatteryLayout.visibility = View.GONE
+            binding.statusBatteryLayout.visibility = View.INVISIBLE
             return
         }
         binding.statusBatteryLayout.visibility = View.VISIBLE
@@ -388,11 +388,11 @@ class HomeFragment :
 
     private fun startConnectivityMonitors() {
         if (!prefs.statusBarEnabled) {
-            binding.statusConnectivityLayout.visibility = View.GONE
+            binding.statusConnectivityLayout.visibility = View.INVISIBLE
             return
         }
         val anyEnabled = prefs.cellularEnabled || prefs.wifiEnabled || prefs.bluetoothEnabled
-        binding.statusConnectivityLayout.visibility = if (anyEnabled) View.VISIBLE else View.GONE
+        binding.statusConnectivityLayout.visibility = if (anyEnabled) View.VISIBLE else View.INVISIBLE
         if (prefs.cellularEnabled) startCellularMonitor() else hideCellular()
         if (prefs.wifiEnabled) startWifiMonitor() else hideWifi()
         if (prefs.bluetoothEnabled) startBluetoothMonitor() else hideBluetooth()
