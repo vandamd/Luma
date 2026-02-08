@@ -59,8 +59,8 @@ class GestureActionFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         prefs = Prefs.getInstance(requireContext())
-        arguments?.getString(GESTURE_TYPE)?.let { gestureType = GestureType.valueOf(it) }
-        arguments?.getString(SECTION_TYPE)?.let { sectionType = StatusBarSectionType.valueOf(it) }
+        arguments?.getString(GESTURE_TYPE)?.takeIf { it.isNotEmpty() }?.let { gestureType = GestureType.valueOf(it) }
+        arguments?.getString(SECTION_TYPE)?.takeIf { it.isNotEmpty() }?.let { sectionType = StatusBarSectionType.valueOf(it) }
     }
 
     override fun onCreateView(
