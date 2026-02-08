@@ -59,6 +59,7 @@ private fun SwipeBackContainer(
 
                         var totalX = 0f
                         var totalY = 0f
+                        var committed = false
                         var triggered = false
 
                         while (!triggered) {
@@ -69,7 +70,13 @@ private fun SwipeBackContainer(
                             totalX = change.position.x - down.position.x
                             totalY = change.position.y - down.position.y
 
-                            if (abs(totalY) > abs(totalX) * 1.5f) break
+                            if (!committed && abs(totalY) > abs(totalX) * 1.5f) break
+
+                            if (!committed && abs(totalX) > abs(totalY)) {
+                                committed = true
+                            }
+
+                            if (committed) change.consume()
 
                             if (totalX > dragThresholdPx) {
                                 triggered = true
