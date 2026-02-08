@@ -66,6 +66,9 @@ private const val FLASHING_SECONDS = "flashing_seconds"
 private const val BATTERY_ENABLED = "battery_enabled"
 private const val BATTERY_PERCENTAGE = "battery_percentage"
 private const val BATTERY_ICON = "battery_icon"
+private const val CELLULAR_ENABLED = "cellular_enabled"
+private const val WIFI_ENABLED = "wifi_enabled"
+private const val BLUETOOTH_ENABLED = "bluetooth_enabled"
 private const val FONT_SIZE_OPTION = "font_size_option"
 
 class Prefs(
@@ -322,6 +325,18 @@ class Prefs(
     var batteryIcon: Boolean
         get() = prefs.getBoolean(BATTERY_ICON, true)
         set(value) = prefs.edit().putBoolean(BATTERY_ICON, value).apply()
+
+    var cellularEnabled: Boolean
+        get() = prefs.getBoolean(CELLULAR_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(CELLULAR_ENABLED, value).apply()
+
+    var wifiEnabled: Boolean
+        get() = prefs.getBoolean(WIFI_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(WIFI_ENABLED, value).apply()
+
+    var bluetoothEnabled: Boolean
+        get() = prefs.getBoolean(BLUETOOTH_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(BLUETOOTH_ENABLED, value).apply()
 
     fun getHiddenAppKey(
         packageName: String,

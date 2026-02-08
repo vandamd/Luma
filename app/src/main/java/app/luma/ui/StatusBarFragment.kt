@@ -58,6 +58,9 @@ class StatusBarFragment : Fragment() {
                             prefs.statusBarEnabled = enabledState.value
                         },
                     )
+                    SimpleTextButton(stringResource(R.string.status_bar_connectivity)) {
+                        findNavController().navigate(R.id.action_statusBarFragment_to_statusBarConnectivityFragment)
+                    }
                     SimpleTextButton(stringResource(R.string.status_bar_time)) {
                         findNavController().navigate(R.id.action_statusBarFragment_to_statusBarTimeFragment)
                     }

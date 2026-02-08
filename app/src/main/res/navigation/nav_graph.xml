@@ -118,6 +118,9 @@
         <action
             android:id="@+id/action_statusBarFragment_to_statusBarBatteryFragment"
             app:destination="@id/statusBarBatteryFragment" />
+        <action
+            android:id="@+id/action_statusBarFragment_to_statusBarConnectivityFragment"
+            app:destination="@id/statusBarConnectivityFragment" />
     </fragment>
     <fragment
         android:id="@+id/statusBarTimeFragment"
@@ -131,6 +134,10 @@
         android:id="@+id/statusBarBatteryFragment"
         android:name="app.luma.ui.StatusBarBatteryFragment"
         android:label="StatusBarBatteryFragment" />
+    <fragment
+        android:id="@+id/statusBarConnectivityFragment"
+        android:name="app.luma.ui.StatusBarConnectivityFragment"
+        android:label="StatusBarConnectivityFragment" />
     <fragment
         android:id="@+id/timeFormatFragment"
         android:name="app.luma.ui.TimeFormatFragment"

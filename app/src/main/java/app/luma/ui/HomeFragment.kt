@@ -1,14 +1,24 @@
 package app.luma.ui
 
 import android.annotation.SuppressLint
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
+import android.net.wifi.WifiManager
 import android.os.BatteryManager
 import android.os.Build
 import android.os.Bundle
 import android.os.UserManager
+import android.telephony.PhoneStateListener
+import android.telephony.SignalStrength
+import android.telephony.TelephonyManager
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -54,6 +64,9 @@ class HomeFragment :
     private var pageIndicatorLayout: LinearLayout? = null
     private var colonVisible = true
     private var batteryReceiver: BroadcastReceiver? = null
+    private var bluetoothReceiver: BroadcastReceiver? = null
+    private var phoneStateListener: PhoneStateListener? = null
+    private var wifiNetworkCallback: ConnectivityManager.NetworkCallback? = null
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -109,12 +122,14 @@ class HomeFragment :
         updatePageIndicator()
         refreshAppNames()
         startBatteryMonitor()
+        startConnectivityMonitors()
     }
 
     override fun onPause() {
         super.onPause()
         HomeCleanupHelper.setOnHomeCleanupCallback(null)
         stopBatteryMonitor()
+        stopConnectivityMonitors()
     }
 
     override fun onClick(view: View) {
@@ -369,6 +384,216 @@ class HomeFragment :
         binding.statusBattery.setImageResource(icon)
         binding.statusBattery.scaleX = if (charging) 1f else -1f
         binding.statusBattery.setColorFilter(binding.statusClock.currentTextColor)
+    }
+
+    private fun startConnectivityMonitors() {
+        if (!prefs.statusBarEnabled) {
+            binding.statusConnectivityLayout.visibility = View.GONE
+            return
+        }
+        val anyEnabled = prefs.cellularEnabled || prefs.wifiEnabled || prefs.bluetoothEnabled
+        binding.statusConnectivityLayout.visibility = if (anyEnabled) View.VISIBLE else View.GONE
+        if (prefs.cellularEnabled) startCellularMonitor() else hideCellular()
+        if (prefs.wifiEnabled) startWifiMonitor() else hideWifi()
+        if (prefs.bluetoothEnabled) startBluetoothMonitor() else hideBluetooth()
+    }
+
+    private fun stopConnectivityMonitors() {
+        stopCellularMonitor()
+        stopWifiMonitor()
+        stopBluetoothMonitor()
+    }
+
+    private fun startCellularMonitor() {
+        @Suppress("DEPRECATION")
+        val listener =
+            object : PhoneStateListener() {
+                @Deprecated("Deprecated in Java")
+                override fun onSignalStrengthsChanged(signalStrength: SignalStrength) {
+                    if (_binding == null) return
+                    updateSignalIcon(signalStrength.level)
+                }
+
+                @Deprecated("Deprecated in Java")
+                override fun onDataConnectionStateChanged(
+                    state: Int,
+                    networkType: Int,
+                ) {
+                    if (_binding == null) return
+                    updateNetworkTypeFromInt(networkType)
+                }
+            }
+        phoneStateListener = listener
+        val tm = requireContext().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        @Suppress("DEPRECATION")
+        tm.listen(
+            listener,
+            PhoneStateListener.LISTEN_SIGNAL_STRENGTHS or PhoneStateListener.LISTEN_DATA_CONNECTION_STATE,
+        )
+    }
+
+    private fun stopCellularMonitor() {
+        phoneStateListener?.let {
+            val tm = requireContext().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            @Suppress("DEPRECATION")
+            tm.listen(it, PhoneStateListener.LISTEN_NONE)
+            phoneStateListener = null
+        }
+    }
+
+    private fun updateSignalIcon(level: Int) {
+        val icon =
+            when (level) {
+                0 -> R.drawable.signal_0
+                1 -> R.drawable.signal_1
+                2 -> R.drawable.signal_2
+                3 -> R.drawable.signal_3
+                else -> R.drawable.signal_4
+            }
+        binding.statusSignal.visibility = View.VISIBLE
+        binding.statusSignal.setImageResource(icon)
+        binding.statusSignal.setColorFilter(binding.statusClock.currentTextColor)
+    }
+
+    private fun updateNetworkTypeFromInt(type: Int) {
+        val label =
+            when (type) {
+                TelephonyManager.NETWORK_TYPE_NR -> "5G"
+
+                TelephonyManager.NETWORK_TYPE_LTE -> "LTE"
+
+                TelephonyManager.NETWORK_TYPE_HSPAP,
+                TelephonyManager.NETWORK_TYPE_HSPA,
+                TelephonyManager.NETWORK_TYPE_HSDPA,
+                TelephonyManager.NETWORK_TYPE_HSUPA,
+                TelephonyManager.NETWORK_TYPE_UMTS,
+                -> "3G"
+
+                TelephonyManager.NETWORK_TYPE_EDGE -> "E"
+
+                TelephonyManager.NETWORK_TYPE_GPRS -> "G"
+
+                TelephonyManager.NETWORK_TYPE_UNKNOWN -> ""
+
+                else -> ""
+            }
+        if (label.isNotEmpty()) {
+            binding.statusNetworkType.visibility = View.VISIBLE
+            binding.statusNetworkType.text = label
+        } else {
+            binding.statusNetworkType.visibility = View.GONE
+        }
+    }
+
+    private fun hideCellular() {
+        binding.statusSignal.visibility = View.GONE
+        binding.statusNetworkType.visibility = View.GONE
+    }
+
+    private fun startWifiMonitor() {
+        val cm = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val request =
+            NetworkRequest
+                .Builder()
+                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                .build()
+        val callback =
+            object : ConnectivityManager.NetworkCallback() {
+                override fun onCapabilitiesChanged(
+                    network: Network,
+                    caps: NetworkCapabilities,
+                ) {
+                    if (_binding == null) return
+                    val rssi = caps.signalStrength
+                    val level = WifiManager.calculateSignalLevel(rssi, 4)
+                    binding.statusWifi.post { updateWifiIcon(level) }
+                }
+
+                override fun onLost(network: Network) {
+                    if (_binding == null) return
+                    binding.statusWifi.post { hideWifi() }
+                }
+            }
+        wifiNetworkCallback = callback
+        cm.registerNetworkCallback(request, callback)
+        val activeNet = cm.activeNetwork
+        val activeCaps = if (activeNet != null) cm.getNetworkCapabilities(activeNet) else null
+        if (activeCaps != null && activeCaps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+            val rssi = activeCaps.signalStrength
+            val level = WifiManager.calculateSignalLevel(rssi, 4)
+            updateWifiIcon(level)
+        } else {
+            hideWifi()
+        }
+    }
+
+    private fun stopWifiMonitor() {
+        wifiNetworkCallback?.let {
+            val cm = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            cm.unregisterNetworkCallback(it)
+            wifiNetworkCallback = null
+        }
+    }
+
+    private fun updateWifiIcon(level: Int) {
+        val icon =
+            when (level) {
+                0 -> R.drawable.wifi_1
+                1 -> R.drawable.wifi_1
+                2 -> R.drawable.wifi_2
+                else -> R.drawable.wifi_full
+            }
+        binding.statusWifi.visibility = View.VISIBLE
+        binding.statusWifi.setImageResource(icon)
+        binding.statusWifi.setColorFilter(binding.statusClock.currentTextColor)
+    }
+
+    private fun hideWifi() {
+        binding.statusWifi.visibility = View.GONE
+    }
+
+    private fun startBluetoothMonitor() {
+        val bm = requireContext().getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+        val adapter = bm?.adapter
+        if (adapter == null) {
+            hideBluetooth()
+        } else {
+            try {
+                if (adapter.isEnabled) showBluetooth() else hideBluetooth()
+            } catch (_: SecurityException) {
+                hideBluetooth()
+            }
+        }
+        val receiver =
+            object : BroadcastReceiver() {
+                override fun onReceive(
+                    context: Context,
+                    intent: Intent,
+                ) {
+                    if (_binding == null) return
+                    val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF)
+                    if (state == BluetoothAdapter.STATE_ON) showBluetooth() else hideBluetooth()
+                }
+            }
+        bluetoothReceiver = receiver
+        requireContext().registerReceiver(receiver, IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED))
+    }
+
+    private fun stopBluetoothMonitor() {
+        bluetoothReceiver?.let {
+            requireContext().unregisterReceiver(it)
+            bluetoothReceiver = null
+        }
+    }
+
+    private fun showBluetooth() {
+        binding.statusBluetooth.visibility = View.VISIBLE
+        binding.statusBluetooth.setImageResource(R.drawable.bluetooth)
+        binding.statusBluetooth.setColorFilter(binding.statusClock.currentTextColor)
+    }
+
+    private fun hideBluetooth() {
+        binding.statusBluetooth.visibility = View.GONE
     }
 
     private fun homeAppClicked(location: Int) {
