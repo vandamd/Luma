@@ -43,6 +43,7 @@ class StatusBarFragment : Fragment() {
             )
 
             val enabledState = remember { mutableStateOf(prefs.statusBarEnabled) }
+            val notifIndicatorState = remember { mutableStateOf(prefs.showNotificationIndicator) }
 
             ContentContainer {
                 Column(verticalArrangement = Arrangement.spacedBy(33.5.dp)) {
@@ -56,6 +57,18 @@ class StatusBarFragment : Fragment() {
                         onClick = {
                             enabledState.value = !enabledState.value
                             prefs.statusBarEnabled = enabledState.value
+                        },
+                    )
+                    ToggleTextButton(
+                        title = stringResource(R.string.status_bar_notification_indicator),
+                        checked = notifIndicatorState.value,
+                        onCheckedChange = {
+                            notifIndicatorState.value = it
+                            prefs.showNotificationIndicator = it
+                        },
+                        onClick = {
+                            notifIndicatorState.value = !notifIndicatorState.value
+                            prefs.showNotificationIndicator = notifIndicatorState.value
                         },
                     )
                     SimpleTextButton(stringResource(R.string.status_bar_connectivity)) {

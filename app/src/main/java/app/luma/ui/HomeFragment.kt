@@ -283,9 +283,15 @@ class HomeFragment :
                 if (current != lastPackages) {
                     lastPackages = current
                     refreshAppNames()
+                    updateNotificationDot(current.isNotEmpty())
                 }
             }
         }
+    }
+
+    private fun updateNotificationDot(hasNotifications: Boolean) {
+        binding.statusNotificationDot.visibility =
+            if (hasNotifications && prefs.statusBarEnabled && prefs.showNotificationIndicator) View.VISIBLE else View.GONE
     }
 
     private fun startClock() {

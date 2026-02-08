@@ -72,6 +72,7 @@
     <string name="status_bar_cellular">Cellular Signal</string>
     <string name="status_bar_wifi">WiFi</string>
     <string name="status_bar_bluetooth">Bluetooth</string>
+    <string name="status_bar_notification_indicator">Notification Indicator</string>
     <string name="status_bar_battery">Battery</string>
     <string name="status_bar_battery_enabled">Enabled</string>
     <string name="status_bar_battery_percentage">Show Percentage</string>
