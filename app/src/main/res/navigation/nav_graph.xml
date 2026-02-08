@@ -85,7 +85,12 @@
         android:label="GestureActionFragment">
         <argument
             android:name="gesture_type"
-            app:argType="string" />
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="section_type"
+            app:argType="string"
+            android:defaultValue="" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
