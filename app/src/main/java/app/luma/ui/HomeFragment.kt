@@ -26,6 +26,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -365,7 +366,7 @@ class HomeFragment :
                     FrameLayout.LayoutParams(
                         FrameLayout.LayoutParams.WRAP_CONTENT,
                         FrameLayout.LayoutParams.WRAP_CONTENT,
-                        Gravity.CENTER_VERTICAL,
+                        Gravity.BOTTOM,
                     )
                 binding.statusClockLayout.addView(dot, frameLp)
                 dot.post {
@@ -506,6 +507,7 @@ class HomeFragment :
         binding.statusBatteryText.text = "$pct%"
         binding.statusBattery.visibility = if (prefs.batteryIcon) View.VISIBLE else View.GONE
         binding.statusBattery.setImageResource(icon)
+        binding.statusBattery.scaleType = if (charging) ImageView.ScaleType.FIT_CENTER else ImageView.ScaleType.FIT_END
         binding.statusBattery.scaleX = if (charging) 1f else -1f
         binding.statusBattery.setColorFilter(binding.statusClock.currentTextColor)
     }

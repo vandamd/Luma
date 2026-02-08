@@ -11,10 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:clipChildren="false"
-        android:paddingTop="8dp"
+        android:paddingTop="9dp"
         android:paddingBottom="8dp"
         android:paddingHorizontal="12dp">
 
@@ -23,8 +22,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_vertical|start"
-            android:baselineAligned="false"
+            android:gravity="start"
+            android:baselineAligned="true"
+            android:baselineAlignedChildIndex="0"
             android:orientation="horizontal"
             android:visibility="invisible"
             tools:visibility="visible">
@@ -42,53 +42,57 @@
 
             <ImageView
                 android:id="@+id/statusSignal"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:baselineAlignBottom="true"
                 android:visibility="gone"
                 android:src="@drawable/signal_4" />
 
             <ImageView
                 android:id="@+id/statusWifi"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
                 android:layout_marginStart="6dp"
+                android:baselineAlignBottom="true"
                 android:visibility="gone"
                 android:src="@drawable/wifi_full" />
 
             <ImageView
                 android:id="@+id/statusBluetooth"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:layout_marginStart="6dp"
+                android:baselineAlignBottom="true"
                 android:visibility="gone"
                 android:src="@drawable/bluetooth" />
 
         </LinearLayout>
 
-        <FrameLayout
+        <app.luma.ui.BaselineFrameLayout
             android:id="@+id/statusClockLayout"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:clipChildren="false">
 
             <TextView
                 android:id="@+id/statusClock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="center_horizontal"
                 android:fontFamily="@font/public_sans"
-                android:textSize="16sp"
+                android:textSize="19.4sp"
                 android:textColor="?attr/primaryColor" />
 
-        </FrameLayout>
+        </app.luma.ui.BaselineFrameLayout>
 
         <LinearLayout
             android:id="@+id/statusBatteryLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_vertical|end"
-            android:baselineAligned="false"
+            android:gravity="end"
+            android:baselineAligned="true"
+            android:baselineAlignedChildIndex="0"
             android:orientation="horizontal"
             android:visibility="invisible"
             tools:visibility="visible">
@@ -105,9 +109,10 @@
 
             <ImageView
                 android:id="@+id/statusBattery"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginTop="0.5dp"
+                android:layout_width="15dp"
+                android:layout_height="10dp"
+                android:scaleType="fitEnd"
+                android:baselineAlignBottom="true"
                 android:src="@drawable/battery_full" />
 
         </LinearLayout>
