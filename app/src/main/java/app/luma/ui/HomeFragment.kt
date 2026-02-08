@@ -373,6 +373,7 @@ class HomeFragment :
                     )
                 binding.statusClockLayout.addView(dot, frameLp)
                 dot.post {
+                    if (_binding == null) return@post
                     dot.translationX = if (before) -(dot.width + dp4).toFloat() else (binding.statusClock.width + dp4).toFloat()
                 }
             }
