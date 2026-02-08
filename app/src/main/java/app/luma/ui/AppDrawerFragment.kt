@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.UserManager
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
@@ -12,17 +13,22 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import app.luma.MainViewModel
 import app.luma.R
 import app.luma.data.AppModel
 import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.Prefs
 import app.luma.databinding.FragmentAppDrawerBinding
+import app.luma.helper.LumaNotificationListener
+import app.luma.helper.performHapticFeedback
 import app.luma.style.SettingsTheme
 import app.luma.style.isDarkTheme
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
+import kotlinx.coroutines.launch
 
 class AppDrawerFragment : Fragment() {
     private var _binding: FragmentAppDrawerBinding? = null
@@ -93,6 +99,14 @@ class AppDrawerFragment : Fragment() {
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = appAdapter
+        binding.recyclerView.addOnItemTouchListener(swipeBackTouchListener())
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            LumaNotificationListener.changeVersion.collect {
+                val packages = LumaNotificationListener.getActiveNotificationPackages()
+                appAdapter.updateNotifications(packages)
+            }
+        }
     }
 
     private fun initViewModel(
@@ -132,8 +146,8 @@ class AppDrawerFragment : Fragment() {
         apps: List<AppModel>,
         appAdapter: AppDrawerAdapter,
     ) {
-        // layout animation removed
         appAdapter.setAppList(apps.toMutableList())
+        appAdapter.updateNotifications(LumaNotificationListener.getActiveNotificationPackages())
     }
 
     private fun appClickListener(
@@ -165,4 +179,66 @@ class AppDrawerFragment : Fragment() {
                 ),
             )
         }
+
+    private fun swipeBackTouchListener(): RecyclerView.OnItemTouchListener {
+        val density = resources.displayMetrics.density
+        val edgeThreshold = 30 * density
+        val dragThreshold = 80 * density
+
+        var startX = 0f
+        var startY = 0f
+        var tracking = false
+        var committed = false
+
+        return object : RecyclerView.OnItemTouchListener {
+            override fun onInterceptTouchEvent(
+                rv: RecyclerView,
+                e: MotionEvent,
+            ): Boolean {
+                when (e.actionMasked) {
+                    MotionEvent.ACTION_DOWN -> {
+                        tracking = e.x <= edgeThreshold
+                        committed = false
+                        startX = e.x
+                        startY = e.y
+                    }
+
+                    MotionEvent.ACTION_MOVE -> {
+                        if (!tracking) return false
+                        val dx = e.x - startX
+                        val dy = e.y - startY
+                        if (!committed && kotlin.math.abs(dy) > kotlin.math.abs(dx) * 1.5f) {
+                            tracking = false
+                            return false
+                        }
+                        if (!committed && kotlin.math.abs(dx) > kotlin.math.abs(dy)) {
+                            committed = true
+                        }
+                        if (committed && dx > dragThreshold) {
+                            tracking = false
+                            performHapticFeedback(requireContext())
+                            if (flag == AppDrawerFlag.LaunchApp || flag == AppDrawerFlag.HiddenApps) {
+                                findNavController().popBackStack(R.id.mainFragment, false)
+                            } else {
+                                findNavController().popBackStack()
+                            }
+                            return true
+                        }
+                    }
+
+                    else -> {
+                        tracking = false
+                    }
+                }
+                return false
+            }
+
+            override fun onTouchEvent(
+                rv: RecyclerView,
+                e: MotionEvent,
+            ) {}
+
+            override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
+        }
+    }
 }

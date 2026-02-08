@@ -31,7 +31,7 @@ class AppCountFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = composeView { AppCountScreen() }
+    ): View = composeView(onSwipeBack = ::goBack) { AppCountScreen() }
 
     @Composable
     fun AppCountScreen() {

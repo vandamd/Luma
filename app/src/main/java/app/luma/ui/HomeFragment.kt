@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import app.luma.MainViewModel
 import app.luma.R
@@ -29,6 +30,7 @@ import app.luma.databinding.FragmentHomeBinding
 import app.luma.helper.*
 import app.luma.helper.LumaNotificationListener
 import app.luma.listener.SwipeTouchListener
+import kotlinx.coroutines.launch
 
 private const val TAG = "HomeFragment"
 
@@ -77,8 +79,8 @@ class HomeFragment :
 
         initObservers()
         initPageNavigation()
-
         initSwipeTouchListener()
+        observeNotificationChanges()
     }
 
     override fun onStart() {
@@ -244,6 +246,19 @@ class HomeFragment :
         binding.homeAppsLayout.gravity = android.view.Gravity.CENTER
     }
 
+    private fun observeNotificationChanges() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            var lastPackages: Set<String> = emptySet()
+            LumaNotificationListener.changeVersion.collect {
+                val current = LumaNotificationListener.getActiveNotificationPackages()
+                if (current != lastPackages) {
+                    lastPackages = current
+                    refreshAppNames()
+                }
+            }
+        }
+    }
+
     private fun homeAppClicked(location: Int) {
         val appModel = prefs.getHomeAppModel(location)
         if (appModel.appLabel.isEmpty()) {
@@ -300,6 +315,13 @@ class HomeFragment :
 
             Action.ShowRecents -> {
                 initActionService(requireContext())?.showRecents()
+            }
+
+            Action.ShowNotificationList -> {
+                try {
+                    findNavController().navigate(R.id.action_mainFragment_to_notificationListFragment)
+                } catch (_: Exception) {
+                }
             }
 
             Action.Disabled -> {}

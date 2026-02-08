@@ -34,7 +34,7 @@ class ConfirmFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = composeView { ConfirmScreen() }
+    ): View = composeView(onSwipeBack = ::goBack) { ConfirmScreen() }
 
     @Composable
     private fun ConfirmScreen() {

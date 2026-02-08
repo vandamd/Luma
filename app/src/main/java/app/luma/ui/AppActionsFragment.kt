@@ -74,7 +74,7 @@ class AppActionsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = composeView { AppActionsScreen() }
+    ): View = composeView(onSwipeBack = ::goBack) { AppActionsScreen() }
 
     override fun onViewCreated(
         view: View,

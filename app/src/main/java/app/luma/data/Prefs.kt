@@ -49,8 +49,8 @@ enum class GestureType(
     val defaultAction: Constants.Action,
 ) {
     SWIPE_LEFT("SWIPE_LEFT_ACTION", "SWIPE_LEFT", Constants.Action.ShowAppList),
-    SWIPE_RIGHT("SWIPE_RIGHT_ACTION", "SWIPE_RIGHT", Constants.Action.Disabled),
-    SWIPE_DOWN("SWIPE_DOWN_ACTION", "SWIPE_DOWN", Constants.Action.ShowNotification),
+    SWIPE_RIGHT("SWIPE_RIGHT_ACTION", "SWIPE_RIGHT", Constants.Action.ShowNotificationList),
+    SWIPE_DOWN("SWIPE_DOWN_ACTION", "SWIPE_DOWN", Constants.Action.Disabled),
     SWIPE_UP("SWIPE_UP_ACTION", "SWIPE_UP", Constants.Action.Disabled),
     DOUBLE_TAP("DOUBLE_TAP_ACTION", "DOUBLE_TAP", Constants.Action.Disabled),
 }
@@ -124,7 +124,11 @@ class Prefs(
         default: Constants.Action,
     ): Constants.Action {
         val string = prefs.getString(prefString, default.name) ?: default.name
-        return Constants.Action.valueOf(string)
+        return try {
+            Constants.Action.valueOf(string)
+        } catch (_: Exception) {
+            default
+        }
     }
 
     private fun storeAction(

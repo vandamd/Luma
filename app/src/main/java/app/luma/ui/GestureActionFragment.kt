@@ -61,7 +61,7 @@ class GestureActionFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = composeView { GestureScreen() }
+    ): View = composeView(onSwipeBack = ::goBack) { GestureScreen() }
 
     private fun getDisplayInfo(): GestureDisplayInfo = gestureDisplayInfo[gestureType] ?: error("Unknown gesture type: $gestureType")
 

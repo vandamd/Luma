@@ -1,20 +1,63 @@
 package app.luma.helper
 
+import android.app.Notification
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import java.lang.ref.WeakReference
 
 class LumaNotificationListener : NotificationListenerService() {
     companion object {
         private var instance: WeakReference<LumaNotificationListener> = WeakReference(null)
 
-        fun getActiveNotificationPackages(): Set<String> =
-            instance
-                .get()
-                ?.activeNotifications
-                ?.map { it.packageName }
-                ?.toSet()
-                ?: emptySet()
+        private val _changeVersion = MutableStateFlow(0L)
+        val changeVersion: StateFlow<Long> = _changeVersion.asStateFlow()
+
+        @Suppress("DEPRECATION")
+        private fun StatusBarNotification.shouldFilter(svc: LumaNotificationListener): Boolean {
+            if (notification.category == Notification.CATEGORY_TRANSPORT) return true
+            return isLightOsKeepAlive(svc)
+        }
+
+        private fun StatusBarNotification.isLightOsKeepAlive(svc: LumaNotificationListener): Boolean {
+            val text = notification.extras.getCharSequence(Notification.EXTRA_TEXT)?.toString()
+            if (!text.isNullOrBlank()) return false
+            val title = notification.extras.getString(Notification.EXTRA_TITLE)
+            if (title == "LightOS") return true
+            if (title == null) {
+                val pm = svc.packageManager
+                val appLabel =
+                    try {
+                        pm.getApplicationLabel(pm.getApplicationInfo(packageName, 0)).toString()
+                    } catch (_: Exception) {
+                        null
+                    }
+                return appLabel == "LightOS"
+            }
+            return false
+        }
+
+        fun getActiveNotificationPackages(): Set<String> {
+            val svc = instance.get() ?: return emptySet()
+            return svc.activeNotifications
+                .filterNot { it.shouldFilter(svc) || it.isOngoing }
+                .map { it.packageName }
+                .toSet()
+        }
+
+        fun getActiveNotifications(): List<StatusBarNotification> {
+            val svc = instance.get() ?: return emptyList()
+            return svc.activeNotifications
+                .filterNot { it.shouldFilter(svc) }
+                .toList()
+        }
+
+        fun dismissNotification(key: String) {
+            instance.get()?.cancelNotification(key)
+        }
     }
 
     override fun onCreate() {
@@ -28,10 +71,10 @@ class LumaNotificationListener : NotificationListenerService() {
     }
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
-        // Notification posted - could trigger UI update here if needed
+        _changeVersion.update { it + 1 }
     }
 
     override fun onNotificationRemoved(sbn: StatusBarNotification?) {
-        // Notification removed - could trigger UI update here if needed
+        _changeVersion.update { it + 1 }
     }
 }

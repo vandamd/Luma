@@ -54,7 +54,7 @@ class RenameFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: android.os.Bundle?,
-    ): View = composeView { RenameContent() }
+    ): View = composeView(onSwipeBack = ::goBack) { RenameContent() }
 
     @Composable
     private fun RenameContent() {

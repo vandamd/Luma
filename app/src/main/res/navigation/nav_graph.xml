@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_mainFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_notificationListFragment"
+            app:destination="@id/notificationListFragment" />
     </fragment>
 
     <fragment
@@ -102,6 +105,10 @@
         android:id="@+id/notificationsFragment"
         android:name="app.luma.ui.NotificationsFragment"
         android:label="NotificationsFragment" />
+    <fragment
+        android:id="@+id/notificationListFragment"
+        android:name="app.luma.ui.NotificationListFragment"
+        android:label="NotificationListFragment" />
     <fragment
         android:id="@+id/appActionsFragment"
         android:name="app.luma.ui.AppActionsFragment"

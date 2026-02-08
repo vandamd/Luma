@@ -34,10 +34,11 @@ object Constants {
     ) {
         Disabled(R.string.action_disabled),
         OpenApp(R.string.action_open_app),
-        LockScreen(R.string.action_lock_screen),
         ShowAppList(R.string.action_show_app_list),
-        OpenQuickSettings(R.string.action_quick_settings),
+        ShowNotificationList(R.string.action_show_notification_list),
         ShowRecents(R.string.action_show_recents),
+        LockScreen(R.string.action_lock_screen),
+        OpenQuickSettings(R.string.action_quick_settings),
         ShowNotification(R.string.action_show_notifications),
         ;
 
