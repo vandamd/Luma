@@ -445,12 +445,24 @@ class HomeFragment :
                         binding.statusClock.text = time
                     }
                     colonVisible = !colonVisible
+                    repositionClockDot()
                 } else {
                     binding.statusClock.visibility = View.GONE
                 }
                 val now = System.currentTimeMillis()
                 delay(1000 - (now % 1000))
             }
+        }
+    }
+
+    private fun repositionClockDot() {
+        val dot = notificationDotView ?: return
+        if (dot.parent != binding.statusClockLayout || dot.visibility != View.VISIBLE) return
+        val before = prefs.notificationIndicatorAlignment == Prefs.NotificationIndicatorAlignment.Before
+        val dp4 = (4 * resources.displayMetrics.density).toInt()
+        binding.statusClock.post {
+            if (_binding == null) return@post
+            dot.translationX = if (before) -(dot.width + dp4).toFloat() else (binding.statusClock.width + dp4).toFloat()
         }
     }
 
