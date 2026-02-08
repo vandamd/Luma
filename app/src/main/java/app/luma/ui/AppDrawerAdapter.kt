@@ -111,9 +111,9 @@ class AppDrawerAdapter(
             app.hasNotification = packages.contains(app.appPackage)
             if (had != app.hasNotification) notifyItemChanged(i)
         }
-        appsList.forEach {
-            if (it !in appFilteredList) {
-                it.hasNotification = packages.contains(it.appPackage)
+        appsList.forEach { app ->
+            if (appFilteredList.none { it === app }) {
+                app.hasNotification = packages.contains(app.appPackage)
             }
         }
     }
