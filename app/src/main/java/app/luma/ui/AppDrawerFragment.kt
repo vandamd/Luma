@@ -188,6 +188,7 @@ class AppDrawerFragment : Fragment() {
         var startX = 0f
         var startY = 0f
         var tracking = false
+        var committed = false
 
         return object : RecyclerView.OnItemTouchListener {
             override fun onInterceptTouchEvent(
@@ -197,6 +198,7 @@ class AppDrawerFragment : Fragment() {
                 when (e.actionMasked) {
                     MotionEvent.ACTION_DOWN -> {
                         tracking = e.x <= edgeThreshold
+                        committed = false
                         startX = e.x
                         startY = e.y
                     }
@@ -205,11 +207,14 @@ class AppDrawerFragment : Fragment() {
                         if (!tracking) return false
                         val dx = e.x - startX
                         val dy = e.y - startY
-                        if (kotlin.math.abs(dy) > kotlin.math.abs(dx) * 1.5f) {
+                        if (!committed && kotlin.math.abs(dy) > kotlin.math.abs(dx) * 1.5f) {
                             tracking = false
                             return false
                         }
-                        if (dx > dragThreshold) {
+                        if (!committed && kotlin.math.abs(dx) > kotlin.math.abs(dy)) {
+                            committed = true
+                        }
+                        if (committed && dx > dragThreshold) {
                             tracking = false
                             performHapticFeedback(requireContext())
                             if (flag == AppDrawerFlag.LaunchApp || flag == AppDrawerFlag.HiddenApps) {
