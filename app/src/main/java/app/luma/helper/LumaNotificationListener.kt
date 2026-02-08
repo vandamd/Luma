@@ -17,18 +17,18 @@ class LumaNotificationListener : NotificationListenerService() {
         val changeVersion: StateFlow<Long> = _changeVersion.asStateFlow()
 
         @Suppress("DEPRECATION")
-        private fun StatusBarNotification.shouldFilter(): Boolean {
+        private fun StatusBarNotification.shouldFilter(svc: LumaNotificationListener): Boolean {
             if (notification.category == Notification.CATEGORY_TRANSPORT) return true
-            return isLightOsKeepAlive()
+            return isLightOsKeepAlive(svc)
         }
 
-        private fun StatusBarNotification.isLightOsKeepAlive(): Boolean {
+        private fun StatusBarNotification.isLightOsKeepAlive(svc: LumaNotificationListener): Boolean {
             val text = notification.extras.getCharSequence(Notification.EXTRA_TEXT)?.toString()
             if (!text.isNullOrBlank()) return false
             val title = notification.extras.getString(Notification.EXTRA_TITLE)
             if (title == "LightOS") return true
             if (title == null) {
-                val pm = instance.get()?.packageManager ?: return false
+                val pm = svc.packageManager
                 val appLabel =
                     try {
                         pm.getApplicationLabel(pm.getApplicationInfo(packageName, 0)).toString()
@@ -40,22 +40,20 @@ class LumaNotificationListener : NotificationListenerService() {
             return false
         }
 
-        fun getActiveNotificationPackages(): Set<String> =
-            instance
-                .get()
-                ?.activeNotifications
-                ?.filterNot { it.shouldFilter() || it.isOngoing }
-                ?.map { it.packageName }
-                ?.toSet()
-                ?: emptySet()
+        fun getActiveNotificationPackages(): Set<String> {
+            val svc = instance.get() ?: return emptySet()
+            return svc.activeNotifications
+                .filterNot { it.shouldFilter(svc) || it.isOngoing }
+                .map { it.packageName }
+                .toSet()
+        }
 
-        fun getActiveNotifications(): List<StatusBarNotification> =
-            instance
-                .get()
-                ?.activeNotifications
-                ?.filterNot { it.shouldFilter() }
-                ?.toList()
-                ?: emptyList()
+        fun getActiveNotifications(): List<StatusBarNotification> {
+            val svc = instance.get() ?: return emptyList()
+            return svc.activeNotifications
+                .filterNot { it.shouldFilter(svc) }
+                .toList()
+        }
 
         fun dismissNotification(key: String) {
             instance.get()?.cancelNotification(key)
