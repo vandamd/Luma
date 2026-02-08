@@ -214,7 +214,11 @@ class AppDrawerFragment : Fragment() {
                         if (dx > dragThreshold) {
                             tracking = false
                             performHapticFeedback(requireContext())
-                            findNavController().popBackStack(R.id.mainFragment, false)
+                            if (flag == AppDrawerFlag.LaunchApp || flag == AppDrawerFlag.HiddenApps) {
+                                findNavController().popBackStack(R.id.mainFragment, false)
+                            } else {
+                                findNavController().popBackStack()
+                            }
                             return true
                         }
                     }
