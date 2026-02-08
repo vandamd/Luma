@@ -2,7 +2,6 @@ package app.luma.ui
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -16,6 +15,7 @@ import android.os.BatteryManager
 import android.os.Build
 import android.os.Bundle
 import android.os.UserManager
+import android.provider.Settings
 import android.telephony.SignalStrength
 import android.telephony.TelephonyCallback
 import android.telephony.TelephonyManager
@@ -656,17 +656,8 @@ class HomeFragment :
     }
 
     private fun startBluetoothMonitor() {
-        val bm = requireContext().getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
-        val adapter = bm?.adapter
-        if (adapter == null) {
-            hideBluetooth()
-            return
-        }
-        try {
-            if (adapter.isEnabled) showBluetooth() else hideBluetooth()
-        } catch (_: SecurityException) {
-            hideBluetooth()
-        }
+        val btOn = Settings.Global.getInt(requireContext().contentResolver, Settings.Global.BLUETOOTH_ON, 0) != 0
+        if (btOn) showBluetooth() else hideBluetooth()
         val receiver =
             object : BroadcastReceiver() {
                 override fun onReceive(
