@@ -44,7 +44,7 @@ class LumaNotificationListener : NotificationListenerService() {
             instance
                 .get()
                 ?.activeNotifications
-                ?.filterNot { it.shouldFilter() }
+                ?.filterNot { it.shouldFilter() || it.isOngoing }
                 ?.map { it.packageName }
                 ?.toSet()
                 ?: emptySet()
