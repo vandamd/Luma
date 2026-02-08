@@ -124,7 +124,11 @@ class Prefs(
         default: Constants.Action,
     ): Constants.Action {
         val string = prefs.getString(prefString, default.name) ?: default.name
-        return Constants.Action.valueOf(string)
+        return try {
+            Constants.Action.valueOf(string)
+        } catch (_: Exception) {
+            default
+        }
     }
 
     private fun storeAction(
