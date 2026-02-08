@@ -293,11 +293,11 @@ class Prefs(
 
     var timeFormat: TimeFormat
         get() {
-            val stored = prefs.getString(TIME_FORMAT, null) ?: return TimeFormat.Standard
+            val stored = prefs.getString(TIME_FORMAT, null) ?: return TimeFormat.TwentyFourHour
             return try {
                 TimeFormat.valueOf(stored)
             } catch (_: Exception) {
-                TimeFormat.Standard
+                TimeFormat.TwentyFourHour
             }
         }
         set(value) = prefs.edit().putString(TIME_FORMAT, value.name).apply()

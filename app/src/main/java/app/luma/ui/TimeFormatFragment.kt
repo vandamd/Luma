@@ -39,14 +39,14 @@ class TimeFormatFragment : Fragment() {
             ContentContainer {
                 CustomScrollView {
                     SimpleTextButton(
-                        title = stringResource(R.string.status_bar_time_standard),
-                        underline = prefs.timeFormat == Prefs.TimeFormat.Standard,
-                        onClick = { select(Prefs.TimeFormat.Standard) },
-                    )
-                    SimpleTextButton(
                         title = stringResource(R.string.status_bar_time_24h),
                         underline = prefs.timeFormat == Prefs.TimeFormat.TwentyFourHour,
                         onClick = { select(Prefs.TimeFormat.TwentyFourHour) },
+                    )
+                    SimpleTextButton(
+                        title = stringResource(R.string.status_bar_time_standard),
+                        underline = prefs.timeFormat == Prefs.TimeFormat.Standard,
+                        onClick = { select(Prefs.TimeFormat.Standard) },
                     )
                 }
             }

@@ -24,7 +24,7 @@
         android:layout_gravity="top|end"
         android:gravity="center_vertical"
         android:baselineAligned="false"
-        android:paddingTop="8dp"
+        android:paddingTop="5.5dp"
         android:paddingEnd="12dp"
         android:orientation="horizontal"
         android:visibility="gone"
@@ -42,8 +42,8 @@
 
         <ImageView
             android:id="@+id/statusBattery"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginTop="0.5dp"
             android:src="@drawable/battery_full" />
 
