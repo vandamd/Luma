@@ -464,7 +464,8 @@ class HomeFragment :
 
     private fun updateBatteryIcon(intent: Intent) {
         val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-        val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
+        val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
+        if (level < 0 || scale <= 0) return
         val pct = level * 100 / scale
         val status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
         val charging =
