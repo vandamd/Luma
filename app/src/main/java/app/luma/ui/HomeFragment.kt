@@ -314,7 +314,7 @@ class HomeFragment :
 
             Action.ShowNotificationList -> {
                 try {
-                    findNavController().navigate(R.id.notificationListFragment)
+                    findNavController().navigate(R.id.action_mainFragment_to_notificationListFragment)
                 } catch (_: Exception) {
                 }
             }

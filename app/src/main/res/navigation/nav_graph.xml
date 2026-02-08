@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_mainFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_notificationListFragment"
+            app:destination="@id/notificationListFragment" />
     </fragment>
 
     <fragment
