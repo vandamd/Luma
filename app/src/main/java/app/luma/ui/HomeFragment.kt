@@ -248,8 +248,13 @@ class HomeFragment :
 
     private fun observeNotificationChanges() {
         viewLifecycleOwner.lifecycleScope.launch {
+            var lastPackages: Set<String> = emptySet()
             LumaNotificationListener.changeVersion.collect {
-                refreshAppNames()
+                val current = LumaNotificationListener.getActiveNotificationPackages()
+                if (current != lastPackages) {
+                    lastPackages = current
+                    refreshAppNames()
+                }
             }
         }
     }
