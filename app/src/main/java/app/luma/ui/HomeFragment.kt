@@ -16,8 +16,8 @@ import android.os.BatteryManager
 import android.os.Build
 import android.os.Bundle
 import android.os.UserManager
-import android.telephony.PhoneStateListener
 import android.telephony.SignalStrength
+import android.telephony.TelephonyCallback
 import android.telephony.TelephonyManager
 import android.util.Log
 import android.util.TypedValue
@@ -65,7 +65,7 @@ class HomeFragment :
     private var colonVisible = true
     private var batteryReceiver: BroadcastReceiver? = null
     private var bluetoothReceiver: BroadcastReceiver? = null
-    private var phoneStateListener: PhoneStateListener? = null
+    private var telephonyCallback: TelephonyCallback? = null
     private var wifiNetworkCallback: ConnectivityManager.NetworkCallback? = null
     private var notificationDotView: TextView? = null
 
@@ -513,16 +513,17 @@ class HomeFragment :
     }
 
     private fun startCellularMonitor() {
-        @Suppress("DEPRECATION")
-        val listener =
-            object : PhoneStateListener() {
-                @Deprecated("Deprecated in Java")
+        val tm = requireContext().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        val callback =
+            object :
+                TelephonyCallback(),
+                TelephonyCallback.SignalStrengthsListener,
+                TelephonyCallback.DataConnectionStateListener {
                 override fun onSignalStrengthsChanged(signalStrength: SignalStrength) {
                     if (_binding == null) return
                     updateSignalIcon(signalStrength.level)
                 }
 
-                @Deprecated("Deprecated in Java")
                 override fun onDataConnectionStateChanged(
                     state: Int,
                     networkType: Int,
@@ -531,21 +532,15 @@ class HomeFragment :
                     updateNetworkTypeFromInt(networkType)
                 }
             }
-        phoneStateListener = listener
-        val tm = requireContext().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        @Suppress("DEPRECATION")
-        tm.listen(
-            listener,
-            PhoneStateListener.LISTEN_SIGNAL_STRENGTHS or PhoneStateListener.LISTEN_DATA_CONNECTION_STATE,
-        )
+        telephonyCallback = callback
+        tm.registerTelephonyCallback(requireContext().mainExecutor, callback)
     }
 
     private fun stopCellularMonitor() {
-        phoneStateListener?.let {
+        telephonyCallback?.let {
             val tm = requireContext().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            @Suppress("DEPRECATION")
-            tm.listen(it, PhoneStateListener.LISTEN_NONE)
-            phoneStateListener = null
+            tm.unregisterTelephonyCallback(it)
+            telephonyCallback = null
         }
     }
 
@@ -600,6 +595,7 @@ class HomeFragment :
 
     private fun startWifiMonitor() {
         val cm = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val wm = requireContext().getSystemService(Context.WIFI_SERVICE) as WifiManager
         val request =
             NetworkRequest
                 .Builder()
@@ -612,8 +608,7 @@ class HomeFragment :
                     caps: NetworkCapabilities,
                 ) {
                     if (_binding == null) return
-                    val rssi = caps.signalStrength
-                    val level = WifiManager.calculateSignalLevel(rssi, 4)
+                    val level = wm.calculateSignalLevel(caps.signalStrength)
                     binding.statusWifi.post { if (_binding != null) updateWifiIcon(level) }
                 }
 
@@ -627,9 +622,7 @@ class HomeFragment :
         val activeNet = cm.activeNetwork
         val activeCaps = if (activeNet != null) cm.getNetworkCapabilities(activeNet) else null
         if (activeCaps != null && activeCaps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-            val rssi = activeCaps.signalStrength
-            val level = WifiManager.calculateSignalLevel(rssi, 4)
-            updateWifiIcon(level)
+            updateWifiIcon(wm.calculateSignalLevel(activeCaps.signalStrength))
         } else {
             hideWifi()
         }
