@@ -80,7 +80,7 @@ private fun SwipeBackContainer(
 
                             if (committed) change.consume()
 
-                            if (totalX > dragThresholdPx) {
+                            if (committed && totalX > dragThresholdPx) {
                                 triggered = true
                                 performHapticFeedback(context)
                                 currentOnSwipeBack.value()
