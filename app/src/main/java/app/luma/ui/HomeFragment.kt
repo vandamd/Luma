@@ -128,6 +128,7 @@ class HomeFragment :
         pageIndicatorLayout = null
         updatePageIndicator()
         refreshAppNames()
+        binding.statusBar.visibility = if (prefs.statusBarEnabled) View.VISIBLE else View.GONE
         startBatteryMonitor()
         startConnectivityMonitors()
     }
