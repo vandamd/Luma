@@ -354,6 +354,7 @@ class HomeFragment :
 
         when (section) {
             Prefs.NotificationIndicatorSection.Cellular -> {
+                dot.translationX = 0f
                 if (before) {
                     marginLp.marginEnd = dp4
                     binding.statusConnectivityLayout.addView(dot, 0, marginLp)
@@ -379,6 +380,7 @@ class HomeFragment :
             }
 
             Prefs.NotificationIndicatorSection.Battery -> {
+                dot.translationX = 0f
                 if (before) {
                     marginLp.marginEnd = dp4
                     binding.statusBatteryLayout.addView(dot, 0, marginLp)
