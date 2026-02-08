@@ -12,15 +12,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import app.luma.R
 import app.luma.data.Prefs
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
-import app.luma.ui.compose.SettingsComposable.SimpleTextButton
 import app.luma.ui.compose.SettingsComposable.ToggleTextButton
 
-class StatusBarFragment : Fragment() {
+class StatusBarBatteryFragment : Fragment() {
     private lateinit var prefs: Prefs
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,32 +36,52 @@ class StatusBarFragment : Fragment() {
     fun Screen() {
         Column {
             SettingsHeader(
-                title = stringResource(R.string.settings_status_bar),
+                title = stringResource(R.string.status_bar_battery),
                 onBack = ::goBack,
             )
 
-            val enabledState = remember { mutableStateOf(prefs.statusBarEnabled) }
+            val enabledState = remember { mutableStateOf(prefs.batteryEnabled) }
+            val percentageState = remember { mutableStateOf(prefs.batteryPercentage) }
+            val iconState = remember { mutableStateOf(prefs.batteryIcon) }
 
             ContentContainer {
                 Column(verticalArrangement = Arrangement.spacedBy(33.5.dp)) {
                     ToggleTextButton(
-                        title = stringResource(R.string.status_bar_enabled),
+                        title = stringResource(R.string.status_bar_battery_enabled),
                         checked = enabledState.value,
                         onCheckedChange = {
                             enabledState.value = it
-                            prefs.statusBarEnabled = it
+                            prefs.batteryEnabled = it
                         },
                         onClick = {
                             enabledState.value = !enabledState.value
-                            prefs.statusBarEnabled = enabledState.value
+                            prefs.batteryEnabled = enabledState.value
                         },
                     )
-                    SimpleTextButton(stringResource(R.string.status_bar_time)) {
-                        findNavController().navigate(R.id.action_statusBarFragment_to_statusBarTimeFragment)
-                    }
-                    SimpleTextButton(stringResource(R.string.status_bar_battery)) {
-                        findNavController().navigate(R.id.action_statusBarFragment_to_statusBarBatteryFragment)
-                    }
+                    ToggleTextButton(
+                        title = stringResource(R.string.status_bar_battery_percentage),
+                        checked = percentageState.value,
+                        onCheckedChange = {
+                            percentageState.value = it
+                            prefs.batteryPercentage = it
+                        },
+                        onClick = {
+                            percentageState.value = !percentageState.value
+                            prefs.batteryPercentage = percentageState.value
+                        },
+                    )
+                    ToggleTextButton(
+                        title = stringResource(R.string.status_bar_battery_icon),
+                        checked = iconState.value,
+                        onCheckedChange = {
+                            iconState.value = it
+                            prefs.batteryIcon = it
+                        },
+                        onClick = {
+                            iconState.value = !iconState.value
+                            prefs.batteryIcon = iconState.value
+                        },
+                    )
                 }
             }
         }

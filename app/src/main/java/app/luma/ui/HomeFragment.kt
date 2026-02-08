@@ -1,6 +1,11 @@
 package app.luma.ui
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.BatteryManager
 import android.os.Build
 import android.os.Bundle
 import android.os.UserManager
@@ -48,6 +53,7 @@ class HomeFragment :
     private var totalPages = 1
     private var pageIndicatorLayout: LinearLayout? = null
     private var colonVisible = true
+    private var batteryReceiver: BroadcastReceiver? = null
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -102,11 +108,13 @@ class HomeFragment :
         pageIndicatorLayout = null
         updatePageIndicator()
         refreshAppNames()
+        startBatteryMonitor()
     }
 
     override fun onPause() {
         super.onPause()
         HomeCleanupHelper.setOnHomeCleanupCallback(null)
+        stopBatteryMonitor()
     }
 
     override fun onClick(view: View) {
@@ -268,19 +276,34 @@ class HomeFragment :
     private fun startClock() {
         viewLifecycleOwner.lifecycleScope.launch {
             while (true) {
-                if (prefs.statusBarEnabled) {
+                if (prefs.statusBarEnabled && prefs.timeEnabled) {
                     binding.statusClock.visibility = View.VISIBLE
                     val is24Hour = prefs.timeFormat == Prefs.TimeFormat.TwentyFourHour
-                    val pattern = if (is24Hour) "HH mm" else "h mm a"
+                    val showSec = prefs.showSeconds
+                    val h =
+                        if (is24Hour) {
+                            "HH"
+                        } else if (prefs.leadingZero) {
+                            "hh"
+                        } else {
+                            "h"
+                        }
+                    val pattern =
+                        buildString {
+                            append("$h mm")
+                            if (showSec) append(" ss")
+                            if (!is24Hour) append(" a")
+                        }
                     val fmt = SimpleDateFormat(pattern, Locale.getDefault())
                     val parts = fmt.format(Date()).split(" ")
                     val sep = if (prefs.flashingSeconds && !colonVisible) " " else ":"
-                    binding.statusClock.text =
-                        if (is24Hour) {
-                            "${parts[0]}$sep${parts[1]}"
-                        } else {
-                            "${parts[0]}$sep${parts[1]} ${parts[2]}"
+                    val time =
+                        buildString {
+                            append("${parts[0]}$sep${parts[1]}")
+                            if (showSec) append("$sep${parts[2]}")
+                            if (!is24Hour) append(" ${parts[if (showSec) 3 else 2]}")
                         }
+                    binding.statusClock.text = time
                     colonVisible = !colonVisible
                 } else {
                     binding.statusClock.visibility = View.GONE
@@ -288,6 +311,64 @@ class HomeFragment :
                 delay(1000)
             }
         }
+    }
+
+    private fun startBatteryMonitor() {
+        if (!prefs.statusBarEnabled || !prefs.batteryEnabled) {
+            binding.statusBatteryLayout.visibility = View.GONE
+            return
+        }
+        binding.statusBatteryLayout.visibility = View.VISIBLE
+        val receiver =
+            object : BroadcastReceiver() {
+                override fun onReceive(
+                    context: Context,
+                    intent: Intent,
+                ) {
+                    updateBatteryIcon(intent)
+                }
+            }
+        batteryReceiver = receiver
+        val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+        val sticky = requireContext().registerReceiver(receiver, filter)
+        if (sticky != null) updateBatteryIcon(sticky)
+    }
+
+    private fun stopBatteryMonitor() {
+        batteryReceiver?.let {
+            requireContext().unregisterReceiver(it)
+            batteryReceiver = null
+        }
+    }
+
+    private fun updateBatteryIcon(intent: Intent) {
+        val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
+        val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100)
+        val pct = level * 100 / scale
+        val status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
+        val charging =
+            status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                status == BatteryManager.BATTERY_STATUS_FULL
+
+        val icon =
+            if (charging) {
+                R.drawable.battery_charging
+            } else {
+                when {
+                    pct >= 95 -> R.drawable.battery_full
+                    pct >= 60 -> R.drawable.battery_75
+                    pct >= 40 -> R.drawable.battery_50
+                    pct >= 20 -> R.drawable.battery_low
+                    pct >= 5 -> R.drawable.battery_very_low
+                    else -> R.drawable.battery_empty
+                }
+            }
+        binding.statusBatteryText.visibility = if (prefs.batteryPercentage) View.VISIBLE else View.GONE
+        binding.statusBatteryText.text = "$pct%"
+        binding.statusBattery.visibility = if (prefs.batteryIcon) View.VISIBLE else View.GONE
+        binding.statusBattery.setImageResource(icon)
+        binding.statusBattery.scaleX = if (charging) 1f else -1f
+        binding.statusBattery.setColorFilter(binding.statusClock.currentTextColor)
     }
 
     private fun homeAppClicked(location: Int) {

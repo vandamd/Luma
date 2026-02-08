@@ -60,10 +60,18 @@
     <!-- Status bar -->
     <string name="settings_status_bar">Status Bar</string>
     <string name="status_bar_enabled">Enabled</string>
+    <string name="status_bar_time">Time</string>
+    <string name="status_bar_time_enabled">Enabled</string>
     <string name="status_bar_time_format">Time Format</string>
     <string name="status_bar_time_standard">Standard (AM/PM)</string>
     <string name="status_bar_time_24h">24-Hour</string>
+    <string name="status_bar_show_seconds">Show Seconds</string>
+    <string name="status_bar_leading_zero">Leading Zero</string>
     <string name="status_bar_blinking_colon">Blinking Colon</string>
+    <string name="status_bar_battery">Battery</string>
+    <string name="status_bar_battery_enabled">Enabled</string>
+    <string name="status_bar_battery_percentage">Show Percentage</string>
+    <string name="status_bar_battery_icon">Show Icon</string>
 
     <!-- Notification list -->
     <string name="notification_list_title">Notifications</string>

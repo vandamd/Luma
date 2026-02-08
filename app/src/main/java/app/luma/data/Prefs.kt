@@ -58,8 +58,14 @@ enum class GestureType(
 private const val PAGE_INDICATOR_POSITION = "page_indicator_position"
 private const val SHOW_NOTIFICATION_INDICATOR = "show_notification_indicator"
 private const val STATUS_BAR_ENABLED = "status_bar_enabled"
+private const val TIME_ENABLED = "time_enabled"
 private const val TIME_FORMAT = "time_format"
+private const val SHOW_SECONDS = "show_seconds"
+private const val LEADING_ZERO = "leading_zero"
 private const val FLASHING_SECONDS = "flashing_seconds"
+private const val BATTERY_ENABLED = "battery_enabled"
+private const val BATTERY_PERCENTAGE = "battery_percentage"
+private const val BATTERY_ICON = "battery_icon"
 private const val FONT_SIZE_OPTION = "font_size_option"
 
 class Prefs(
@@ -278,6 +284,10 @@ class Prefs(
         get() = prefs.getBoolean(STATUS_BAR_ENABLED, true)
         set(value) = prefs.edit().putBoolean(STATUS_BAR_ENABLED, value).apply()
 
+    var timeEnabled: Boolean
+        get() = prefs.getBoolean(TIME_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(TIME_ENABLED, value).apply()
+
     var timeFormat: TimeFormat
         get() {
             val stored = prefs.getString(TIME_FORMAT, null) ?: return TimeFormat.Standard
@@ -289,9 +299,29 @@ class Prefs(
         }
         set(value) = prefs.edit().putString(TIME_FORMAT, value.name).apply()
 
+    var showSeconds: Boolean
+        get() = prefs.getBoolean(SHOW_SECONDS, false)
+        set(value) = prefs.edit().putBoolean(SHOW_SECONDS, value).apply()
+
+    var leadingZero: Boolean
+        get() = prefs.getBoolean(LEADING_ZERO, false)
+        set(value) = prefs.edit().putBoolean(LEADING_ZERO, value).apply()
+
     var flashingSeconds: Boolean
-        get() = prefs.getBoolean(FLASHING_SECONDS, true)
+        get() = prefs.getBoolean(FLASHING_SECONDS, false)
         set(value) = prefs.edit().putBoolean(FLASHING_SECONDS, value).apply()
+
+    var batteryEnabled: Boolean
+        get() = prefs.getBoolean(BATTERY_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(BATTERY_ENABLED, value).apply()
+
+    var batteryPercentage: Boolean
+        get() = prefs.getBoolean(BATTERY_PERCENTAGE, true)
+        set(value) = prefs.edit().putBoolean(BATTERY_PERCENTAGE, value).apply()
+
+    var batteryIcon: Boolean
+        get() = prefs.getBoolean(BATTERY_ICON, true)
+        set(value) = prefs.edit().putBoolean(BATTERY_ICON, value).apply()
 
     fun getHiddenAppKey(
         packageName: String,
