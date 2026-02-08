@@ -49,9 +49,7 @@ import app.luma.helper.LumaNotificationListener
 import app.luma.listener.SwipeTouchListener
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.Calendar
 
 private const val TAG = "HomeFragment"
 
@@ -402,28 +400,27 @@ class HomeFragment :
                     binding.statusClock.visibility = View.VISIBLE
                     val is24Hour = prefs.timeFormat == Prefs.TimeFormat.TwentyFourHour
                     val showSec = prefs.showSeconds
-                    val h =
+                    val cal = Calendar.getInstance()
+                    val hour =
                         if (is24Hour) {
-                            "HH"
-                        } else if (prefs.leadingZero) {
-                            "hh"
+                            cal.get(Calendar.HOUR_OF_DAY)
                         } else {
-                            "h"
+                            cal.get(Calendar.HOUR).let { if (it == 0) 12 else it }
                         }
-                    val pattern =
-                        buildString {
-                            append("$h mm")
-                            if (showSec) append(" ss")
-                            if (!is24Hour) append(" a")
-                        }
-                    val fmt = SimpleDateFormat(pattern, Locale.getDefault())
-                    val parts = fmt.format(Date()).split(" ")
+                    val min = cal.get(Calendar.MINUTE)
+                    val sec = cal.get(Calendar.SECOND)
                     val sep = if (prefs.flashingSeconds && !colonVisible) " " else ":"
+                    val hStr =
+                        if (is24Hour || prefs.leadingZero) {
+                            "%02d".format(hour)
+                        } else {
+                            hour.toString()
+                        }
                     val time =
                         buildString {
-                            append("${parts[0]}$sep${parts[1]}")
-                            if (showSec) append("$sep${parts[2]}")
-                            if (!is24Hour) append(" ${parts[if (showSec) 3 else 2]}")
+                            append("$hStr$sep${"%02d".format(min)}")
+                            if (showSec) append("$sep${"%02d".format(sec)}")
+                            if (!is24Hour) append(if (cal.get(Calendar.AM_PM) == Calendar.AM) " AM" else " PM")
                         }
                     binding.statusClock.text = time
                     colonVisible = !colonVisible
