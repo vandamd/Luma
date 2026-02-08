@@ -428,7 +428,8 @@ class HomeFragment :
                 } else {
                     binding.statusClock.visibility = View.GONE
                 }
-                delay(1000)
+                val now = System.currentTimeMillis()
+                delay(1000 - (now % 1000))
             }
         }
     }
