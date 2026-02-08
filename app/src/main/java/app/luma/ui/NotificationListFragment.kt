@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -94,7 +95,13 @@ class NotificationListFragment : Fragment() {
                 .getEnabledListenerPackages(context)
                 .contains(context.packageName)
         val version by LumaNotificationListener.changeVersion.collectAsState()
-        val notifications = remember(version) { mutableStateListOf(*loadNotifications().toTypedArray()) }
+        val dismissedKeys = remember { mutableSetOf<String>() }
+        val notifications = remember { mutableStateListOf<NotificationItem>() }
+        LaunchedEffect(version) {
+            val fresh = loadNotifications().filter { it.key !in dismissedKeys }
+            notifications.clear()
+            notifications.addAll(fresh)
+        }
 
         Column(modifier = Modifier.fillMaxSize()) {
             SettingsHeader(
@@ -137,6 +144,7 @@ class NotificationListFragment : Fragment() {
                                     if (item.key.isNotEmpty()) {
                                         LumaNotificationListener.dismissNotification(item.key)
                                     }
+                                    dismissedKeys.add(item.key)
                                     notifications.remove(item)
                                 },
                             )
