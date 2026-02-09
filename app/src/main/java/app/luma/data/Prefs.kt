@@ -375,7 +375,7 @@ class Prefs(
         set(value) = prefs.edit().putBoolean(LEADING_ZERO, value).apply()
 
     var batteryEnabled: Boolean
-        get() = prefs.getBoolean(BATTERY_ENABLED, true)
+        get() = prefs.getBoolean(BATTERY_ENABLED, false)
         set(value) = prefs.edit().putBoolean(BATTERY_ENABLED, value).apply()
 
     var batteryPercentage: Boolean
@@ -387,15 +387,15 @@ class Prefs(
         set(value) = prefs.edit().putBoolean(BATTERY_ICON, value).apply()
 
     var cellularEnabled: Boolean
-        get() = prefs.getBoolean(CELLULAR_ENABLED, true)
+        get() = prefs.getBoolean(CELLULAR_ENABLED, false)
         set(value) = prefs.edit().putBoolean(CELLULAR_ENABLED, value).apply()
 
     var wifiEnabled: Boolean
-        get() = prefs.getBoolean(WIFI_ENABLED, true)
+        get() = prefs.getBoolean(WIFI_ENABLED, false)
         set(value) = prefs.edit().putBoolean(WIFI_ENABLED, value).apply()
 
     var bluetoothEnabled: Boolean
-        get() = prefs.getBoolean(BLUETOOTH_ENABLED, true)
+        get() = prefs.getBoolean(BLUETOOTH_ENABLED, false)
         set(value) = prefs.edit().putBoolean(BLUETOOTH_ENABLED, value).apply()
 
     fun getHiddenAppKey(
