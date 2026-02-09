@@ -345,7 +345,7 @@ class HomeFragment :
 
         val targetParent: ViewGroup =
             when (prefs.notificationIndicatorSection) {
-                Prefs.NotificationIndicatorSection.Cellular -> binding.statusConnectivityLayout
+                Prefs.NotificationIndicatorSection.Connectivity -> binding.statusConnectivityLayout
                 Prefs.NotificationIndicatorSection.Time -> binding.statusClockLayout
                 Prefs.NotificationIndicatorSection.Battery -> binding.statusBatteryLayout
             }
@@ -363,7 +363,7 @@ class HomeFragment :
         val section = prefs.notificationIndicatorSection
         val dotSize =
             when (section) {
-                Prefs.NotificationIndicatorSection.Cellular -> 13f
+                Prefs.NotificationIndicatorSection.Connectivity -> 13f
                 Prefs.NotificationIndicatorSection.Time -> 19.4f
                 Prefs.NotificationIndicatorSection.Battery -> 16f
             }
@@ -377,7 +377,7 @@ class HomeFragment :
         val dp4 = (4 * resources.displayMetrics.density).toInt()
 
         when (section) {
-            Prefs.NotificationIndicatorSection.Cellular -> {
+            Prefs.NotificationIndicatorSection.Connectivity -> {
                 dot.translationX = 0f
                 if (before) {
                     marginLp.marginEnd = dp4

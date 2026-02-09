@@ -70,9 +70,19 @@ class StatusBarNotificationIndicatorFragment : Fragment() {
                         label = stringResource(R.string.status_bar_notif_section),
                         value =
                             when (sectionState.value) {
-                                Prefs.NotificationIndicatorSection.Cellular -> stringResource(R.string.status_bar_notif_section_cellular)
-                                Prefs.NotificationIndicatorSection.Time -> stringResource(R.string.status_bar_notif_section_time)
-                                Prefs.NotificationIndicatorSection.Battery -> stringResource(R.string.status_bar_notif_section_battery)
+                                Prefs.NotificationIndicatorSection.Connectivity -> {
+                                    stringResource(
+                                        R.string.status_bar_notif_section_cellular,
+                                    )
+                                }
+
+                                Prefs.NotificationIndicatorSection.Time -> {
+                                    stringResource(R.string.status_bar_notif_section_time)
+                                }
+
+                                Prefs.NotificationIndicatorSection.Battery -> {
+                                    stringResource(R.string.status_bar_notif_section_battery)
+                                }
                             },
                         onClick = {
                             findNavController().navigate(

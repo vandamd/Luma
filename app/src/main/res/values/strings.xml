@@ -75,7 +75,7 @@
     <string name="status_bar_on_press">On Press</string>
     <string name="status_bar_notif_section">Section</string>
     <string name="status_bar_notif_alignment">Alignment</string>
-    <string name="status_bar_notif_section_cellular">Cellular</string>
+    <string name="status_bar_notif_section_cellular">Connectivity</string>
     <string name="status_bar_notif_section_time">Time</string>
     <string name="status_bar_notif_section_battery">Battery</string>
     <string name="status_bar_notif_alignment_before">Before</string>

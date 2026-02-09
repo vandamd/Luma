@@ -99,7 +99,7 @@ class Prefs(
 
     enum class PageIndicatorPosition { Left, Right, Hidden }
 
-    enum class NotificationIndicatorSection { Cellular, Time, Battery }
+    enum class NotificationIndicatorSection { Connectivity, Time, Battery }
 
     enum class NotificationIndicatorAlignment { Before, After }
 

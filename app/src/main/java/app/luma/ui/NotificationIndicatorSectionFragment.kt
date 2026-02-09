@@ -40,8 +40,8 @@ class NotificationIndicatorSectionFragment : Fragment() {
                 CustomScrollView {
                     SimpleTextButton(
                         title = stringResource(R.string.status_bar_notif_section_cellular),
-                        underline = prefs.notificationIndicatorSection == Prefs.NotificationIndicatorSection.Cellular,
-                        onClick = { select(Prefs.NotificationIndicatorSection.Cellular) },
+                        underline = prefs.notificationIndicatorSection == Prefs.NotificationIndicatorSection.Connectivity,
+                        onClick = { select(Prefs.NotificationIndicatorSection.Connectivity) },
                     )
                     SimpleTextButton(
                         title = stringResource(R.string.status_bar_notif_section_time),
