@@ -110,8 +110,9 @@ class GestureActionFragment : Fragment() {
 
     private fun setCurrentAction(action: Action) {
         gestureType?.let { prefs.setGestureAction(it, action) }
-        sectionType?.let { prefs.setSectionAction(it, action) }
+            ?: sectionType?.let { prefs.setSectionAction(it, action) }
     }
+
 
     private fun getAppLabel(): String =
         gestureType?.let { prefs.getGestureApp(it).appLabel }
