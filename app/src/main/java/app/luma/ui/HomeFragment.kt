@@ -178,6 +178,7 @@ class HomeFragment :
             createGestureListener(
                 onLongClick = {
                     try {
+                        if (prefs.gestureHaptic) performHapticFeedback(requireContext())
                         findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
                     } catch (_: Exception) {
                     }
