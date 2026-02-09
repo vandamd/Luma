@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -20,13 +19,16 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import app.luma.style.SettingsTheme
 import kotlin.math.max
+
+val SettingsItemSpacing = 33.5.dp
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CustomScrollView(
     modifier: Modifier = Modifier,
-    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(33.5.dp),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(SettingsItemSpacing),
     content: @Composable () -> Unit,
 ) {
     var contentHeightPx by remember { mutableStateOf(0) }
@@ -88,7 +90,7 @@ fun CustomScrollView(
                             .fillMaxHeight()
                             .align(Alignment.TopEnd)
                             .offset(x = (-17.7).dp)
-                            .background(Color.White),
+                            .background(SettingsTheme.typography.item.color),
                 )
                 Box(
                     modifier =
@@ -102,7 +104,7 @@ fun CustomScrollView(
                                     y = scrollIndicatorPositionPx,
                                 )
                             }.offset(x = (-15.8).dp)
-                            .background(Color.White),
+                            .background(SettingsTheme.typography.item.color),
                 )
             }
         }

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +21,7 @@ import app.luma.helper.performHapticFeedback
 import app.luma.style.SettingsTheme
 import app.luma.ui.compose.SettingsComposable.MessageText
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
+import app.luma.ui.noRippleClickable
 import java.util.Locale
 
 class ConfirmFragment : Fragment() {
@@ -61,7 +61,7 @@ class ConfirmFragment : Fragment() {
                     style = SettingsTheme.typography.pageButton,
                     fontSize = 40.sp,
                     modifier =
-                        Modifier.clickable {
+                        Modifier.noRippleClickable {
                             performHapticFeedback(context)
                             findNavController().previousBackStackEntry?.savedStateHandle?.apply {
                                 set("confirmed", true)

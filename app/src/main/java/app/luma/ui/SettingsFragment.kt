@@ -72,6 +72,9 @@ class SettingsFragment : Fragment() {
                     SimpleTextButton(
                         stringResource(R.string.settings_pages),
                     ) { findNavController().navigate(R.id.action_settingsFragment_to_pagesFragment) }
+                    SimpleTextButton(
+                        stringResource(R.string.settings_status_bar),
+                    ) { findNavController().navigate(R.id.action_settingsFragment_to_statusBarFragment) }
                     SimpleTextButton(stringResource(R.string.settings_gestures)) {
                         findNavController().navigate(R.id.action_settingsFragment_to_gesturesFragment)
                     }

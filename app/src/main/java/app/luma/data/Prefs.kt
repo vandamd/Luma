@@ -49,14 +49,38 @@ enum class GestureType(
     val defaultAction: Constants.Action,
 ) {
     SWIPE_LEFT("SWIPE_LEFT_ACTION", "SWIPE_LEFT", Constants.Action.ShowAppList),
-    SWIPE_RIGHT("SWIPE_RIGHT_ACTION", "SWIPE_RIGHT", Constants.Action.ShowNotificationList),
-    SWIPE_DOWN("SWIPE_DOWN_ACTION", "SWIPE_DOWN", Constants.Action.Disabled),
+    SWIPE_RIGHT("SWIPE_RIGHT_ACTION", "SWIPE_RIGHT", Constants.Action.Disabled),
+    SWIPE_DOWN("SWIPE_DOWN_ACTION", "SWIPE_DOWN", Constants.Action.ShowNotificationList),
     SWIPE_UP("SWIPE_UP_ACTION", "SWIPE_UP", Constants.Action.Disabled),
     DOUBLE_TAP("DOUBLE_TAP_ACTION", "DOUBLE_TAP", Constants.Action.Disabled),
 }
 
+enum class StatusBarSectionType(
+    val actionKey: String,
+    val appKey: String,
+    val defaultAction: Constants.Action,
+) {
+    CELLULAR("SB_CELLULAR_ACTION", "SB_CELLULAR_APP", Constants.Action.Disabled),
+    TIME("SB_TIME_ACTION", "SB_TIME_APP", Constants.Action.ShowNotificationList),
+    BATTERY("SB_BATTERY_ACTION", "SB_BATTERY_APP", Constants.Action.Disabled),
+}
+
 private const val PAGE_INDICATOR_POSITION = "page_indicator_position"
 private const val SHOW_NOTIFICATION_INDICATOR = "show_notification_indicator"
+private const val SHOW_STATUS_BAR_NOTIFICATION_INDICATOR = "show_status_bar_notification_indicator"
+private const val NOTIFICATION_INDICATOR_SECTION = "notification_indicator_section"
+private const val NOTIFICATION_INDICATOR_ALIGNMENT = "notification_indicator_alignment"
+private const val STATUS_BAR_ENABLED = "status_bar_enabled"
+private const val TIME_ENABLED = "time_enabled"
+private const val TIME_FORMAT = "time_format"
+private const val SHOW_SECONDS = "show_seconds"
+private const val LEADING_ZERO = "leading_zero"
+private const val BATTERY_ENABLED = "battery_enabled"
+private const val BATTERY_PERCENTAGE = "battery_percentage"
+private const val BATTERY_ICON = "battery_icon"
+private const val CELLULAR_ENABLED = "cellular_enabled"
+private const val WIFI_ENABLED = "wifi_enabled"
+private const val BLUETOOTH_ENABLED = "bluetooth_enabled"
 private const val FONT_SIZE_OPTION = "font_size_option"
 
 class Prefs(
@@ -71,11 +95,29 @@ class Prefs(
             }
     }
 
+    enum class TimeFormat { Standard, TwentyFourHour }
+
     enum class PageIndicatorPosition { Left, Right, Hidden }
+
+    enum class NotificationIndicatorSection { Connectivity, Time, Battery }
+
+    enum class NotificationIndicatorAlignment { Before, After }
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, 0)
     private val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
     val mySerial: Long = userManager.getSerialNumberForUser(android.os.Process.myUserHandle())
+
+    private inline fun <reified T : Enum<T>> enumPref(
+        key: String,
+        default: T,
+    ): T {
+        val stored = prefs.getString(key, null) ?: return default
+        return try {
+            enumValueOf<T>(stored)
+        } catch (_: Exception) {
+            default
+        }
+    }
 
     init {
         migrateHiddenApps()
@@ -206,6 +248,24 @@ class Prefs(
         storeAction(type.actionKey, action)
     }
 
+    fun getSectionApp(type: StatusBarSectionType): AppModel = loadApp(type.appKey)
+
+    fun setSectionApp(
+        type: StatusBarSectionType,
+        appModel: AppModel,
+    ) {
+        storeApp(type.appKey, appModel)
+    }
+
+    fun getSectionAction(type: StatusBarSectionType): Constants.Action = loadAction(type.actionKey, type.defaultAction)
+
+    fun setSectionAction(
+        type: StatusBarSectionType,
+        action: Constants.Action,
+    ) {
+        storeAction(type.actionKey, action)
+    }
+
     private fun loadApp(id: String): AppModel {
         val name = prefs.getString("${APP_NAME}_$id", "") ?: ""
         val pack = prefs.getString("${APP_PACKAGE}_$id", "") ?: ""
@@ -253,21 +313,68 @@ class Prefs(
         set(value) = prefs.edit().putString(FONT_SIZE_OPTION, value.name).apply()
 
     var pageIndicatorPosition: PageIndicatorPosition
-        get() {
-            val stored =
-                prefs.getString(PAGE_INDICATOR_POSITION, null)
-                    ?: return PageIndicatorPosition.Left
-            return try {
-                PageIndicatorPosition.valueOf(stored)
-            } catch (_: Exception) {
-                PageIndicatorPosition.Left
-            }
-        }
+        get() = enumPref(PAGE_INDICATOR_POSITION, PageIndicatorPosition.Left)
         set(value) = prefs.edit().putString(PAGE_INDICATOR_POSITION, value.name).apply()
 
     var showNotificationIndicator: Boolean
         get() = prefs.getBoolean(SHOW_NOTIFICATION_INDICATOR, true)
         set(value) = prefs.edit().putBoolean(SHOW_NOTIFICATION_INDICATOR, value).apply()
+
+    var showStatusBarNotificationIndicator: Boolean
+        get() = prefs.getBoolean(SHOW_STATUS_BAR_NOTIFICATION_INDICATOR, true)
+        set(value) = prefs.edit().putBoolean(SHOW_STATUS_BAR_NOTIFICATION_INDICATOR, value).apply()
+
+    var notificationIndicatorSection: NotificationIndicatorSection
+        get() = enumPref(NOTIFICATION_INDICATOR_SECTION, NotificationIndicatorSection.Time)
+        set(value) = prefs.edit().putString(NOTIFICATION_INDICATOR_SECTION, value.name).apply()
+
+    var notificationIndicatorAlignment: NotificationIndicatorAlignment
+        get() = enumPref(NOTIFICATION_INDICATOR_ALIGNMENT, NotificationIndicatorAlignment.After)
+        set(value) = prefs.edit().putString(NOTIFICATION_INDICATOR_ALIGNMENT, value.name).apply()
+
+    var statusBarEnabled: Boolean
+        get() = prefs.getBoolean(STATUS_BAR_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(STATUS_BAR_ENABLED, value).apply()
+
+    var timeEnabled: Boolean
+        get() = prefs.getBoolean(TIME_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(TIME_ENABLED, value).apply()
+
+    var timeFormat: TimeFormat
+        get() = enumPref(TIME_FORMAT, TimeFormat.TwentyFourHour)
+        set(value) = prefs.edit().putString(TIME_FORMAT, value.name).apply()
+
+    var showSeconds: Boolean
+        get() = prefs.getBoolean(SHOW_SECONDS, false)
+        set(value) = prefs.edit().putBoolean(SHOW_SECONDS, value).apply()
+
+    var leadingZero: Boolean
+        get() = prefs.getBoolean(LEADING_ZERO, false)
+        set(value) = prefs.edit().putBoolean(LEADING_ZERO, value).apply()
+
+    var batteryEnabled: Boolean
+        get() = prefs.getBoolean(BATTERY_ENABLED, false)
+        set(value) = prefs.edit().putBoolean(BATTERY_ENABLED, value).apply()
+
+    var batteryPercentage: Boolean
+        get() = prefs.getBoolean(BATTERY_PERCENTAGE, true)
+        set(value) = prefs.edit().putBoolean(BATTERY_PERCENTAGE, value).apply()
+
+    var batteryIcon: Boolean
+        get() = prefs.getBoolean(BATTERY_ICON, true)
+        set(value) = prefs.edit().putBoolean(BATTERY_ICON, value).apply()
+
+    var cellularEnabled: Boolean
+        get() = prefs.getBoolean(CELLULAR_ENABLED, false)
+        set(value) = prefs.edit().putBoolean(CELLULAR_ENABLED, value).apply()
+
+    var wifiEnabled: Boolean
+        get() = prefs.getBoolean(WIFI_ENABLED, false)
+        set(value) = prefs.edit().putBoolean(WIFI_ENABLED, value).apply()
+
+    var bluetoothEnabled: Boolean
+        get() = prefs.getBoolean(BLUETOOTH_ENABLED, false)
+        set(value) = prefs.edit().putBoolean(BLUETOOTH_ENABLED, value).apply()
 
     fun getHiddenAppKey(
         packageName: String,

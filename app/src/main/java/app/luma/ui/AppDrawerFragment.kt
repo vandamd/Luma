@@ -157,7 +157,7 @@ class AppDrawerFragment : Fragment() {
     ): (appModel: AppModel) -> Unit =
         { appModel ->
             viewModel.selectedApp(appModel, flag, n)
-            if (flag == AppDrawerFlag.LaunchApp || flag == AppDrawerFlag.HiddenApps || flag == AppDrawerFlag.SetHomeApp) {
+            if (flag == AppDrawerFlag.LaunchApp || flag == AppDrawerFlag.SetHomeApp) {
                 findNavController().popBackStack(R.id.mainFragment, false)
             } else {
                 findNavController().popBackStack()
@@ -217,7 +217,7 @@ class AppDrawerFragment : Fragment() {
                         if (committed && dx > dragThreshold) {
                             tracking = false
                             performHapticFeedback(requireContext())
-                            if (flag == AppDrawerFlag.LaunchApp || flag == AppDrawerFlag.HiddenApps) {
+                            if (flag == AppDrawerFlag.LaunchApp) {
                                 findNavController().popBackStack(R.id.mainFragment, false)
                             } else {
                                 findNavController().popBackStack()

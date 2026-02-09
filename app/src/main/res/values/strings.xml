@@ -26,7 +26,7 @@
     <string name="action_open_app_name">Open %1$s</string>
 
     <!-- Gestures screen -->
-    <string name="gesture_swipe_left">Swipe left</string>
+<string name="gesture_swipe_left">Swipe left</string>
     <string name="gesture_swipe_right">Swipe right</string>
     <string name="gesture_swipe_down">Swipe down</string>
     <string name="gesture_swipe_up">Swipe up</string>
@@ -56,6 +56,34 @@
     <string name="notifications_visible_next_to_apps">visible next to apps</string>
     <string name="notifications_not_visible">not visible</string>
     <string name="notifications_not_visible_permission_required">not visible (permission required)</string>
+
+    <!-- Status bar -->
+    <string name="settings_status_bar">Status Bar</string>
+    <string name="status_bar_enabled">Enabled</string>
+    <string name="status_bar_time">Time</string>
+    <string name="status_bar_time_enabled">Enabled</string>
+    <string name="status_bar_time_format">Time Format</string>
+    <string name="status_bar_time_standard">12-Hour AM/PM</string>
+    <string name="status_bar_time_24h">24-Hour</string>
+    <string name="status_bar_show_seconds">Show Seconds</string>
+    <string name="status_bar_leading_zero">Leading Zero</string>
+    <string name="status_bar_connectivity">Connectivity</string>
+    <string name="status_bar_cellular">Cellular Signal</string>
+    <string name="status_bar_wifi">WiFi</string>
+    <string name="status_bar_bluetooth">Bluetooth</string>
+    <string name="status_bar_notification_indicator">Notification Indicator</string>
+    <string name="status_bar_on_press">On Press</string>
+    <string name="status_bar_notif_section">Section</string>
+    <string name="status_bar_notif_alignment">Alignment</string>
+    <string name="status_bar_notif_section_cellular">Connectivity</string>
+    <string name="status_bar_notif_section_time">Time</string>
+    <string name="status_bar_notif_section_battery">Battery</string>
+    <string name="status_bar_notif_alignment_before">Before</string>
+    <string name="status_bar_notif_alignment_after">After</string>
+    <string name="status_bar_battery">Battery</string>
+    <string name="status_bar_battery_enabled">Enabled</string>
+    <string name="status_bar_battery_percentage">Show Percentage</string>
+    <string name="status_bar_battery_icon">Show Icon</string>
 
     <!-- Notification list -->
     <string name="notification_list_title">Notifications</string>
@@ -102,6 +130,7 @@
     <string name="toast_added_to_app_drawer">Added to app drawer</string>
 
     <!-- Misc -->
+    <string name="app_count_status_bar_hint">You have the status bar enabled, I recommend using a maximum of 5 apps for it to look good :)</string>
     <string name="app_placeholder">App</string>
 
     <!-- Content descriptions -->

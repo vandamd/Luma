@@ -65,6 +65,10 @@ class LumaNotificationListener : NotificationListenerService() {
         instance = WeakReference(this)
     }
 
+    override fun onListenerConnected() {
+        _changeVersion.update { it + 1 }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         instance = WeakReference(null)
