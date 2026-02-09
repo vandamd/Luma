@@ -334,6 +334,9 @@ class HomeFragment :
         if (!show) {
             if (dot.visibility != View.GONE) {
                 oldParent?.removeView(dot)
+                if (oldParent == binding.statusBatteryLayout) {
+                    binding.statusBatteryLayout.baselineAlignedChildIndex = 0
+                }
                 dot.visibility = View.GONE
                 refreshSectionVisibility(oldParent)
             }
@@ -352,6 +355,9 @@ class HomeFragment :
         }
 
         oldParent?.removeView(dot)
+        if (oldParent == binding.statusBatteryLayout) {
+            binding.statusBatteryLayout.baselineAlignedChildIndex = 0
+        }
 
         dot.visibility = View.VISIBLE
         val section = prefs.notificationIndicatorSection
@@ -402,6 +408,8 @@ class HomeFragment :
                 if (before) {
                     marginLp.marginEnd = dp4
                     binding.statusBatteryLayout.addView(dot, 0, marginLp)
+                    binding.statusBatteryLayout.baselineAlignedChildIndex =
+                        binding.statusBatteryLayout.indexOfChild(binding.statusBatteryText)
                 } else {
                     marginLp.marginStart = dp4
                     binding.statusBatteryLayout.addView(dot, marginLp)
