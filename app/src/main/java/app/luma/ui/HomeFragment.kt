@@ -48,6 +48,7 @@ import app.luma.databinding.FragmentHomeBinding
 import app.luma.helper.*
 import app.luma.helper.LumaNotificationListener
 import app.luma.listener.SwipeTouchListener
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -67,6 +68,7 @@ class HomeFragment :
     private var bluetoothReceiver: BroadcastReceiver? = null
     private var telephonyCallback: TelephonyCallback? = null
     private var wifiNetworkCallback: ConnectivityManager.NetworkCallback? = null
+    private var clockJob: Job? = null
     private var notificationDotView: TextView? = null
 
     private var _binding: FragmentHomeBinding? = null
@@ -108,7 +110,6 @@ class HomeFragment :
         initSwipeTouchListener()
         initStatusBarClickListeners()
         observeNotificationChanges()
-        startClock()
     }
 
     override fun onStart() {
@@ -127,11 +128,13 @@ class HomeFragment :
         binding.statusBar.visibility = if (prefs.statusBarEnabled) View.VISIBLE else View.GONE
         startBatteryMonitor()
         startConnectivityMonitors()
+        startClock()
     }
 
     override fun onPause() {
         super.onPause()
         HomeCleanupHelper.setOnHomeCleanupCallback(null)
+        stopClock()
         stopBatteryMonitor()
         stopConnectivityMonitors()
     }
@@ -431,42 +434,48 @@ class HomeFragment :
     }
 
     private fun startClock() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            while (true) {
-                if (prefs.statusBarEnabled && prefs.timeEnabled) {
-                    binding.statusClock.visibility = View.VISIBLE
-                    val is24Hour = prefs.timeFormat == Prefs.TimeFormat.TwentyFourHour
-                    val showSec = prefs.showSeconds
-                    val cal = Calendar.getInstance()
-                    val hour =
-                        if (is24Hour) {
-                            cal.get(Calendar.HOUR_OF_DAY)
-                        } else {
-                            cal.get(Calendar.HOUR).let { if (it == 0) 12 else it }
-                        }
-                    val min = cal.get(Calendar.MINUTE)
-                    val sec = cal.get(Calendar.SECOND)
-                    val hStr =
-                        if (is24Hour || prefs.leadingZero) {
-                            "%02d".format(hour)
-                        } else {
-                            hour.toString()
-                        }
-                    val time =
-                        buildString {
-                            append("$hStr:${"%02d".format(min)}")
-                            if (showSec) append(":${"%02d".format(sec)}")
-                            if (!is24Hour) append(if (cal.get(Calendar.AM_PM) == Calendar.AM) " AM" else " PM")
-                        }
-                    binding.statusClock.text = time
-                    repositionClockDot()
-                } else {
-                    binding.statusClock.visibility = View.GONE
+        clockJob =
+            viewLifecycleOwner.lifecycleScope.launch {
+                while (true) {
+                    if (prefs.statusBarEnabled && prefs.timeEnabled) {
+                        binding.statusClock.visibility = View.VISIBLE
+                        val is24Hour = prefs.timeFormat == Prefs.TimeFormat.TwentyFourHour
+                        val showSec = prefs.showSeconds
+                        val cal = Calendar.getInstance()
+                        val hour =
+                            if (is24Hour) {
+                                cal.get(Calendar.HOUR_OF_DAY)
+                            } else {
+                                cal.get(Calendar.HOUR).let { if (it == 0) 12 else it }
+                            }
+                        val min = cal.get(Calendar.MINUTE)
+                        val sec = cal.get(Calendar.SECOND)
+                        val hStr =
+                            if (is24Hour || prefs.leadingZero) {
+                                "%02d".format(hour)
+                            } else {
+                                hour.toString()
+                            }
+                        val time =
+                            buildString {
+                                append("$hStr:${"%02d".format(min)}")
+                                if (showSec) append(":${"%02d".format(sec)}")
+                                if (!is24Hour) append(if (cal.get(Calendar.AM_PM) == Calendar.AM) " AM" else " PM")
+                            }
+                        binding.statusClock.text = time
+                        repositionClockDot()
+                    } else {
+                        binding.statusClock.visibility = View.GONE
+                    }
+                    val now = System.currentTimeMillis()
+                    delay(1000 - (now % 1000))
                 }
-                val now = System.currentTimeMillis()
-                delay(1000 - (now % 1000))
             }
-        }
+    }
+
+    private fun stopClock() {
+        clockJob?.cancel()
+        clockJob = null
     }
 
     private fun repositionClockDot() {
