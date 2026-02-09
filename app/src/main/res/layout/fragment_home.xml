@@ -12,6 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:orientation="horizontal"
+        android:baselineAligned="true"
+        android:baselineAlignedChildIndex="1"
         android:clipChildren="false"
         android:paddingTop="9dp"
         android:paddingBottom="8dp"
@@ -34,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/public_sans"
-                android:textSize="16sp"
+                android:textSize="13sp"
                 android:textColor="?attr/primaryColor"
                 android:layout_marginEnd="4dp"
                 android:visibility="gone"
@@ -51,8 +53,9 @@
             <ImageView
                 android:id="@+id/statusWifi"
                 android:layout_width="12dp"
-                android:layout_height="12dp"
+                android:layout_height="10dp"
                 android:layout_marginStart="6dp"
+                android:scaleType="fitXY"
                 android:baselineAlignBottom="true"
                 android:visibility="gone"
                 android:src="@drawable/wifi_full" />
