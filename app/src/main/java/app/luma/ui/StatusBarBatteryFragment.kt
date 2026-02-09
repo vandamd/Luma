@@ -53,11 +53,6 @@ class StatusBarBatteryFragment : Fragment() {
             ContentContainer {
                 Column(verticalArrangement = Arrangement.spacedBy(SettingsItemSpacing)) {
                     PrefsToggleTextButton(
-                        title = stringResource(R.string.status_bar_battery_enabled),
-                        initialValue = prefs.batteryEnabled,
-                        onValueChange = { prefs.batteryEnabled = it },
-                    )
-                    PrefsToggleTextButton(
                         title = stringResource(R.string.status_bar_battery_percentage),
                         initialValue = prefs.batteryPercentage,
                         onValueChange = { prefs.batteryPercentage = it },

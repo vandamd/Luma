@@ -81,7 +81,6 @@
     <string name="status_bar_notif_alignment_before">Before</string>
     <string name="status_bar_notif_alignment_after">After</string>
     <string name="status_bar_battery">Battery</string>
-    <string name="status_bar_battery_enabled">Enabled</string>
     <string name="status_bar_battery_percentage">Show Percentage</string>
     <string name="status_bar_battery_icon">Show Icon</string>
 

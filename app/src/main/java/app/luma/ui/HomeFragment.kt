@@ -405,7 +405,7 @@ class HomeFragment :
                 }
 
                 Prefs.NotificationIndicatorSection.Battery -> {
-                    if (prefs.batteryEnabled) {
+                    if (prefs.batteryPercentage || prefs.batteryIcon) {
                         prefs.notificationIndicatorAlignment == Prefs.NotificationIndicatorAlignment.Before
                     } else {
                         false
@@ -478,11 +478,12 @@ class HomeFragment :
             binding.statusConnectivityLayout.visibility = if (anyEnabled) View.VISIBLE else View.INVISIBLE
         }
         if (oldParent == binding.statusBatteryLayout && !hasDotIn(binding.statusBatteryLayout)) {
-            if (!prefs.batteryEnabled) {
-                binding.statusBatteryText.visibility = View.INVISIBLE
-                binding.statusBattery.visibility = View.INVISIBLE
+            val anyBatteryEnabled = prefs.batteryPercentage || prefs.batteryIcon
+            if (!anyBatteryEnabled) {
+                binding.statusBatteryText.visibility = View.GONE
+                binding.statusBattery.visibility = View.GONE
             }
-            binding.statusBatteryLayout.visibility = if (prefs.batteryEnabled) View.VISIBLE else View.INVISIBLE
+            binding.statusBatteryLayout.visibility = if (anyBatteryEnabled) View.VISIBLE else View.INVISIBLE
         }
     }
 
@@ -555,10 +556,10 @@ class HomeFragment :
     }
 
     private fun startBatteryMonitor() {
-        if (!prefs.statusBarEnabled || !prefs.batteryEnabled) {
-            binding.statusBatteryText.text = "100%"
-            binding.statusBatteryText.visibility = View.INVISIBLE
-            binding.statusBattery.visibility = View.INVISIBLE
+        if (!prefs.statusBarEnabled || (!prefs.batteryPercentage && !prefs.batteryIcon)) {
+            binding.statusBatteryText.visibility = View.GONE
+            binding.statusBattery.visibility = View.GONE
+            updateSectionBaseline(binding.statusBatteryLayout)
             binding.statusBatteryLayout.visibility =
                 if (hasDotIn(binding.statusBatteryLayout)) View.VISIBLE else View.INVISIBLE
             return
@@ -610,9 +611,10 @@ class HomeFragment :
                     else -> R.drawable.battery_empty
                 }
             }
-        binding.statusBatteryText.visibility = if (prefs.batteryPercentage) View.VISIBLE else View.INVISIBLE
+        binding.statusBatteryText.visibility = if (prefs.batteryPercentage) View.VISIBLE else View.GONE
         binding.statusBatteryText.text = "$pct%"
-        binding.statusBattery.visibility = if (prefs.batteryIcon) View.VISIBLE else View.INVISIBLE
+        binding.statusBattery.visibility = if (prefs.batteryIcon) View.VISIBLE else View.GONE
+        updateSectionBaseline(binding.statusBatteryLayout)
         binding.statusBattery.setImageResource(icon)
         binding.statusBattery.scaleType = if (charging) ImageView.ScaleType.FIT_CENTER else ImageView.ScaleType.FIT_END
         binding.statusBattery.scaleX = if (charging) 1f else -1f
@@ -634,6 +636,7 @@ class HomeFragment :
         if (prefs.cellularEnabled) startCellularMonitor() else hideCellular()
         if (prefs.wifiEnabled) startWifiMonitor() else hideWifi()
         if (prefs.bluetoothEnabled) startBluetoothMonitor() else hideBluetooth()
+        updateSectionBaseline(binding.statusConnectivityLayout)
     }
 
     private fun stopConnectivityMonitors() {
@@ -711,13 +714,22 @@ class HomeFragment :
 
                 else -> ""
             }
-        binding.statusNetworkType.visibility = if (label.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+        binding.statusNetworkType.visibility = if (label.isNotEmpty()) View.VISIBLE else View.GONE
         binding.statusNetworkType.text = label
     }
 
+    private fun updateSectionBaseline(layout: LinearLayout) {
+        for (i in 0 until layout.childCount) {
+            if (layout.getChildAt(i).visibility != View.GONE) {
+                layout.baselineAlignedChildIndex = i
+                return
+            }
+        }
+    }
+
     private fun hideCellular() {
-        binding.statusSignal.visibility = View.INVISIBLE
-        binding.statusNetworkType.visibility = View.INVISIBLE
+        binding.statusSignal.visibility = View.GONE
+        binding.statusNetworkType.visibility = View.GONE
     }
 
     private fun startWifiMonitor() {
@@ -773,7 +785,7 @@ class HomeFragment :
     }
 
     private fun hideWifi() {
-        binding.statusWifi.visibility = View.INVISIBLE
+        binding.statusWifi.visibility = View.GONE
     }
 
     private fun startBluetoothMonitor() {
@@ -806,7 +818,7 @@ class HomeFragment :
     }
 
     private fun hideBluetooth() {
-        binding.statusBluetooth.visibility = View.INVISIBLE
+        binding.statusBluetooth.visibility = View.GONE
     }
 
     private fun homeAppClicked(location: Int) {
