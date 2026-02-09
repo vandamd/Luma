@@ -107,6 +107,18 @@ class Prefs(
     private val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
     val mySerial: Long = userManager.getSerialNumberForUser(android.os.Process.myUserHandle())
 
+    private inline fun <reified T : Enum<T>> enumPref(
+        key: String,
+        default: T,
+    ): T {
+        val stored = prefs.getString(key, null) ?: return default
+        return try {
+            enumValueOf<T>(stored)
+        } catch (_: Exception) {
+            default
+        }
+    }
+
     init {
         migrateHiddenApps()
     }
@@ -301,16 +313,7 @@ class Prefs(
         set(value) = prefs.edit().putString(FONT_SIZE_OPTION, value.name).apply()
 
     var pageIndicatorPosition: PageIndicatorPosition
-        get() {
-            val stored =
-                prefs.getString(PAGE_INDICATOR_POSITION, null)
-                    ?: return PageIndicatorPosition.Left
-            return try {
-                PageIndicatorPosition.valueOf(stored)
-            } catch (_: Exception) {
-                PageIndicatorPosition.Left
-            }
-        }
+        get() = enumPref(PAGE_INDICATOR_POSITION, PageIndicatorPosition.Left)
         set(value) = prefs.edit().putString(PAGE_INDICATOR_POSITION, value.name).apply()
 
     var showNotificationIndicator: Boolean
@@ -322,29 +325,11 @@ class Prefs(
         set(value) = prefs.edit().putBoolean(SHOW_STATUS_BAR_NOTIFICATION_INDICATOR, value).apply()
 
     var notificationIndicatorSection: NotificationIndicatorSection
-        get() {
-            val stored =
-                prefs.getString(NOTIFICATION_INDICATOR_SECTION, null)
-                    ?: return NotificationIndicatorSection.Time
-            return try {
-                NotificationIndicatorSection.valueOf(stored)
-            } catch (_: Exception) {
-                NotificationIndicatorSection.Time
-            }
-        }
+        get() = enumPref(NOTIFICATION_INDICATOR_SECTION, NotificationIndicatorSection.Time)
         set(value) = prefs.edit().putString(NOTIFICATION_INDICATOR_SECTION, value.name).apply()
 
     var notificationIndicatorAlignment: NotificationIndicatorAlignment
-        get() {
-            val stored =
-                prefs.getString(NOTIFICATION_INDICATOR_ALIGNMENT, null)
-                    ?: return NotificationIndicatorAlignment.After
-            return try {
-                NotificationIndicatorAlignment.valueOf(stored)
-            } catch (_: Exception) {
-                NotificationIndicatorAlignment.After
-            }
-        }
+        get() = enumPref(NOTIFICATION_INDICATOR_ALIGNMENT, NotificationIndicatorAlignment.After)
         set(value) = prefs.edit().putString(NOTIFICATION_INDICATOR_ALIGNMENT, value.name).apply()
 
     var statusBarEnabled: Boolean
@@ -356,14 +341,7 @@ class Prefs(
         set(value) = prefs.edit().putBoolean(TIME_ENABLED, value).apply()
 
     var timeFormat: TimeFormat
-        get() {
-            val stored = prefs.getString(TIME_FORMAT, null) ?: return TimeFormat.TwentyFourHour
-            return try {
-                TimeFormat.valueOf(stored)
-            } catch (_: Exception) {
-                TimeFormat.TwentyFourHour
-            }
-        }
+        get() = enumPref(TIME_FORMAT, TimeFormat.TwentyFourHour)
         set(value) = prefs.edit().putString(TIME_FORMAT, value.name).apply()
 
     var showSeconds: Boolean

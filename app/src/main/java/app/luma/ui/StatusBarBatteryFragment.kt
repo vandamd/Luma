@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -19,9 +17,10 @@ import app.luma.data.Constants
 import app.luma.data.Prefs
 import app.luma.data.StatusBarSectionType
 import app.luma.ui.compose.SettingsComposable.ContentContainer
+import app.luma.ui.compose.SettingsComposable.PrefsToggleTextButton
 import app.luma.ui.compose.SettingsComposable.SelectorButton
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
-import app.luma.ui.compose.SettingsComposable.ToggleTextButton
+import app.luma.ui.compose.SettingsItemSpacing
 
 class StatusBarBatteryFragment : Fragment() {
     private lateinit var prefs: Prefs
@@ -51,51 +50,26 @@ class StatusBarBatteryFragment : Fragment() {
                 onBack = ::goBack,
             )
 
-            val enabledState = remember { mutableStateOf(prefs.batteryEnabled) }
-            val percentageState = remember { mutableStateOf(prefs.batteryPercentage) }
-            val iconState = remember { mutableStateOf(prefs.batteryIcon) }
-
             ContentContainer {
-                Column(verticalArrangement = Arrangement.spacedBy(33.5.dp)) {
-                    ToggleTextButton(
+                Column(verticalArrangement = Arrangement.spacedBy(SettingsItemSpacing)) {
+                    PrefsToggleTextButton(
                         title = stringResource(R.string.status_bar_battery_enabled),
-                        checked = enabledState.value,
-                        onCheckedChange = {
-                            enabledState.value = it
-                            prefs.batteryEnabled = it
-                        },
-                        onClick = {
-                            enabledState.value = !enabledState.value
-                            prefs.batteryEnabled = enabledState.value
-                        },
+                        initialValue = prefs.batteryEnabled,
+                        onValueChange = { prefs.batteryEnabled = it },
                     )
-                    ToggleTextButton(
+                    PrefsToggleTextButton(
                         title = stringResource(R.string.status_bar_battery_percentage),
-                        checked = percentageState.value,
-                        onCheckedChange = {
-                            percentageState.value = it
-                            prefs.batteryPercentage = it
-                        },
-                        onClick = {
-                            percentageState.value = !percentageState.value
-                            prefs.batteryPercentage = percentageState.value
-                        },
+                        initialValue = prefs.batteryPercentage,
+                        onValueChange = { prefs.batteryPercentage = it },
                     )
-                    ToggleTextButton(
+                    PrefsToggleTextButton(
                         title = stringResource(R.string.status_bar_battery_icon),
-                        checked = iconState.value,
-                        onCheckedChange = {
-                            iconState.value = it
-                            prefs.batteryIcon = it
-                        },
-                        onClick = {
-                            iconState.value = !iconState.value
-                            prefs.batteryIcon = iconState.value
-                        },
+                        initialValue = prefs.batteryIcon,
+                        onValueChange = { prefs.batteryIcon = it },
                     )
                     SelectorButton(
                         label = stringResource(R.string.status_bar_on_press),
-                        value = actionDisplayValue(actionState.value, StatusBarSectionType.BATTERY),
+                        value = actionDisplayValue(actionState.value, prefs, StatusBarSectionType.BATTERY),
                         onClick = {
                             findNavController().navigate(
                                 R.id.action_statusBarBatteryFragment_to_gestureActionFragment,
@@ -107,15 +81,4 @@ class StatusBarBatteryFragment : Fragment() {
             }
         }
     }
-
-    @Composable
-    private fun actionDisplayValue(
-        action: Constants.Action,
-        section: StatusBarSectionType,
-    ): String =
-        when (action) {
-            Constants.Action.OpenApp -> stringResource(R.string.action_open_app_name, prefs.getSectionApp(section).appLabel)
-            Constants.Action.Disabled -> stringResource(R.string.action_disabled)
-            else -> action.displayName()
-        }
 }

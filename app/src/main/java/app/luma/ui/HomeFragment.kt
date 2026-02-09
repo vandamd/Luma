@@ -180,7 +180,6 @@ class HomeFragment :
                     try {
                         findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
                     } catch (_: Exception) {
-                        // Navigation already in progress, ignore
                     }
                 },
             ),
@@ -213,26 +212,22 @@ class HomeFragment :
     }
 
     private fun updatePageIndicator() {
-        // Remove any existing indicator to avoid duplicates
         binding.mainLayout.findViewWithTag<View>("pageIndicator")?.let {
             binding.mainLayout.removeView(it)
             if (it === pageIndicatorLayout) pageIndicatorLayout = null
         }
 
-        // Only show indicator if there are 2 or more pages and not hidden
         if (totalPages < 2) {
             currentPage = 0
             pageIndicatorLayout = null
             return
         }
 
-        // If hidden, just return without creating indicators but keep page logic
         if (prefs.pageIndicatorPosition == Prefs.PageIndicatorPosition.Hidden) {
             pageIndicatorLayout = null
             return
         }
 
-        // Always create a fresh indicator layout
         val newLayout =
             LinearLayout(requireContext()).apply {
                 orientation = LinearLayout.VERTICAL
@@ -244,9 +239,7 @@ class HomeFragment :
         val circleMargin = (0.8 * density).toInt()
         val circleVerticalMargin = (7.8 * density).toInt()
 
-        // Add circles for each page
         for (i in 0 until totalPages) {
-            val index = i
             val circle =
                 View(requireContext()).apply {
                     layoutParams =
@@ -255,8 +248,8 @@ class HomeFragment :
                         }
                     isClickable = true
                     isFocusable = true
-                    setOnClickListener { switchToPage(index) }
-                    setBackgroundResource(if (index == currentPage) R.drawable.filled_circle else R.drawable.hollow_circle)
+                    setOnClickListener { switchToPage(i) }
+                    setBackgroundResource(if (i == currentPage) R.drawable.filled_circle else R.drawable.hollow_circle)
                 }
             newLayout.addView(circle)
         }
@@ -328,18 +321,30 @@ class HomeFragment :
     private fun hasDotIn(layout: ViewGroup): Boolean =
         notificationDotView?.let { it.parent == layout && it.visibility == View.VISIBLE } == true
 
+    private fun ImageView.showTinted(icon: Int) {
+        visibility = View.VISIBLE
+        setImageResource(icon)
+        setColorFilter(binding.statusClock.currentTextColor)
+    }
+
+    private fun detachDot(
+        dot: View,
+        parent: ViewGroup?,
+    ) {
+        parent?.removeView(dot)
+        if (parent == binding.statusBatteryLayout) {
+            binding.statusBatteryLayout.baselineAlignedChildIndex = 0
+        }
+    }
+
     private fun updateNotificationDot(hasNotifications: Boolean) {
         val show = hasNotifications && prefs.statusBarEnabled && prefs.showStatusBarNotificationIndicator
         val dot = notificationDotView ?: createNotificationDot().also { notificationDotView = it }
-
         val oldParent = dot.parent as? ViewGroup
 
         if (!show) {
             if (dot.visibility != View.GONE) {
-                oldParent?.removeView(dot)
-                if (oldParent == binding.statusBatteryLayout) {
-                    binding.statusBatteryLayout.baselineAlignedChildIndex = 0
-                }
+                detachDot(dot, oldParent)
                 dot.visibility = View.GONE
                 refreshSectionVisibility(oldParent)
             }
@@ -357,10 +362,7 @@ class HomeFragment :
             return
         }
 
-        oldParent?.removeView(dot)
-        if (oldParent == binding.statusBatteryLayout) {
-            binding.statusBatteryLayout.baselineAlignedChildIndex = 0
-        }
+        detachDot(dot, oldParent)
 
         dot.visibility = View.VISIBLE
         val section = prefs.notificationIndicatorSection
@@ -616,9 +618,7 @@ class HomeFragment :
                 3 -> R.drawable.signal_3
                 else -> R.drawable.signal_4
             }
-        binding.statusSignal.visibility = View.VISIBLE
-        binding.statusSignal.setImageResource(icon)
-        binding.statusSignal.setColorFilter(binding.statusClock.currentTextColor)
+        binding.statusSignal.showTinted(icon)
     }
 
     private fun updateNetworkTypeFromInt(type: Int) {
@@ -639,16 +639,10 @@ class HomeFragment :
 
                 TelephonyManager.NETWORK_TYPE_GPRS -> "G"
 
-                TelephonyManager.NETWORK_TYPE_UNKNOWN -> ""
-
                 else -> ""
             }
-        if (label.isNotEmpty()) {
-            binding.statusNetworkType.visibility = View.VISIBLE
-            binding.statusNetworkType.text = label
-        } else {
-            binding.statusNetworkType.visibility = View.GONE
-        }
+        binding.statusNetworkType.visibility = if (label.isNotEmpty()) View.VISIBLE else View.GONE
+        binding.statusNetworkType.text = label
     }
 
     private fun hideCellular() {
@@ -682,9 +676,8 @@ class HomeFragment :
             }
         wifiNetworkCallback = callback
         cm.registerNetworkCallback(request, callback)
-        val activeNet = cm.activeNetwork
-        val activeCaps = if (activeNet != null) cm.getNetworkCapabilities(activeNet) else null
-        if (activeCaps != null && activeCaps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+        val activeCaps = cm.activeNetwork?.let { cm.getNetworkCapabilities(it) }
+        if (activeCaps?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true) {
             updateWifiIcon(wm.calculateSignalLevel(activeCaps.signalStrength))
         } else {
             hideWifi()
@@ -701,15 +694,12 @@ class HomeFragment :
 
     private fun updateWifiIcon(level: Int) {
         val icon =
-            when (level) {
-                0 -> R.drawable.wifi_1
-                1 -> R.drawable.wifi_1
-                2 -> R.drawable.wifi_2
+            when {
+                level <= 1 -> R.drawable.wifi_1
+                level == 2 -> R.drawable.wifi_2
                 else -> R.drawable.wifi_full
             }
-        binding.statusWifi.visibility = View.VISIBLE
-        binding.statusWifi.setImageResource(icon)
-        binding.statusWifi.setColorFilter(binding.statusClock.currentTextColor)
+        binding.statusWifi.showTinted(icon)
     }
 
     private fun hideWifi() {
@@ -742,9 +732,7 @@ class HomeFragment :
     }
 
     private fun showBluetooth() {
-        binding.statusBluetooth.visibility = View.VISIBLE
-        binding.statusBluetooth.setImageResource(R.drawable.bluetooth)
-        binding.statusBluetooth.setColorFilter(binding.statusClock.currentTextColor)
+        binding.statusBluetooth.showTinted(R.drawable.bluetooth)
     }
 
     private fun hideBluetooth() {
@@ -782,7 +770,6 @@ class HomeFragment :
         }
     }
 
-    // This function handles all swipe actions that a independent of the actual swipe direction
     @SuppressLint("NewApi")
     private fun handleOtherAction(action: Action) {
         when (action) {
@@ -798,9 +785,6 @@ class HomeFragment :
                 showAppList(AppDrawerFlag.LaunchApp)
             }
 
-            Action.OpenApp -> {}
-
-            // this should be handled in the respective onSwipe[Down,Right,Left] functions
             Action.OpenQuickSettings -> {
                 expandQuickSettings(requireContext())
             }
@@ -816,18 +800,14 @@ class HomeFragment :
                 }
             }
 
-            Action.Disabled -> {}
+            Action.OpenApp, Action.Disabled -> {}
         }
     }
 
     private fun lockPhone() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val actionService = ActionService.instance()
-            if (actionService != null) {
-                actionService.lockScreen()
-            } else {
-                openAccessibilitySettings(requireContext())
-            }
+            ActionService.instance()?.lockScreen()
+                ?: openAccessibilitySettings(requireContext())
         } else {
             showToast(requireContext(), getString(R.string.toast_lock_requires_android_9), Toast.LENGTH_LONG)
         }
@@ -885,12 +865,10 @@ class HomeFragment :
             override fun onClick(view: View) = onClick(view)
         }
 
-    // Update the number of app buttons displayed for the current page
     private fun updateAppCountForPage(appsCount: Int) {
         val currentAppCount = binding.homeAppsLayout.childCount
 
         if (currentAppCount < appsCount) {
-            // Add more app buttons
             for (i in currentAppCount until appsCount) {
                 val view = layoutInflater.inflate(R.layout.home_app_button, null) as TextView
                 view.apply {
@@ -911,12 +889,10 @@ class HomeFragment :
                 binding.homeAppsLayout.addView(view)
             }
         } else if (currentAppCount > appsCount) {
-            // Remove excess app buttons
             binding.homeAppsLayout.removeViews(appsCount, currentAppCount - appsCount)
         }
     }
 
-    // Helper function to get app display name with notification indicator
     private fun getAppDisplayName(appModel: AppModel): String {
         val appName = if (appModel.appAlias.isNotEmpty()) appModel.appAlias else appModel.appLabel
         if (!prefs.showNotificationIndicator) return appName
@@ -930,7 +906,6 @@ class HomeFragment :
         val appsPerPage = prefs.getAppsPerPage(currentPage + 1)
         val startIndex = currentPage * HomeLayout.APPS_PER_PAGE
 
-        // Update the number of app buttons if needed
         updateAppCountForPage(appsPerPage)
 
         for (i in 0 until appsPerPage) {

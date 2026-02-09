@@ -22,11 +22,13 @@ import androidx.compose.ui.unit.dp
 import app.luma.style.SettingsTheme
 import kotlin.math.max
 
+val SettingsItemSpacing = 33.5.dp
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CustomScrollView(
     modifier: Modifier = Modifier,
-    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(33.5.dp),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(SettingsItemSpacing),
     content: @Composable () -> Unit,
 ) {
     var contentHeightPx by remember { mutableStateOf(0) }

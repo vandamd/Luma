@@ -14,9 +14,13 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import app.luma.R
+import app.luma.data.Constants
 import app.luma.data.Prefs
+import app.luma.data.StatusBarSectionType
 import app.luma.helper.performHapticFeedback
 import app.luma.style.SettingsTheme
 import app.luma.style.isDarkTheme
@@ -94,12 +98,21 @@ private fun SwipeBackContainer(
     }
 }
 
-/**
- * Navigates back using the activity's back press dispatcher.
- */
 fun Fragment.goBack() {
     requireActivity().onBackPressedDispatcher.onBackPressed()
 }
+
+@Composable
+fun actionDisplayValue(
+    action: Constants.Action,
+    prefs: Prefs,
+    section: StatusBarSectionType,
+): String =
+    when (action) {
+        Constants.Action.OpenApp -> stringResource(R.string.action_open_app_name, prefs.getSectionApp(section).appLabel)
+        Constants.Action.Disabled -> stringResource(R.string.action_disabled)
+        else -> action.displayName()
+    }
 
 fun Modifier.noRippleClickable(
     enabled: Boolean = true,

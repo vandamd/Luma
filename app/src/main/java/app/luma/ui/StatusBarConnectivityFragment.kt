@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -19,9 +17,10 @@ import app.luma.data.Constants
 import app.luma.data.Prefs
 import app.luma.data.StatusBarSectionType
 import app.luma.ui.compose.SettingsComposable.ContentContainer
+import app.luma.ui.compose.SettingsComposable.PrefsToggleTextButton
 import app.luma.ui.compose.SettingsComposable.SelectorButton
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
-import app.luma.ui.compose.SettingsComposable.ToggleTextButton
+import app.luma.ui.compose.SettingsItemSpacing
 
 class StatusBarConnectivityFragment : Fragment() {
     private lateinit var prefs: Prefs
@@ -51,51 +50,26 @@ class StatusBarConnectivityFragment : Fragment() {
                 onBack = ::goBack,
             )
 
-            val cellularState = remember { mutableStateOf(prefs.cellularEnabled) }
-            val wifiState = remember { mutableStateOf(prefs.wifiEnabled) }
-            val bluetoothState = remember { mutableStateOf(prefs.bluetoothEnabled) }
-
             ContentContainer {
-                Column(verticalArrangement = Arrangement.spacedBy(33.5.dp)) {
-                    ToggleTextButton(
+                Column(verticalArrangement = Arrangement.spacedBy(SettingsItemSpacing)) {
+                    PrefsToggleTextButton(
                         title = stringResource(R.string.status_bar_cellular),
-                        checked = cellularState.value,
-                        onCheckedChange = {
-                            cellularState.value = it
-                            prefs.cellularEnabled = it
-                        },
-                        onClick = {
-                            cellularState.value = !cellularState.value
-                            prefs.cellularEnabled = cellularState.value
-                        },
+                        initialValue = prefs.cellularEnabled,
+                        onValueChange = { prefs.cellularEnabled = it },
                     )
-                    ToggleTextButton(
+                    PrefsToggleTextButton(
                         title = stringResource(R.string.status_bar_wifi),
-                        checked = wifiState.value,
-                        onCheckedChange = {
-                            wifiState.value = it
-                            prefs.wifiEnabled = it
-                        },
-                        onClick = {
-                            wifiState.value = !wifiState.value
-                            prefs.wifiEnabled = wifiState.value
-                        },
+                        initialValue = prefs.wifiEnabled,
+                        onValueChange = { prefs.wifiEnabled = it },
                     )
-                    ToggleTextButton(
+                    PrefsToggleTextButton(
                         title = stringResource(R.string.status_bar_bluetooth),
-                        checked = bluetoothState.value,
-                        onCheckedChange = {
-                            bluetoothState.value = it
-                            prefs.bluetoothEnabled = it
-                        },
-                        onClick = {
-                            bluetoothState.value = !bluetoothState.value
-                            prefs.bluetoothEnabled = bluetoothState.value
-                        },
+                        initialValue = prefs.bluetoothEnabled,
+                        onValueChange = { prefs.bluetoothEnabled = it },
                     )
                     SelectorButton(
                         label = stringResource(R.string.status_bar_on_press),
-                        value = actionDisplayValue(actionState.value, StatusBarSectionType.CELLULAR),
+                        value = actionDisplayValue(actionState.value, prefs, StatusBarSectionType.CELLULAR),
                         onClick = {
                             findNavController().navigate(
                                 R.id.action_statusBarConnectivityFragment_to_gestureActionFragment,
@@ -107,15 +81,4 @@ class StatusBarConnectivityFragment : Fragment() {
             }
         }
     }
-
-    @Composable
-    private fun actionDisplayValue(
-        action: Constants.Action,
-        section: StatusBarSectionType,
-    ): String =
-        when (action) {
-            Constants.Action.OpenApp -> stringResource(R.string.action_open_app_name, prefs.getSectionApp(section).appLabel)
-            Constants.Action.Disabled -> stringResource(R.string.action_disabled)
-            else -> action.displayName()
-        }
 }

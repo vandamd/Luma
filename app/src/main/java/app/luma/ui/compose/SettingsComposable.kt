@@ -146,6 +146,29 @@ object SettingsComposable {
     }
 
     @Composable
+    fun PrefsToggleTextButton(
+        title: String,
+        initialValue: Boolean,
+        onValueChange: (Boolean) -> Unit,
+        fontSize: TextUnit = TextUnit.Unspecified,
+    ) {
+        val state = remember { mutableStateOf(initialValue) }
+        ToggleTextButton(
+            title = title,
+            checked = state.value,
+            onCheckedChange = {
+                state.value = it
+                onValueChange(it)
+            },
+            onClick = {
+                state.value = !state.value
+                onValueChange(state.value)
+            },
+            fontSize = fontSize,
+        )
+    }
+
+    @Composable
     fun CustomToggleSwitch(
         checked: Boolean,
         onCheckedChange: (Boolean) -> Unit,
