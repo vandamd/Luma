@@ -14,6 +14,6 @@ class BaselineFrameLayout
         override fun getBaseline(): Int {
             val child = getChildAt(0) ?: return super.getBaseline()
             val baseline = child.baseline
-            return if (baseline != -1) baseline + child.top else super.getBaseline()
+            return if (baseline != -1) baseline + child.top else 0
         }
     }

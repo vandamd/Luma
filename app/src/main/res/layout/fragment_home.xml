@@ -39,7 +39,7 @@
                 android:textSize="13sp"
                 android:textColor="?attr/primaryColor"
                 android:layout_marginEnd="4dp"
-                android:visibility="gone"
+                android:visibility="invisible"
                 tools:text="LTE" />
 
             <ImageView

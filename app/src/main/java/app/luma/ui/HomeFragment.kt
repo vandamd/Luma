@@ -352,6 +352,25 @@ class HomeFragment :
             return
         }
 
+        when (prefs.notificationIndicatorSection) {
+            Prefs.NotificationIndicatorSection.Time -> {
+                if (prefs.timeEnabled) {
+                    binding.statusClock.visibility = View.VISIBLE
+                } else {
+                    binding.statusClock.text = clockPlaceholder()
+                    binding.statusClock.visibility = View.INVISIBLE
+                }
+            }
+
+            Prefs.NotificationIndicatorSection.Connectivity -> {
+                binding.statusConnectivityLayout.visibility = View.VISIBLE
+            }
+
+            Prefs.NotificationIndicatorSection.Battery -> {
+                binding.statusBatteryLayout.visibility = View.VISIBLE
+            }
+        }
+
         val targetParent: ViewGroup =
             when (prefs.notificationIndicatorSection) {
                 Prefs.NotificationIndicatorSection.Connectivity -> binding.statusConnectivityLayout
@@ -374,7 +393,29 @@ class HomeFragment :
                 Prefs.NotificationIndicatorSection.Battery -> 16f
             }
         dot.setTextSize(TypedValue.COMPLEX_UNIT_SP, dotSize)
-        val before = prefs.notificationIndicatorAlignment == Prefs.NotificationIndicatorAlignment.Before
+        val anyConnectivityEnabled = prefs.cellularEnabled || prefs.wifiEnabled || prefs.bluetoothEnabled
+        val before =
+            when (section) {
+                Prefs.NotificationIndicatorSection.Connectivity -> {
+                    if (anyConnectivityEnabled) {
+                        prefs.notificationIndicatorAlignment == Prefs.NotificationIndicatorAlignment.Before
+                    } else {
+                        true
+                    }
+                }
+
+                Prefs.NotificationIndicatorSection.Battery -> {
+                    if (prefs.batteryEnabled) {
+                        prefs.notificationIndicatorAlignment == Prefs.NotificationIndicatorAlignment.Before
+                    } else {
+                        false
+                    }
+                }
+
+                Prefs.NotificationIndicatorSection.Time -> {
+                    prefs.notificationIndicatorAlignment == Prefs.NotificationIndicatorAlignment.Before
+                }
+            }
         val marginLp =
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -400,12 +441,17 @@ class HomeFragment :
                     FrameLayout.LayoutParams(
                         FrameLayout.LayoutParams.WRAP_CONTENT,
                         FrameLayout.LayoutParams.WRAP_CONTENT,
-                        Gravity.BOTTOM,
+                        if (prefs.timeEnabled) Gravity.BOTTOM else Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL,
                     )
                 binding.statusClockLayout.addView(dot, frameLp)
                 dot.post {
                     if (_binding == null) return@post
-                    dot.translationX = if (before) -(dot.width + dp4).toFloat() else (binding.statusClock.width + dp4).toFloat()
+                    dot.translationX =
+                        if (prefs.timeEnabled) {
+                            if (before) -(dot.width + dp4).toFloat() else (binding.statusClock.width + dp4).toFloat()
+                        } else {
+                            0f
+                        }
                 }
             }
 
@@ -432,6 +478,10 @@ class HomeFragment :
             binding.statusConnectivityLayout.visibility = if (anyEnabled) View.VISIBLE else View.INVISIBLE
         }
         if (oldParent == binding.statusBatteryLayout && !hasDotIn(binding.statusBatteryLayout)) {
+            if (!prefs.batteryEnabled) {
+                binding.statusBatteryText.visibility = View.INVISIBLE
+                binding.statusBattery.visibility = View.INVISIBLE
+            }
             binding.statusBatteryLayout.visibility = if (prefs.batteryEnabled) View.VISIBLE else View.INVISIBLE
         }
     }
@@ -468,12 +518,24 @@ class HomeFragment :
                         binding.statusClock.text = time
                         repositionClockDot()
                     } else {
-                        binding.statusClock.visibility = View.GONE
+                        binding.statusClock.text = clockPlaceholder()
+                        binding.statusClock.visibility = View.INVISIBLE
                     }
                     val now = System.currentTimeMillis()
                     delay(1000 - (now % 1000))
                 }
             }
+    }
+
+    private fun clockPlaceholder(): String {
+        val is24Hour = prefs.timeFormat == Prefs.TimeFormat.TwentyFourHour
+        val showSec = prefs.showSeconds
+        val hour = if (is24Hour || prefs.leadingZero) "00" else "12"
+        return buildString {
+            append("$hour:00")
+            if (showSec) append(":00")
+            if (!is24Hour) append(" AM")
+        }
     }
 
     private fun stopClock() {
@@ -494,6 +556,9 @@ class HomeFragment :
 
     private fun startBatteryMonitor() {
         if (!prefs.statusBarEnabled || !prefs.batteryEnabled) {
+            binding.statusBatteryText.text = "100%"
+            binding.statusBatteryText.visibility = View.INVISIBLE
+            binding.statusBattery.visibility = View.INVISIBLE
             binding.statusBatteryLayout.visibility =
                 if (hasDotIn(binding.statusBatteryLayout)) View.VISIBLE else View.INVISIBLE
             return
@@ -545,9 +610,9 @@ class HomeFragment :
                     else -> R.drawable.battery_empty
                 }
             }
-        binding.statusBatteryText.visibility = if (prefs.batteryPercentage) View.VISIBLE else View.GONE
+        binding.statusBatteryText.visibility = if (prefs.batteryPercentage) View.VISIBLE else View.INVISIBLE
         binding.statusBatteryText.text = "$pct%"
-        binding.statusBattery.visibility = if (prefs.batteryIcon) View.VISIBLE else View.GONE
+        binding.statusBattery.visibility = if (prefs.batteryIcon) View.VISIBLE else View.INVISIBLE
         binding.statusBattery.setImageResource(icon)
         binding.statusBattery.scaleType = if (charging) ImageView.ScaleType.FIT_CENTER else ImageView.ScaleType.FIT_END
         binding.statusBattery.scaleX = if (charging) 1f else -1f
@@ -561,6 +626,9 @@ class HomeFragment :
             return
         }
         val anyEnabled = prefs.cellularEnabled || prefs.wifiEnabled || prefs.bluetoothEnabled
+        if (!anyEnabled) {
+            binding.statusNetworkType.text = "LTE"
+        }
         binding.statusConnectivityLayout.visibility =
             if (anyEnabled || hasDotIn(binding.statusConnectivityLayout)) View.VISIBLE else View.INVISIBLE
         if (prefs.cellularEnabled) startCellularMonitor() else hideCellular()
@@ -642,13 +710,13 @@ class HomeFragment :
 
                 else -> ""
             }
-        binding.statusNetworkType.visibility = if (label.isNotEmpty()) View.VISIBLE else View.GONE
+        binding.statusNetworkType.visibility = if (label.isNotEmpty()) View.VISIBLE else View.INVISIBLE
         binding.statusNetworkType.text = label
     }
 
     private fun hideCellular() {
-        binding.statusSignal.visibility = View.GONE
-        binding.statusNetworkType.visibility = View.GONE
+        binding.statusSignal.visibility = View.INVISIBLE
+        binding.statusNetworkType.visibility = View.INVISIBLE
     }
 
     private fun startWifiMonitor() {
@@ -704,7 +772,7 @@ class HomeFragment :
     }
 
     private fun hideWifi() {
-        binding.statusWifi.visibility = View.GONE
+        binding.statusWifi.visibility = View.INVISIBLE
     }
 
     private fun startBluetoothMonitor() {
@@ -737,7 +805,7 @@ class HomeFragment :
     }
 
     private fun hideBluetooth() {
-        binding.statusBluetooth.visibility = View.GONE
+        binding.statusBluetooth.visibility = View.INVISIBLE
     }
 
     private fun homeAppClicked(location: Int) {
