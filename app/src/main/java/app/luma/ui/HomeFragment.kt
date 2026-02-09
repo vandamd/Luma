@@ -355,6 +355,13 @@ class HomeFragment :
 
         dot.visibility = View.VISIBLE
         val section = prefs.notificationIndicatorSection
+        val dotSize =
+            when (section) {
+                Prefs.NotificationIndicatorSection.Cellular -> 13f
+                Prefs.NotificationIndicatorSection.Time -> 19.4f
+                Prefs.NotificationIndicatorSection.Battery -> 16f
+            }
+        dot.setTextSize(TypedValue.COMPLEX_UNIT_SP, dotSize)
         val before = prefs.notificationIndicatorAlignment == Prefs.NotificationIndicatorAlignment.Before
         val marginLp =
             LinearLayout.LayoutParams(
