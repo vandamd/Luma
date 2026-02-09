@@ -330,13 +330,28 @@ class HomeFragment :
         val dot = notificationDotView ?: createNotificationDot().also { notificationDotView = it }
 
         val oldParent = dot.parent as? ViewGroup
-        oldParent?.removeView(dot)
 
         if (!show) {
-            dot.visibility = View.GONE
-            refreshSectionVisibility(oldParent)
+            if (dot.visibility != View.GONE) {
+                oldParent?.removeView(dot)
+                dot.visibility = View.GONE
+                refreshSectionVisibility(oldParent)
+            }
             return
         }
+
+        val targetParent: ViewGroup =
+            when (prefs.notificationIndicatorSection) {
+                Prefs.NotificationIndicatorSection.Cellular -> binding.statusConnectivityLayout
+                Prefs.NotificationIndicatorSection.Time -> binding.statusClockLayout
+                Prefs.NotificationIndicatorSection.Battery -> binding.statusBatteryLayout
+            }
+        if (oldParent == targetParent && dot.visibility == View.VISIBLE) {
+            repositionClockDot()
+            return
+        }
+
+        oldParent?.removeView(dot)
 
         dot.visibility = View.VISIBLE
         val section = prefs.notificationIndicatorSection
