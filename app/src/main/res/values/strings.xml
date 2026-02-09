@@ -26,6 +26,7 @@
     <string name="action_open_app_name">Open %1$s</string>
 
     <!-- Gestures screen -->
+    <string name="settings_gesture_haptic">Haptic feedback</string>
     <string name="gesture_swipe_left">Swipe left</string>
     <string name="gesture_swipe_right">Swipe right</string>
     <string name="gesture_swipe_down">Swipe down</string>

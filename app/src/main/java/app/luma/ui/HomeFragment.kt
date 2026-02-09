@@ -817,6 +817,8 @@ class HomeFragment :
 
     private fun handleGesture(gestureType: GestureType) {
         val action = prefs.getGestureAction(gestureType)
+        if (action == Action.Disabled) return
+        if (prefs.gestureHaptic) performHapticFeedback(requireContext())
         if (action == Action.OpenApp) {
             openGestureApp(gestureType)
         } else {
@@ -826,6 +828,7 @@ class HomeFragment :
 
     private fun handleSwipeUp() {
         if (totalPages > 1 && currentPage < totalPages - 1) {
+            if (prefs.gestureHaptic) performHapticFeedback(requireContext())
             switchToPage(currentPage + 1)
         } else {
             handleGesture(GestureType.SWIPE_UP)
@@ -834,6 +837,7 @@ class HomeFragment :
 
     private fun handleSwipeDown() {
         if (totalPages > 1 && currentPage > 0) {
+            if (prefs.gestureHaptic) performHapticFeedback(requireContext())
             switchToPage(currentPage - 1)
         } else {
             handleGesture(GestureType.SWIPE_DOWN)

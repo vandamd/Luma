@@ -81,6 +81,7 @@ private const val BATTERY_ICON = "battery_icon"
 private const val CELLULAR_ENABLED = "cellular_enabled"
 private const val WIFI_ENABLED = "wifi_enabled"
 private const val BLUETOOTH_ENABLED = "bluetooth_enabled"
+private const val GESTURE_HAPTIC = "GESTURE_HAPTIC"
 private const val FONT_SIZE_OPTION = "font_size_option"
 
 class Prefs(
@@ -304,6 +305,10 @@ class Prefs(
             .putLong("${APP_USER_SERIAL}_$id", serial)
             .apply()
     }
+
+    var gestureHaptic: Boolean
+        get() = prefs.getBoolean(GESTURE_HAPTIC, true)
+        set(value) = prefs.edit().putBoolean(GESTURE_HAPTIC, value).apply()
 
     var fontSizeOption: FontSizeOption
         get() {

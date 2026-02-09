@@ -18,6 +18,7 @@ import app.luma.data.GestureType
 import app.luma.data.Prefs
 import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.ContentContainer
+import app.luma.ui.compose.SettingsComposable.PrefsToggleTextButton
 import app.luma.ui.compose.SettingsComposable.SelectorButton
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 
@@ -45,6 +46,11 @@ class GesturesFragment : Fragment() {
 
             ContentContainer {
                 CustomScrollView(verticalArrangement = Arrangement.spacedBy(33.5.dp)) {
+                    PrefsToggleTextButton(
+                        title = stringResource(R.string.settings_gesture_haptic),
+                        initialValue = prefs.gestureHaptic,
+                        onValueChange = { prefs.gestureHaptic = it },
+                    )
                     GestureButton(stringResource(R.string.gesture_swipe_left), GestureType.SWIPE_LEFT)
                     GestureButton(stringResource(R.string.gesture_swipe_right), GestureType.SWIPE_RIGHT)
                     GestureButton(stringResource(R.string.gesture_swipe_down), GestureType.SWIPE_DOWN)
