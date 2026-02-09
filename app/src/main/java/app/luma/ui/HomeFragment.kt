@@ -666,6 +666,7 @@ class HomeFragment :
         try {
             tm.registerTelephonyCallback(requireContext().mainExecutor, callback)
         } catch (_: SecurityException) {
+            telephonyCallback = null
             hideCellular()
         }
     }
