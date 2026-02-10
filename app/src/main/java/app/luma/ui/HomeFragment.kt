@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
@@ -55,9 +54,6 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 
 private const val TAG = "HomeFragment"
-private const val PREF_KEY_STATUS_BAR_ENABLED = "status_bar_enabled"
-private const val PREF_KEY_BATTERY_PERCENTAGE = "battery_percentage"
-private const val PREF_KEY_BATTERY_ICON = "battery_icon"
 
 class HomeFragment :
     Fragment(),
@@ -74,21 +70,6 @@ class HomeFragment :
     private var wifiNetworkCallback: ConnectivityManager.NetworkCallback? = null
     private var clockJob: Job? = null
     private var notificationDotView: TextView? = null
-    private val prefsChangeListener =
-        SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            if (
-                _binding != null &&
-                (
-                    key == PREF_KEY_STATUS_BAR_ENABLED ||
-                        key == PREF_KEY_BATTERY_PERCENTAGE ||
-                        key == PREF_KEY_BATTERY_ICON
-                )
-            ) {
-                binding.statusBar.visibility = if (prefs.statusBarEnabled) View.VISIBLE else View.GONE
-                stopBatteryMonitor()
-                startBatteryMonitor()
-            }
-        }
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -138,7 +119,6 @@ class HomeFragment :
 
     override fun onResume() {
         super.onResume()
-        prefs.registerOnSharedPreferenceChangeListener(prefsChangeListener)
         HomeCleanupHelper.setOnHomeCleanupCallback { refreshAppNames() }
         totalPages = prefs.homePages
         if (currentPage >= totalPages) currentPage = totalPages - 1
@@ -153,7 +133,6 @@ class HomeFragment :
 
     override fun onPause() {
         super.onPause()
-        prefs.unregisterOnSharedPreferenceChangeListener(prefsChangeListener)
         HomeCleanupHelper.setOnHomeCleanupCallback(null)
         stopClock()
         stopBatteryMonitor()
