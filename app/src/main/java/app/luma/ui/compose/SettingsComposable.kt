@@ -129,6 +129,7 @@ object SettingsComposable {
         checked: Boolean,
         onCheckedChange: (Boolean) -> Unit,
         onClick: () -> Unit,
+        enabled: Boolean = true,
         fontSize: TextUnit = TextUnit.Unspecified,
     ) {
         Row(
@@ -138,9 +139,9 @@ object SettingsComposable {
                     .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            CustomToggleSwitch(checked = checked, onCheckedChange = onCheckedChange)
+            CustomToggleSwitch(checked = checked, onCheckedChange = onCheckedChange, enabled = enabled)
             Box(modifier = Modifier.offset(y = (5).dp)) {
-                SimpleTextButton(title = title, fontSize = fontSize, onClick = onClick)
+                SimpleTextButton(title = title, fontSize = fontSize, enabled = enabled, onClick = onClick)
             }
         }
     }
@@ -150,6 +151,7 @@ object SettingsComposable {
         title: String,
         initialValue: Boolean,
         onValueChange: (Boolean) -> Unit,
+        enabled: Boolean = true,
         fontSize: TextUnit = TextUnit.Unspecified,
     ) {
         val state = remember { mutableStateOf(initialValue) }
@@ -164,6 +166,7 @@ object SettingsComposable {
                 state.value = !state.value
                 onValueChange(state.value)
             },
+            enabled = enabled,
             fontSize = fontSize,
         )
     }
@@ -257,6 +260,7 @@ object SettingsComposable {
         title: String,
         fontSize: TextUnit = TextUnit.Unspecified,
         underline: Boolean = false,
+        enabled: Boolean = true,
         onClick: () -> Unit,
     ) {
         val context = LocalContext.current
@@ -266,11 +270,12 @@ object SettingsComposable {
                 title,
                 style = SettingsTheme.typography.pageButton,
                 fontSize = fontSize,
+                color = if (enabled) Color.Unspecified else Color.Gray,
                 modifier =
                     Modifier
                         .align(Alignment.CenterStart)
                         .offset(y = (-5.5).dp)
-                        .noRippleClickable {
+                        .noRippleClickable(enabled = enabled) {
                             performHapticFeedback(context)
                             onClick()
                         }.then(

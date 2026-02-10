@@ -37,6 +37,7 @@ private const val TAG = "Utils"
 
 fun performHapticFeedback(context: Context) {
     try {
+        if (!Prefs.getInstance(context).hapticsEnabled) return
         val vibrator =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 val vibratorManager =
@@ -49,6 +50,30 @@ fun performHapticFeedback(context: Context) {
         vibrator.vibrate(VibrationEffect.createOneShot(42, VibrationEffect.DEFAULT_AMPLITUDE))
     } catch (e: Exception) {
         // Continue if haptic feedback fails
+    }
+}
+
+fun performAppTapHapticFeedback(context: Context) {
+    if (Prefs.getInstance(context).hapticsAppTapEnabled) {
+        performHapticFeedback(context)
+    }
+}
+
+fun performLongPressHapticFeedback(context: Context) {
+    if (Prefs.getInstance(context).hapticsLongPressEnabled) {
+        performHapticFeedback(context)
+    }
+}
+
+fun performGestureActionHapticFeedback(context: Context) {
+    if (Prefs.getInstance(context).hapticsGestureActionsEnabled) {
+        performHapticFeedback(context)
+    }
+}
+
+fun performStatusBarPressHapticFeedback(context: Context) {
+    if (Prefs.getInstance(context).hapticsStatusBarPressEnabled) {
+        performHapticFeedback(context)
     }
 }
 

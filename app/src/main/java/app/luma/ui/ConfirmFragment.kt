@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import app.luma.helper.performHapticFeedback
+import app.luma.helper.performAppTapHapticFeedback
 import app.luma.style.SettingsTheme
 import app.luma.ui.compose.SettingsComposable.MessageText
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
@@ -62,7 +62,7 @@ class ConfirmFragment : Fragment() {
                     fontSize = 40.sp,
                     modifier =
                         Modifier.noRippleClickable {
-                            performHapticFeedback(context)
+                            performAppTapHapticFeedback(context)
                             findNavController().previousBackStackEntry?.savedStateHandle?.apply {
                                 set("confirmed", true)
                                 set("action", action)

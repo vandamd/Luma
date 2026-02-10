@@ -142,7 +142,7 @@ class HomeFragment :
     override fun onClick(view: View) {
         try {
             val appLocation = view.id
-            performHapticFeedback(requireContext())
+            performAppTapHaptic()
             homeAppClicked(appLocation)
         } catch (e: Exception) {
             Log.e(TAG, "Error handling app click", e)
@@ -150,7 +150,7 @@ class HomeFragment :
     }
 
     override fun onLongClick(view: View): Boolean {
-        performHapticFeedback(requireContext())
+        performLongPressHaptic()
         val position = view.id
         val appModel = prefs.getHomeAppModel(position)
 
@@ -178,7 +178,7 @@ class HomeFragment :
             createGestureListener(
                 onLongClick = {
                     try {
-                        performHapticFeedback(requireContext())
+                        performLongPressHaptic()
                         findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
                     } catch (_: Exception) {
                     }
@@ -196,7 +196,7 @@ class HomeFragment :
     private fun handleSectionPress(section: StatusBarSectionType) {
         val action = prefs.getSectionAction(section)
         if (action == Action.Disabled) return
-        performHapticFeedback(requireContext())
+        performStatusBarPressHaptic()
         if (action == Action.OpenApp) {
             val app = prefs.getSectionApp(section)
             if (app.appPackage.isNotEmpty()) launchApp(app)
@@ -900,7 +900,7 @@ class HomeFragment :
     private fun handleGesture(gestureType: GestureType) {
         val action = prefs.getGestureAction(gestureType)
         if (action == Action.Disabled) return
-        performHapticFeedback(requireContext())
+        performGestureActionHaptic()
         if (action == Action.OpenApp) {
             openGestureApp(gestureType)
         } else {
@@ -910,7 +910,6 @@ class HomeFragment :
 
     private fun handleSwipeUp() {
         if (totalPages > 1 && currentPage < totalPages - 1) {
-            performHapticFeedback(requireContext())
             switchToPage(currentPage + 1)
         } else {
             handleGesture(GestureType.SWIPE_UP)
@@ -919,7 +918,6 @@ class HomeFragment :
 
     private fun handleSwipeDown() {
         if (totalPages > 1 && currentPage > 0) {
-            performHapticFeedback(requireContext())
             switchToPage(currentPage - 1)
         } else {
             handleGesture(GestureType.SWIPE_DOWN)
@@ -1005,5 +1003,21 @@ class HomeFragment :
         }
 
         updatePageIndicator()
+    }
+
+    private fun performAppTapHaptic() {
+        performAppTapHapticFeedback(requireContext())
+    }
+
+    private fun performLongPressHaptic() {
+        performLongPressHapticFeedback(requireContext())
+    }
+
+    private fun performGestureActionHaptic() {
+        performGestureActionHapticFeedback(requireContext())
+    }
+
+    private fun performStatusBarPressHaptic() {
+        performStatusBarPressHapticFeedback(requireContext())
     }
 }

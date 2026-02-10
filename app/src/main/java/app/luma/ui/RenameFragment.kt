@@ -38,7 +38,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import app.luma.R
 import app.luma.data.Prefs
-import app.luma.helper.performHapticFeedback
+import app.luma.helper.performAppTapHapticFeedback
 import app.luma.style.SettingsTheme
 import app.luma.ui.compose.SettingsComposable.ContentContainer
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
@@ -154,7 +154,7 @@ class RenameFragment : Fragment() {
                                     .padding(bottom = 6.dp, end = 6.dp)
                                     .size(20.dp)
                                     .noRippleClickable {
-                                        performHapticFeedback(context)
+                                        performAppTapHapticFeedback(context)
                                         textState.value = TextFieldValue("")
                                     },
                         )
