@@ -371,14 +371,6 @@ class Prefs(
         get() = prefs.getBoolean(BLUETOOTH_ENABLED, false)
         set(value) = prefs.edit().putBoolean(BLUETOOTH_ENABLED, value).apply()
 
-    fun registerOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
-        prefs.registerOnSharedPreferenceChangeListener(listener)
-    }
-
-    fun unregisterOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
-        prefs.unregisterOnSharedPreferenceChangeListener(listener)
-    }
-
     fun getHiddenAppKey(
         packageName: String,
         userSerial: Long,
