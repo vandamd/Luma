@@ -84,12 +84,22 @@ class NotificationListFragment : Fragment() {
     @Suppress("DEPRECATION")
     private fun loadNotifications(): List<NotificationItem> {
         val pm = requireContext().packageManager
-        return LumaNotificationListener
-            .getActiveNotifications()
-            .filter { !it.isOngoing }
+        val nonOngoing =
+            LumaNotificationListener
+                .getActiveNotifications()
+                .filter { !it.isOngoing }
+        val groupKeysWithChildren =
+            nonOngoing
+                .filterNot { it.isGroupSummary() }
+                .map { it.groupKey }
+                .toSet()
+        return nonOngoing
+            .filterNot { it.isGroupSummary() && it.groupKey in groupKeysWithChildren }
             .map { sbn -> sbn.toNotificationItem(pm) }
             .sortedBy { it.title.lowercase() }
     }
+
+    private fun StatusBarNotification.isGroupSummary(): Boolean = notification.flags and Notification.FLAG_GROUP_SUMMARY != 0
 
     @Suppress("DEPRECATION")
     private fun StatusBarNotification.toNotificationItem(pm: android.content.pm.PackageManager): NotificationItem {
