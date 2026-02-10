@@ -108,7 +108,14 @@
         <action
             android:id="@+id/action_settingsFragment_to_statusBarFragment"
             app:destination="@id/statusBarFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_hapticsFragment"
+            app:destination="@id/hapticsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/hapticsFragment"
+        android:name="app.luma.ui.HapticsFragment"
+        android:label="HapticsFragment" />
     <fragment
         android:id="@+id/notificationsFragment"
         android:name="app.luma.ui.NotificationsFragment"

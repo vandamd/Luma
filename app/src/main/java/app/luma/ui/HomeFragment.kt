@@ -142,7 +142,7 @@ class HomeFragment :
     override fun onClick(view: View) {
         try {
             val appLocation = view.id
-            performHapticFeedback(requireContext())
+            performAppTapHaptic()
             homeAppClicked(appLocation)
         } catch (e: Exception) {
             Log.e(TAG, "Error handling app click", e)
@@ -150,7 +150,7 @@ class HomeFragment :
     }
 
     override fun onLongClick(view: View): Boolean {
-        performHapticFeedback(requireContext())
+        performLongPressHaptic()
         val position = view.id
         val appModel = prefs.getHomeAppModel(position)
 
@@ -178,7 +178,7 @@ class HomeFragment :
             createGestureListener(
                 onLongClick = {
                     try {
-                        performHapticFeedback(requireContext())
+                        performLongPressHaptic()
                         findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
                     } catch (_: Exception) {
                     }
@@ -900,7 +900,7 @@ class HomeFragment :
     private fun handleGesture(gestureType: GestureType) {
         val action = prefs.getGestureAction(gestureType)
         if (action == Action.Disabled) return
-        performHapticFeedback(requireContext())
+        performGestureActionHaptic()
         if (action == Action.OpenApp) {
             openGestureApp(gestureType)
         } else {
@@ -1003,5 +1003,23 @@ class HomeFragment :
         }
 
         updatePageIndicator()
+    }
+
+    private fun performAppTapHaptic() {
+        if (prefs.hapticsAppTapEnabled) {
+            performHapticFeedback(requireContext())
+        }
+    }
+
+    private fun performLongPressHaptic() {
+        if (prefs.hapticsLongPressEnabled) {
+            performHapticFeedback(requireContext())
+        }
+    }
+
+    private fun performGestureActionHaptic() {
+        if (prefs.hapticsGestureActionsEnabled) {
+            performHapticFeedback(requireContext())
+        }
     }
 }

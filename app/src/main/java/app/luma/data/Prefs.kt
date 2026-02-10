@@ -81,6 +81,10 @@ private const val CELLULAR_ENABLED = "cellular_enabled"
 private const val WIFI_ENABLED = "wifi_enabled"
 private const val BLUETOOTH_ENABLED = "bluetooth_enabled"
 private const val FONT_SIZE_OPTION = "font_size_option"
+private const val HAPTICS_ENABLED = "haptics_enabled"
+private const val HAPTICS_APP_TAP_ENABLED = "haptics_app_tap_enabled"
+private const val HAPTICS_LONG_PRESS_ENABLED = "haptics_long_press_enabled"
+private const val HAPTICS_GESTURE_ACTIONS_ENABLED = "haptics_gesture_actions_enabled"
 
 class Prefs(
     val context: Context,
@@ -370,6 +374,22 @@ class Prefs(
     var bluetoothEnabled: Boolean
         get() = prefs.getBoolean(BLUETOOTH_ENABLED, false)
         set(value) = prefs.edit().putBoolean(BLUETOOTH_ENABLED, value).apply()
+
+    var hapticsEnabled: Boolean
+        get() = prefs.getBoolean(HAPTICS_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(HAPTICS_ENABLED, value).apply()
+
+    var hapticsAppTapEnabled: Boolean
+        get() = prefs.getBoolean(HAPTICS_APP_TAP_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(HAPTICS_APP_TAP_ENABLED, value).apply()
+
+    var hapticsLongPressEnabled: Boolean
+        get() = prefs.getBoolean(HAPTICS_LONG_PRESS_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(HAPTICS_LONG_PRESS_ENABLED, value).apply()
+
+    var hapticsGestureActionsEnabled: Boolean
+        get() = prefs.getBoolean(HAPTICS_GESTURE_ACTIONS_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(HAPTICS_GESTURE_ACTIONS_ENABLED, value).apply()
 
     fun getHiddenAppKey(
         packageName: String,

@@ -37,6 +37,7 @@ private const val TAG = "Utils"
 
 fun performHapticFeedback(context: Context) {
     try {
+        if (!Prefs.getInstance(context).hapticsEnabled) return
         val vibrator =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 val vibratorManager =
