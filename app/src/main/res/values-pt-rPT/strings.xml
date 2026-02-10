@@ -13,6 +13,7 @@
     <string name="settings_pages">Páginas</string>
     <string name="settings_gestures">Gestos</string>
     <string name="settings_notifications">Notificações</string>
+    <string name="settings_status_bar">Barra de estado</string>
     <string name="settings_hidden_apps">Aplicações escondidas</string>
     <string name="settings_default_launcher">Launcher predefinido</string>
 
@@ -54,6 +55,32 @@
     <string name="notifications_not_visible">não visível</string>
     <string name="notifications_not_visible_permission_required">não visível (permissão necessária)</string>
 
+    <!-- Status bar screen -->
+    <string name="status_bar_enabled">Ativado</string>
+    <string name="status_bar_time">Hora</string>
+    <string name="status_bar_time_enabled">Ativado</string>
+    <string name="status_bar_time_format">Formato da hora</string>
+    <string name="status_bar_time_standard">12 horas AM/PM</string>
+    <string name="status_bar_time_24h">24 horas</string>
+    <string name="status_bar_show_seconds">Mostrar segundos</string>
+    <string name="status_bar_leading_zero">Zero à esquerda</string>
+    <string name="status_bar_connectivity">Conectividade</string>
+    <string name="status_bar_cellular">Sinal de rede móvel</string>
+    <string name="status_bar_wifi">WiFi</string>
+    <string name="status_bar_bluetooth">Bluetooth</string>
+    <string name="status_bar_notification_indicator">Indicador de notificação</string>
+    <string name="status_bar_on_press">Ao tocar</string>
+    <string name="status_bar_notif_section">Secção</string>
+    <string name="status_bar_notif_alignment">Alinhamento</string>
+    <string name="status_bar_notif_section_cellular">Conectividade</string>
+    <string name="status_bar_notif_section_time">Hora</string>
+    <string name="status_bar_notif_section_battery">Bateria</string>
+    <string name="status_bar_notif_alignment_before">Antes</string>
+    <string name="status_bar_notif_alignment_after">Depois</string>
+    <string name="status_bar_battery">Bateria</string>
+    <string name="status_bar_battery_percentage">Mostrar percentagem</string>
+    <string name="status_bar_battery_icon">Mostrar ícone</string>
+
     <!-- App drawer -->
     <string name="app_drawer_title">Gaveta de aplicações</string>
     <string name="app_drawer_select_rename">Selecionar aplicação</string>
@@ -94,6 +121,7 @@
 
     <!-- Misc -->
     <string name="app_placeholder">Aplicação</string>
+    <string name="app_count_status_bar_hint">Tem a barra de estado ativada, recomendo usar no máximo 5 aplicações para ficar com bom aspeto :)</string>
 
     <!-- Content descriptions -->
     <string name="content_desc_back">Voltar</string>

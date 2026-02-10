@@ -54,6 +54,33 @@
     <string name="notifications_not_visible">niewidoczny</string>
     <string name="notifications_not_visible_permission_required">niewidoczny (wymagane uprawnienia)</string>
 
+    <!-- Status bar -->
+    <string name="settings_status_bar">Pasek stanu</string>
+    <string name="status_bar_enabled">Włączone</string>
+    <string name="status_bar_time">Czas</string>
+    <string name="status_bar_time_enabled">Włączone</string>
+    <string name="status_bar_time_format">Format czasu</string>
+    <string name="status_bar_time_standard">12-godzinny (AM/PM)</string>
+    <string name="status_bar_time_24h">24-godzinny</string>
+    <string name="status_bar_show_seconds">Pokaż sekundy</string>
+    <string name="status_bar_leading_zero">Wiodące zero</string>
+    <string name="status_bar_connectivity">Łączność</string>
+    <string name="status_bar_cellular">Sygnał sieci komórkowej</string>
+    <string name="status_bar_wifi">Wi-Fi</string>
+    <string name="status_bar_bluetooth">Bluetooth</string>
+    <string name="status_bar_notification_indicator">Wskaźnik powiadomień</string>
+    <string name="status_bar_on_press">Po naciśnięciu</string>
+    <string name="status_bar_notif_section">Sekcja</string>
+    <string name="status_bar_notif_alignment">Wyrównanie</string>
+    <string name="status_bar_notif_section_cellular">Łączność</string>
+    <string name="status_bar_notif_section_time">Czas</string>
+    <string name="status_bar_notif_section_battery">Bateria</string>
+    <string name="status_bar_notif_alignment_before">Przed</string>
+    <string name="status_bar_notif_alignment_after">Po</string>
+    <string name="status_bar_battery">Bateria</string>
+    <string name="status_bar_battery_percentage">Pokaż procent</string>
+    <string name="status_bar_battery_icon">Pokaż ikonę</string>
+
     <!-- App drawer -->
     <string name="app_drawer_title">Lista aplikacji</string>
     <string name="app_drawer_select_rename">Wybierz aplikację</string>
@@ -93,6 +120,7 @@
     <string name="toast_added_to_app_drawer">Dodano do listy aplikacji</string>
 
     <!-- Misc -->
+    <string name="app_count_status_bar_hint">Masz włączony pasek stanu, zalecam używać maksymalnie 5 aplikacji, żeby wyglądało to dobrze :)</string>
     <string name="app_placeholder">Aplikacja</string>
 
     <!-- Content descriptions -->

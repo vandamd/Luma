@@ -51,6 +51,33 @@
     <string name="notifications_not_visible">neviditelný</string>
     <string name="notifications_not_visible_permission_required">neviditelný (vyžadováno oprávnění)</string>
 
+    <!-- Status bar -->
+    <string name="settings_status_bar">Stavový řádek</string>
+    <string name="status_bar_enabled">Povoleno</string>
+    <string name="status_bar_time">Čas</string>
+    <string name="status_bar_time_enabled">Povoleno</string>
+    <string name="status_bar_time_format">Formát času</string>
+    <string name="status_bar_time_standard">12hodinový (AM/PM)</string>
+    <string name="status_bar_time_24h">24hodinový</string>
+    <string name="status_bar_show_seconds">Zobrazit sekundy</string>
+    <string name="status_bar_leading_zero">Úvodní nula</string>
+    <string name="status_bar_connectivity">Připojení</string>
+    <string name="status_bar_cellular">Mobilní signál</string>
+    <string name="status_bar_wifi">Wi-Fi</string>
+    <string name="status_bar_bluetooth">Bluetooth</string>
+    <string name="status_bar_notification_indicator">Indikátor oznámení</string>
+    <string name="status_bar_on_press">Po stisknutí</string>
+    <string name="status_bar_notif_section">Sekce</string>
+    <string name="status_bar_notif_alignment">Zarovnání</string>
+    <string name="status_bar_notif_section_cellular">Připojení</string>
+    <string name="status_bar_notif_section_time">Čas</string>
+    <string name="status_bar_notif_section_battery">Baterie</string>
+    <string name="status_bar_notif_alignment_before">Před</string>
+    <string name="status_bar_notif_alignment_after">Za</string>
+    <string name="status_bar_battery">Baterie</string>
+    <string name="status_bar_battery_percentage">Zobrazit procenta</string>
+    <string name="status_bar_battery_icon">Zobrazit ikonu</string>
+
     <!-- App drawer -->
     <string name="app_drawer_title">Šuplík aplikací</string>
     <string name="app_drawer_select_rename">Vybrat aplikaci</string>
@@ -90,6 +117,7 @@
     <string name="toast_added_to_app_drawer">Přidáno do šuplíku aplikací</string>
 
     <!-- Misc -->
+    <string name="app_count_status_bar_hint">Máte zapnutý stavový řádek, doporučuji použít maximálně 5 aplikací, aby to vypadalo dobře :)</string>
     <string name="app_placeholder">Aplikace</string>
 
     <!-- Content descriptions -->

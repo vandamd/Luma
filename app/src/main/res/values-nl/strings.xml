@@ -13,6 +13,7 @@
     <string name="settings_pages">Pagina\'s</string>
     <string name="settings_gestures">Gebaren</string>
     <string name="settings_notifications">Meldingen</string>
+    <string name="settings_status_bar">Statusbalk</string>
     <string name="settings_hidden_apps">Verborgen apps</string>
     <string name="settings_default_launcher">Standaard launcher</string>
 
@@ -55,6 +56,32 @@
     <string name="notifications_not_visible">niet zichtbaar</string>
     <string name="notifications_not_visible_permission_required">niet zichtbaar (toestemming vereist)</string>
 
+    <!-- Status bar screen -->
+    <string name="status_bar_enabled">Ingeschakeld</string>
+    <string name="status_bar_time">Tijd</string>
+    <string name="status_bar_time_enabled">Ingeschakeld</string>
+    <string name="status_bar_time_format">Tijdnotatie</string>
+    <string name="status_bar_time_standard">12-uurs AM/PM</string>
+    <string name="status_bar_time_24h">24-uurs</string>
+    <string name="status_bar_show_seconds">Seconden weergeven</string>
+    <string name="status_bar_leading_zero">Voorloopnul</string>
+    <string name="status_bar_connectivity">Connectiviteit</string>
+    <string name="status_bar_cellular">Mobiel signaal</string>
+    <string name="status_bar_wifi">WiFi</string>
+    <string name="status_bar_bluetooth">Bluetooth</string>
+    <string name="status_bar_notification_indicator">Meldingsindicator</string>
+    <string name="status_bar_on_press">Bij indrukken</string>
+    <string name="status_bar_notif_section">Sectie</string>
+    <string name="status_bar_notif_alignment">Uitlijning</string>
+    <string name="status_bar_notif_section_cellular">Connectiviteit</string>
+    <string name="status_bar_notif_section_time">Tijd</string>
+    <string name="status_bar_notif_section_battery">Batterij</string>
+    <string name="status_bar_notif_alignment_before">Voor</string>
+    <string name="status_bar_notif_alignment_after">Na</string>
+    <string name="status_bar_battery">Batterij</string>
+    <string name="status_bar_battery_percentage">Percentage weergeven</string>
+    <string name="status_bar_battery_icon">Pictogram weergeven</string>
+
     <!-- App drawer -->
     <string name="app_drawer_title">App-lade</string>
     <string name="app_drawer_select_rename">App selecteren</string>
@@ -95,6 +122,7 @@
 
     <!-- Misc -->
     <string name="app_placeholder">App</string>
+    <string name="app_count_status_bar_hint">Je hebt de statusbalk ingeschakeld, ik raad aan maximaal 5 apps te gebruiken zodat het er goed uitziet :)</string>
 
     <!-- Content descriptions -->
     <string name="content_desc_back">Terug</string>

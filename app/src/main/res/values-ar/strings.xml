@@ -13,6 +13,7 @@
     <string name="settings_pages">الصفحات</string>
     <string name="settings_gestures">إيماءات</string>
     <string name="settings_notifications">الإشعارات</string>
+    <string name="settings_status_bar">شريط الحالة</string>
     <string name="settings_hidden_apps">التطبيقات المخفية</string>
     <string name="settings_default_launcher">المشغل الافتراضي</string>
 
@@ -50,6 +51,32 @@
     <string name="notifications_visible_next_to_apps">مرئي بجانب التطبيقات</string>
     <string name="notifications_not_visible">غير مرئي</string>
     <string name="notifications_not_visible_permission_required">غير مرئي (يتطلب إذن)</string>
+
+    <!-- Status bar -->
+    <string name="status_bar_enabled">مفعّل</string>
+    <string name="status_bar_time">الوقت</string>
+    <string name="status_bar_time_enabled">مفعّل</string>
+    <string name="status_bar_time_format">تنسيق الوقت</string>
+    <string name="status_bar_time_standard">12 ساعة صباحًا/مساءً</string>
+    <string name="status_bar_time_24h">24 ساعة</string>
+    <string name="status_bar_show_seconds">إظهار الثواني</string>
+    <string name="status_bar_leading_zero">صفر بادئ</string>
+    <string name="status_bar_connectivity">الاتصال</string>
+    <string name="status_bar_cellular">إشارة شبكة الجوال</string>
+    <string name="status_bar_wifi">واي فاي</string>
+    <string name="status_bar_bluetooth">بلوتوث</string>
+    <string name="status_bar_notification_indicator">مؤشر الإشعارات</string>
+    <string name="status_bar_on_press">عند الضغط</string>
+    <string name="status_bar_notif_section">القسم</string>
+    <string name="status_bar_notif_alignment">المحاذاة</string>
+    <string name="status_bar_notif_section_cellular">الاتصال</string>
+    <string name="status_bar_notif_section_time">الوقت</string>
+    <string name="status_bar_notif_section_battery">البطارية</string>
+    <string name="status_bar_notif_alignment_before">قبل</string>
+    <string name="status_bar_notif_alignment_after">بعد</string>
+    <string name="status_bar_battery">البطارية</string>
+    <string name="status_bar_battery_percentage">إظهار النسبة المئوية</string>
+    <string name="status_bar_battery_icon">إظهار الأيقونة</string>
 
     <!-- App drawer -->
     <string name="app_drawer_title">قائمة التطبيقات</string>
@@ -91,6 +118,7 @@
 
     <!-- Misc -->
     <string name="app_placeholder">تطبيق</string>
+    <string name="app_count_status_bar_hint">لديك شريط الحالة مفعّل، أوصي باستخدام 5 تطبيقات كحد أقصى ليبدو بشكل جيد :)</string>
 
     <!-- Content descriptions -->
     <string name="content_desc_back">رجوع</string>

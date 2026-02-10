@@ -13,6 +13,7 @@
     <string name="settings_pages">Halaman</string>
     <string name="settings_gestures">Gestur</string>
     <string name="settings_notifications">Notifikasi</string>
+    <string name="settings_status_bar">Bilah status</string>
     <string name="settings_hidden_apps">Aplikasi tersembunyi</string>
     <string name="settings_default_launcher">Launcher default</string>
 
@@ -56,6 +57,32 @@
     <string name="notifications_not_visible">tidak terlihat</string>
     <string name="notifications_not_visible_permission_required">tidak terlihat (izin diperlukan)</string>
 
+    <!-- Status bar -->
+    <string name="status_bar_enabled">Aktif</string>
+    <string name="status_bar_time">Waktu</string>
+    <string name="status_bar_time_enabled">Aktif</string>
+    <string name="status_bar_time_format">Format waktu</string>
+    <string name="status_bar_time_standard">12 jam AM/PM</string>
+    <string name="status_bar_time_24h">24 jam</string>
+    <string name="status_bar_show_seconds">Tampilkan detik</string>
+    <string name="status_bar_leading_zero">Nol di depan</string>
+    <string name="status_bar_connectivity">Konektivitas</string>
+    <string name="status_bar_cellular">Sinyal seluler</string>
+    <string name="status_bar_wifi">WiFi</string>
+    <string name="status_bar_bluetooth">Bluetooth</string>
+    <string name="status_bar_notification_indicator">Indikator notifikasi</string>
+    <string name="status_bar_on_press">Saat ditekan</string>
+    <string name="status_bar_notif_section">Bagian</string>
+    <string name="status_bar_notif_alignment">Perataan</string>
+    <string name="status_bar_notif_section_cellular">Konektivitas</string>
+    <string name="status_bar_notif_section_time">Waktu</string>
+    <string name="status_bar_notif_section_battery">Baterai</string>
+    <string name="status_bar_notif_alignment_before">Sebelum</string>
+    <string name="status_bar_notif_alignment_after">Sesudah</string>
+    <string name="status_bar_battery">Baterai</string>
+    <string name="status_bar_battery_percentage">Tampilkan persentase</string>
+    <string name="status_bar_battery_icon">Tampilkan ikon</string>
+
     <!-- App drawer -->
     <string name="app_drawer_title">Drawer Aplikasi</string>
     <string name="app_drawer_select_rename">Pilih aplikasi</string>
@@ -96,6 +123,7 @@
 
     <!-- Misc -->
     <string name="app_placeholder">Aplikasi</string>
+    <string name="app_count_status_bar_hint">Anda mengaktifkan bilah status, saya sarankan maksimal 5 aplikasi agar terlihat bagus :)</string>
 
     <!-- Content descriptions -->
     <string name="content_desc_back">Kembali</string>

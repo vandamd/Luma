@@ -13,6 +13,7 @@
     <string name="settings_pages">หน้า</string>
     <string name="settings_gestures">ท่าทาง</string>
     <string name="settings_notifications">การแจ้งเตือน</string>
+    <string name="settings_status_bar">แถบสถานะ</string>
     <string name="settings_hidden_apps">แอพที่ซ่อนอยู่</string>
     <string name="settings_default_launcher">ตัวเรียกใช้งานเริ่มต้น</string>
 
@@ -56,6 +57,32 @@
     <string name="notifications_not_visible">ไม่แสดง</string>
     <string name="notifications_not_visible_permission_required">ไม่แสดง (ต้องได้รับอนุญาต)</string>
 
+    <!-- Status bar -->
+    <string name="status_bar_enabled">เปิด</string>
+    <string name="status_bar_time">เวลา</string>
+    <string name="status_bar_time_enabled">เปิด</string>
+    <string name="status_bar_time_format">รูปแบบเวลา</string>
+    <string name="status_bar_time_standard">12 ชั่วโมง AM/PM</string>
+    <string name="status_bar_time_24h">24 ชั่วโมง</string>
+    <string name="status_bar_show_seconds">แสดงวินาที</string>
+    <string name="status_bar_leading_zero">เลขศูนย์นำหน้า</string>
+    <string name="status_bar_connectivity">การเชื่อมต่อ</string>
+    <string name="status_bar_cellular">สัญญาณเครือข่ายมือถือ</string>
+    <string name="status_bar_wifi">WiFi</string>
+    <string name="status_bar_bluetooth">บลูทูธ</string>
+    <string name="status_bar_notification_indicator">ตัวบ่งชี้การแจ้งเตือน</string>
+    <string name="status_bar_on_press">เมื่อกด</string>
+    <string name="status_bar_notif_section">ส่วน</string>
+    <string name="status_bar_notif_alignment">การจัดแนว</string>
+    <string name="status_bar_notif_section_cellular">การเชื่อมต่อ</string>
+    <string name="status_bar_notif_section_time">เวลา</string>
+    <string name="status_bar_notif_section_battery">แบตเตอรี่</string>
+    <string name="status_bar_notif_alignment_before">ก่อน</string>
+    <string name="status_bar_notif_alignment_after">หลัง</string>
+    <string name="status_bar_battery">แบตเตอรี่</string>
+    <string name="status_bar_battery_percentage">แสดงเปอร์เซ็นต์</string>
+    <string name="status_bar_battery_icon">แสดงไอคอน</string>
+
     <!-- App drawer -->
     <string name="app_drawer_title">ลิ้นชักแอป</string>
     <string name="app_drawer_select_rename">เลือกแอป</string>
@@ -96,6 +123,7 @@
 
     <!-- Misc -->
     <string name="app_placeholder">แอป</string>
+    <string name="app_count_status_bar_hint">คุณเปิดใช้งานแถบสถานะอยู่ แนะนำให้ใช้แอปสูงสุด 5 แอปเพื่อให้ดูสวยงาม :)</string>
 
     <!-- Content descriptions -->
     <string name="content_desc_back">กลับ</string>

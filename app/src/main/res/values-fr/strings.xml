@@ -13,6 +13,7 @@
     <string name="settings_pages">Pages</string>
     <string name="settings_gestures">Gestes</string>
     <string name="settings_notifications">Notifications</string>
+    <string name="settings_status_bar">Barre d\'état</string>
     <string name="settings_hidden_apps">Applications masquées</string>
     <string name="settings_default_launcher">Lanceur par défaut</string>
 
@@ -56,6 +57,32 @@
     <string name="notifications_not_visible">non visible</string>
     <string name="notifications_not_visible_permission_required">non visible (permission requise)</string>
 
+    <!-- Status bar screen -->
+    <string name="status_bar_enabled">Activé</string>
+    <string name="status_bar_time">Heure</string>
+    <string name="status_bar_time_enabled">Activé</string>
+    <string name="status_bar_time_format">Format de l\'heure</string>
+    <string name="status_bar_time_standard">12 heures AM/PM</string>
+    <string name="status_bar_time_24h">24 heures</string>
+    <string name="status_bar_show_seconds">Afficher les secondes</string>
+    <string name="status_bar_leading_zero">Zéro initial</string>
+    <string name="status_bar_connectivity">Connectivité</string>
+    <string name="status_bar_cellular">Signal cellulaire</string>
+    <string name="status_bar_wifi">WiFi</string>
+    <string name="status_bar_bluetooth">Bluetooth</string>
+    <string name="status_bar_notification_indicator">Indicateur de notification</string>
+    <string name="status_bar_on_press">Au toucher</string>
+    <string name="status_bar_notif_section">Section</string>
+    <string name="status_bar_notif_alignment">Alignement</string>
+    <string name="status_bar_notif_section_cellular">Connectivité</string>
+    <string name="status_bar_notif_section_time">Heure</string>
+    <string name="status_bar_notif_section_battery">Batterie</string>
+    <string name="status_bar_notif_alignment_before">Avant</string>
+    <string name="status_bar_notif_alignment_after">Après</string>
+    <string name="status_bar_battery">Batterie</string>
+    <string name="status_bar_battery_percentage">Afficher le pourcentage</string>
+    <string name="status_bar_battery_icon">Afficher l\'icône</string>
+
     <!-- App drawer -->
     <string name="app_drawer_title">Tiroir d\'applications</string>
     <string name="app_drawer_select_rename">Sélectionner App</string>
@@ -96,6 +123,7 @@
 
     <!-- Misc -->
     <string name="app_placeholder">App</string>
+    <string name="app_count_status_bar_hint">La barre d\'état est activée, je recommande un maximum de 5 apps pour un meilleur rendu :)</string>
 
     <!-- Content descriptions -->
     <string name="content_desc_back">Retour</string>
