@@ -196,7 +196,7 @@ class HomeFragment :
     private fun handleSectionPress(section: StatusBarSectionType) {
         val action = prefs.getSectionAction(section)
         if (action == Action.Disabled) return
-        performHapticFeedback(requireContext())
+        performStatusBarPressHaptic()
         if (action == Action.OpenApp) {
             val app = prefs.getSectionApp(section)
             if (app.appPackage.isNotEmpty()) launchApp(app)
@@ -1019,6 +1019,12 @@ class HomeFragment :
 
     private fun performGestureActionHaptic() {
         if (prefs.hapticsGestureActionsEnabled) {
+            performHapticFeedback(requireContext())
+        }
+    }
+
+    private fun performStatusBarPressHaptic() {
+        if (prefs.hapticsStatusBarPressEnabled) {
             performHapticFeedback(requireContext())
         }
     }

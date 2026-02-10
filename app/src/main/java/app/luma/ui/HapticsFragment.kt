@@ -37,6 +37,7 @@ class HapticsFragment : Fragment() {
         val appTapEnabled = remember { mutableStateOf(prefs.hapticsAppTapEnabled) }
         val longPressEnabled = remember { mutableStateOf(prefs.hapticsLongPressEnabled) }
         val gestureActionsEnabled = remember { mutableStateOf(prefs.hapticsGestureActionsEnabled) }
+        val statusBarPressEnabled = remember { mutableStateOf(prefs.hapticsStatusBarPressEnabled) }
 
         Column {
             SettingsHeader(
@@ -94,6 +95,19 @@ class HapticsFragment : Fragment() {
                         onClick = {
                             gestureActionsEnabled.value = !gestureActionsEnabled.value
                             prefs.hapticsGestureActionsEnabled = gestureActionsEnabled.value
+                        },
+                        enabled = globalEnabled.value,
+                    )
+                    ToggleTextButton(
+                        title = stringResource(R.string.haptics_status_bar_press),
+                        checked = globalEnabled.value && statusBarPressEnabled.value,
+                        onCheckedChange = {
+                            statusBarPressEnabled.value = it
+                            prefs.hapticsStatusBarPressEnabled = it
+                        },
+                        onClick = {
+                            statusBarPressEnabled.value = !statusBarPressEnabled.value
+                            prefs.hapticsStatusBarPressEnabled = statusBarPressEnabled.value
                         },
                         enabled = globalEnabled.value,
                     )
