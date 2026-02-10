@@ -13,6 +13,7 @@
     <string name="settings_pages">페이지</string>
     <string name="settings_gestures">제스처</string>
     <string name="settings_notifications">알림</string>
+    <string name="settings_status_bar">상태 표시줄</string>
     <string name="settings_hidden_apps">숨겨진 앱</string>
     <string name="settings_default_launcher">기본 런처</string>
 
@@ -55,6 +56,32 @@
     <string name="notifications_not_visible">표시 안 함</string>
     <string name="notifications_not_visible_permission_required">표시 안 함 (권한 필요)</string>
 
+    <!-- Status bar -->
+    <string name="status_bar_enabled">사용</string>
+    <string name="status_bar_time">시간</string>
+    <string name="status_bar_time_enabled">사용</string>
+    <string name="status_bar_time_format">시간 형식</string>
+    <string name="status_bar_time_standard">12시간 (오전/오후)</string>
+    <string name="status_bar_time_24h">24시간</string>
+    <string name="status_bar_show_seconds">초 표시</string>
+    <string name="status_bar_leading_zero">앞자리 0</string>
+    <string name="status_bar_connectivity">연결</string>
+    <string name="status_bar_cellular">셀룰러 신호</string>
+    <string name="status_bar_wifi">WiFi</string>
+    <string name="status_bar_bluetooth">블루투스</string>
+    <string name="status_bar_notification_indicator">알림 표시기</string>
+    <string name="status_bar_on_press">누를 때</string>
+    <string name="status_bar_notif_section">섹션</string>
+    <string name="status_bar_notif_alignment">정렬</string>
+    <string name="status_bar_notif_section_cellular">연결</string>
+    <string name="status_bar_notif_section_time">시간</string>
+    <string name="status_bar_notif_section_battery">배터리</string>
+    <string name="status_bar_notif_alignment_before">앞</string>
+    <string name="status_bar_notif_alignment_after">뒤</string>
+    <string name="status_bar_battery">배터리</string>
+    <string name="status_bar_battery_percentage">퍼센트 표시</string>
+    <string name="status_bar_battery_icon">아이콘 표시</string>
+
     <!-- App drawer -->
     <string name="app_drawer_title">앱 서랍</string>
     <string name="app_drawer_select_rename">앱 선택</string>
@@ -95,6 +122,7 @@
 
     <!-- Misc -->
     <string name="app_placeholder">앱</string>
+    <string name="app_count_status_bar_hint">상태 표시줄을 켜 두셨네요. 보기 좋게 하려면 앱은 최대 5개를 추천해요 :)</string>
 
     <!-- Content descriptions -->
     <string name="content_desc_back">뒤로</string>

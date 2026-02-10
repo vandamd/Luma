@@ -13,6 +13,7 @@
     <string name="settings_pages">ページ</string>
     <string name="settings_gestures">ジェスチャー</string>
     <string name="settings_notifications">通知</string>
+    <string name="settings_status_bar">ステータスバー</string>
     <string name="settings_hidden_apps">非表示のアプリ</string>
     <string name="settings_default_launcher">デフォルトのランチャー</string>
 
@@ -55,6 +56,32 @@
     <string name="notifications_not_visible">非表示</string>
     <string name="notifications_not_visible_permission_required">非表示（権限が必要）</string>
 
+    <!-- Status bar -->
+    <string name="status_bar_enabled">有効</string>
+    <string name="status_bar_time">時刻</string>
+    <string name="status_bar_time_enabled">有効</string>
+    <string name="status_bar_time_format">時刻形式</string>
+    <string name="status_bar_time_standard">12時間（午前/午後）</string>
+    <string name="status_bar_time_24h">24時間</string>
+    <string name="status_bar_show_seconds">秒を表示</string>
+    <string name="status_bar_leading_zero">先頭にゼロ</string>
+    <string name="status_bar_connectivity">接続</string>
+    <string name="status_bar_cellular">携帯電波</string>
+    <string name="status_bar_wifi">WiFi</string>
+    <string name="status_bar_bluetooth">Bluetooth</string>
+    <string name="status_bar_notification_indicator">通知インジケーター</string>
+    <string name="status_bar_on_press">押したとき</string>
+    <string name="status_bar_notif_section">セクション</string>
+    <string name="status_bar_notif_alignment">配置</string>
+    <string name="status_bar_notif_section_cellular">接続</string>
+    <string name="status_bar_notif_section_time">時刻</string>
+    <string name="status_bar_notif_section_battery">バッテリー</string>
+    <string name="status_bar_notif_alignment_before">前</string>
+    <string name="status_bar_notif_alignment_after">後</string>
+    <string name="status_bar_battery">バッテリー</string>
+    <string name="status_bar_battery_percentage">パーセンテージを表示</string>
+    <string name="status_bar_battery_icon">アイコンを表示</string>
+
     <!-- App drawer -->
     <string name="app_drawer_title">アプリドロワー</string>
     <string name="app_drawer_select_rename">アプリを選択</string>
@@ -95,6 +122,7 @@
 
     <!-- Misc -->
     <string name="app_placeholder">アプリ</string>
+    <string name="app_count_status_bar_hint">ステータスバーを有効にしています。見た目を良くするにはアプリは最大5個をおすすめします :)</string>
 
     <!-- Content descriptions -->
     <string name="content_desc_back">戻る</string>

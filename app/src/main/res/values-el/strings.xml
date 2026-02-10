@@ -13,6 +13,7 @@
     <string name="settings_pages">Σελίδες</string>
     <string name="settings_gestures">Χεριρονομίες</string>
     <string name="settings_notifications">Ειδοποιήσεις</string>
+    <string name="settings_status_bar">Γραμμή κατάστασης</string>
     <string name="settings_hidden_apps">Κρυφές εφαρμογές</string>
     <string name="settings_default_launcher">Προεπιλεγμένος εκκινητής</string>
 
@@ -50,6 +51,32 @@
     <string name="notifications_visible_next_to_apps">ορατό δίπλα στις εφαρμογές</string>
     <string name="notifications_not_visible">μη ορατό</string>
     <string name="notifications_not_visible_permission_required">μη ορατό (απαιτείται άδεια)</string>
+
+    <!-- Status bar -->
+    <string name="status_bar_enabled">Ενεργό</string>
+    <string name="status_bar_time">Ώρα</string>
+    <string name="status_bar_time_enabled">Ενεργό</string>
+    <string name="status_bar_time_format">Μορφή ώρας</string>
+    <string name="status_bar_time_standard">12ωρη ΠΜ/ΜΜ</string>
+    <string name="status_bar_time_24h">24ωρη</string>
+    <string name="status_bar_show_seconds">Εμφάνιση δευτερολέπτων</string>
+    <string name="status_bar_leading_zero">Προπορευόμενο μηδενικό</string>
+    <string name="status_bar_connectivity">Συνδεσιμότητα</string>
+    <string name="status_bar_cellular">Σήμα κινητής</string>
+    <string name="status_bar_wifi">WiFi</string>
+    <string name="status_bar_bluetooth">Bluetooth</string>
+    <string name="status_bar_notification_indicator">Ένδειξη ειδοποιήσεων</string>
+    <string name="status_bar_on_press">Στο πάτημα</string>
+    <string name="status_bar_notif_section">Ενότητα</string>
+    <string name="status_bar_notif_alignment">Στοίχιση</string>
+    <string name="status_bar_notif_section_cellular">Συνδεσιμότητα</string>
+    <string name="status_bar_notif_section_time">Ώρα</string>
+    <string name="status_bar_notif_section_battery">Μπαταρία</string>
+    <string name="status_bar_notif_alignment_before">Πριν</string>
+    <string name="status_bar_notif_alignment_after">Μετά</string>
+    <string name="status_bar_battery">Μπαταρία</string>
+    <string name="status_bar_battery_percentage">Εμφάνιση ποσοστού</string>
+    <string name="status_bar_battery_icon">Εμφάνιση εικονιδίου</string>
 
     <!-- App drawer -->
     <string name="app_drawer_title">Συρτάρι εφαρμογών</string>
@@ -91,6 +118,7 @@
 
     <!-- Misc -->
     <string name="app_placeholder">Εφαρμογή</string>
+    <string name="app_count_status_bar_hint">Έχετε ενεργοποιήσει τη γραμμή κατάστασης, προτείνω το πολύ 5 εφαρμογές για να δείχνει όμορφα :)</string>
 
     <!-- Content descriptions -->
     <string name="content_desc_back">Πίσω</string>

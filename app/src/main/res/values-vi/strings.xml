@@ -13,6 +13,7 @@
     <string name="settings_pages">Trang</string>
     <string name="settings_gestures">Cử chỉ</string>
     <string name="settings_notifications">Thông báo</string>
+    <string name="settings_status_bar">Thanh trạng thái</string>
     <string name="settings_hidden_apps">Ẩn ứng dụng</string>
     <string name="settings_default_launcher">Trình khởi chạy mặc định</string>
 
@@ -56,6 +57,32 @@
     <string name="notifications_not_visible">không hiển thị</string>
     <string name="notifications_not_visible_permission_required">không hiển thị (cần quyền)</string>
 
+    <!-- Status bar -->
+    <string name="status_bar_enabled">Bật</string>
+    <string name="status_bar_time">Thời gian</string>
+    <string name="status_bar_time_enabled">Bật</string>
+    <string name="status_bar_time_format">Định dạng thời gian</string>
+    <string name="status_bar_time_standard">12 giờ SA/CH</string>
+    <string name="status_bar_time_24h">24 giờ</string>
+    <string name="status_bar_show_seconds">Hiển thị giây</string>
+    <string name="status_bar_leading_zero">Số 0 ở đầu</string>
+    <string name="status_bar_connectivity">Kết nối</string>
+    <string name="status_bar_cellular">Tín hiệu di động</string>
+    <string name="status_bar_wifi">WiFi</string>
+    <string name="status_bar_bluetooth">Bluetooth</string>
+    <string name="status_bar_notification_indicator">Chỉ báo thông báo</string>
+    <string name="status_bar_on_press">Khi nhấn</string>
+    <string name="status_bar_notif_section">Mục</string>
+    <string name="status_bar_notif_alignment">Căn chỉnh</string>
+    <string name="status_bar_notif_section_cellular">Kết nối</string>
+    <string name="status_bar_notif_section_time">Thời gian</string>
+    <string name="status_bar_notif_section_battery">Pin</string>
+    <string name="status_bar_notif_alignment_before">Trước</string>
+    <string name="status_bar_notif_alignment_after">Sau</string>
+    <string name="status_bar_battery">Pin</string>
+    <string name="status_bar_battery_percentage">Hiển thị phần trăm</string>
+    <string name="status_bar_battery_icon">Hiển thị biểu tượng</string>
+
     <!-- App drawer -->
     <string name="app_drawer_title">Ngăn ứng dụng</string>
     <string name="app_drawer_select_rename">Chọn ứng dụng</string>
@@ -96,6 +123,7 @@
 
     <!-- Misc -->
     <string name="app_placeholder">Ứng Dụng</string>
+    <string name="app_count_status_bar_hint">Bạn đã bật thanh trạng thái, mình khuyên chỉ nên dùng tối đa 5 ứng dụng để trông đẹp hơn :)</string>
 
     <!-- Content descriptions -->
     <string name="content_desc_back">Quay lại</string>

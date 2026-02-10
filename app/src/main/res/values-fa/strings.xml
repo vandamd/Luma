@@ -13,6 +13,7 @@
     <string name="settings_pages">صفحات</string>
     <string name="settings_gestures">اشاره های حرکتی</string>
     <string name="settings_notifications">اعلان‌ها</string>
+    <string name="settings_status_bar">نوار وضعیت</string>
     <string name="settings_hidden_apps">برنامه های مخفی</string>
     <string name="settings_default_launcher">لانچر اصلی</string>
 
@@ -56,6 +57,32 @@
     <string name="notifications_not_visible">غیر قابل مشاهده</string>
     <string name="notifications_not_visible_permission_required">غیر قابل مشاهده (نیاز به مجوز)</string>
 
+    <!-- Status bar -->
+    <string name="status_bar_enabled">فعال</string>
+    <string name="status_bar_time">زمان</string>
+    <string name="status_bar_time_enabled">فعال</string>
+    <string name="status_bar_time_format">قالب زمان</string>
+    <string name="status_bar_time_standard">۱۲ ساعته (ق.ظ/ب.ظ)</string>
+    <string name="status_bar_time_24h">۲۴ ساعته</string>
+    <string name="status_bar_show_seconds">نمایش ثانیه‌ها</string>
+    <string name="status_bar_leading_zero">صفر ابتدایی</string>
+    <string name="status_bar_connectivity">اتصالات</string>
+    <string name="status_bar_cellular">سیگنال شبکه موبایل</string>
+    <string name="status_bar_wifi">وای‌فای</string>
+    <string name="status_bar_bluetooth">بلوتوث</string>
+    <string name="status_bar_notification_indicator">نشانگر اعلان</string>
+    <string name="status_bar_on_press">هنگام لمس</string>
+    <string name="status_bar_notif_section">بخش</string>
+    <string name="status_bar_notif_alignment">تراز</string>
+    <string name="status_bar_notif_section_cellular">اتصالات</string>
+    <string name="status_bar_notif_section_time">زمان</string>
+    <string name="status_bar_notif_section_battery">باتری</string>
+    <string name="status_bar_notif_alignment_before">قبل</string>
+    <string name="status_bar_notif_alignment_after">بعد</string>
+    <string name="status_bar_battery">باتری</string>
+    <string name="status_bar_battery_percentage">نمایش درصد</string>
+    <string name="status_bar_battery_icon">نمایش آیکن</string>
+
     <!-- App drawer -->
     <string name="app_drawer_title">کشوی برنامه</string>
     <string name="app_drawer_select_rename">انتخاب برنامه</string>
@@ -96,6 +123,7 @@
 
     <!-- Misc -->
     <string name="app_placeholder">برنامه</string>
+    <string name="app_count_status_bar_hint">نوار وضعیت را فعال کرده‌اید، پیشنهاد می‌کنم برای ظاهر بهتر حداکثر ۵ برنامه استفاده کنید :)</string>
 
     <!-- Content descriptions -->
     <string name="content_desc_back">بازگشت</string>

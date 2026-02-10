@@ -13,6 +13,7 @@
     <string name="settings_pages">Sidor</string>
     <string name="settings_gestures">Gester</string>
     <string name="settings_notifications">Aviseringar</string>
+    <string name="settings_status_bar">Statusfält</string>
     <string name="settings_hidden_apps">Dolda appar</string>
     <string name="settings_default_launcher">Standardstartsida</string>
 
@@ -54,6 +55,32 @@
     <string name="notifications_not_visible">inte synlig</string>
     <string name="notifications_not_visible_permission_required">inte synlig (behörighet krävs)</string>
 
+    <!-- Status bar screen -->
+    <string name="status_bar_enabled">Aktiverad</string>
+    <string name="status_bar_time">Tid</string>
+    <string name="status_bar_time_enabled">Aktiverad</string>
+    <string name="status_bar_time_format">Tidsformat</string>
+    <string name="status_bar_time_standard">12-timmars AM/PM</string>
+    <string name="status_bar_time_24h">24-timmars</string>
+    <string name="status_bar_show_seconds">Visa sekunder</string>
+    <string name="status_bar_leading_zero">Inledande nolla</string>
+    <string name="status_bar_connectivity">Uppkoppling</string>
+    <string name="status_bar_cellular">Mobilsignal</string>
+    <string name="status_bar_wifi">WiFi</string>
+    <string name="status_bar_bluetooth">Bluetooth</string>
+    <string name="status_bar_notification_indicator">Aviseringsindikator</string>
+    <string name="status_bar_on_press">Vid tryck</string>
+    <string name="status_bar_notif_section">Sektion</string>
+    <string name="status_bar_notif_alignment">Justering</string>
+    <string name="status_bar_notif_section_cellular">Uppkoppling</string>
+    <string name="status_bar_notif_section_time">Tid</string>
+    <string name="status_bar_notif_section_battery">Batteri</string>
+    <string name="status_bar_notif_alignment_before">Före</string>
+    <string name="status_bar_notif_alignment_after">Efter</string>
+    <string name="status_bar_battery">Batteri</string>
+    <string name="status_bar_battery_percentage">Visa procent</string>
+    <string name="status_bar_battery_icon">Visa ikon</string>
+
     <!-- App drawer -->
     <string name="app_drawer_title">App-låda</string>
     <string name="app_drawer_select_rename">Välj app</string>
@@ -94,6 +121,7 @@
 
     <!-- Misc -->
     <string name="app_placeholder">App</string>
+    <string name="app_count_status_bar_hint">Du har statusfältet aktiverat, jag rekommenderar högst 5 appar för att det ska se bra ut :)</string>
 
     <!-- Content descriptions -->
     <string name="content_desc_back">Tillbaka</string>

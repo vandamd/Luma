@@ -13,6 +13,7 @@
     <string name="settings_pages">Seiten</string>
     <string name="settings_gestures">Gesten</string>
     <string name="settings_notifications">Benachrichtigungen</string>
+    <string name="settings_status_bar">Statusleiste</string>
     <string name="settings_hidden_apps">Versteckte Apps</string>
     <string name="settings_default_launcher">Standard-Launcher</string>
 
@@ -50,6 +51,32 @@
     <string name="notifications_visible_next_to_apps">sichtbar neben Apps</string>
     <string name="notifications_not_visible">nicht sichtbar</string>
     <string name="notifications_not_visible_permission_required">nicht sichtbar (Berechtigung erforderlich)</string>
+
+    <!-- Status bar screen -->
+    <string name="status_bar_enabled">Aktiviert</string>
+    <string name="status_bar_time">Uhrzeit</string>
+    <string name="status_bar_time_enabled">Aktiviert</string>
+    <string name="status_bar_time_format">Uhrzeitformat</string>
+    <string name="status_bar_time_standard">12-Stunden AM/PM</string>
+    <string name="status_bar_time_24h">24-Stunden</string>
+    <string name="status_bar_show_seconds">Sekunden anzeigen</string>
+    <string name="status_bar_leading_zero">Führende Null</string>
+    <string name="status_bar_connectivity">Konnektivität</string>
+    <string name="status_bar_cellular">Mobilfunksignal</string>
+    <string name="status_bar_wifi">WiFi</string>
+    <string name="status_bar_bluetooth">Bluetooth</string>
+    <string name="status_bar_notification_indicator">Benachrichtigungsindikator</string>
+    <string name="status_bar_on_press">Beim Tippen</string>
+    <string name="status_bar_notif_section">Abschnitt</string>
+    <string name="status_bar_notif_alignment">Ausrichtung</string>
+    <string name="status_bar_notif_section_cellular">Konnektivität</string>
+    <string name="status_bar_notif_section_time">Uhrzeit</string>
+    <string name="status_bar_notif_section_battery">Batterie</string>
+    <string name="status_bar_notif_alignment_before">Vor</string>
+    <string name="status_bar_notif_alignment_after">Nach</string>
+    <string name="status_bar_battery">Batterie</string>
+    <string name="status_bar_battery_percentage">Prozent anzeigen</string>
+    <string name="status_bar_battery_icon">Symbol anzeigen</string>
 
     <!-- App drawer -->
     <string name="app_drawer_title">App-Übersicht</string>
@@ -91,6 +118,7 @@
 
     <!-- Misc -->
     <string name="app_placeholder">App</string>
+    <string name="app_count_status_bar_hint">Du hast die Statusleiste aktiviert, ich empfehle maximal 5 Apps, damit es gut aussieht :)</string>
 
     <!-- Content descriptions -->
     <string name="content_desc_back">Zurück</string>

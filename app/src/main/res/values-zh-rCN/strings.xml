@@ -13,6 +13,7 @@
     <string name="settings_pages">页面</string>
     <string name="settings_gestures">手势</string>
     <string name="settings_notifications">通知</string>
+    <string name="settings_status_bar">状态栏</string>
     <string name="settings_hidden_apps">隐藏的应用</string>
     <string name="settings_default_launcher">默认启动器</string>
 
@@ -56,6 +57,32 @@
     <string name="notifications_not_visible">不显示</string>
     <string name="notifications_not_visible_permission_required">不显示（需要权限）</string>
 
+    <!-- Status bar -->
+    <string name="status_bar_enabled">启用</string>
+    <string name="status_bar_time">时间</string>
+    <string name="status_bar_time_enabled">启用</string>
+    <string name="status_bar_time_format">时间格式</string>
+    <string name="status_bar_time_standard">12 小时（上午/下午）</string>
+    <string name="status_bar_time_24h">24 小时制</string>
+    <string name="status_bar_show_seconds">显示秒</string>
+    <string name="status_bar_leading_zero">前导零</string>
+    <string name="status_bar_connectivity">连接</string>
+    <string name="status_bar_cellular">蜂窝信号</string>
+    <string name="status_bar_wifi">WiFi</string>
+    <string name="status_bar_bluetooth">蓝牙</string>
+    <string name="status_bar_notification_indicator">通知指示器</string>
+    <string name="status_bar_on_press">按下时</string>
+    <string name="status_bar_notif_section">分区</string>
+    <string name="status_bar_notif_alignment">对齐</string>
+    <string name="status_bar_notif_section_cellular">连接</string>
+    <string name="status_bar_notif_section_time">时间</string>
+    <string name="status_bar_notif_section_battery">电池</string>
+    <string name="status_bar_notif_alignment_before">前</string>
+    <string name="status_bar_notif_alignment_after">后</string>
+    <string name="status_bar_battery">电池</string>
+    <string name="status_bar_battery_percentage">显示百分比</string>
+    <string name="status_bar_battery_icon">显示图标</string>
+
     <!-- App drawer -->
     <string name="app_drawer_title">应用抽屉</string>
     <string name="app_drawer_select_rename">选择应用</string>
@@ -96,6 +123,7 @@
 
     <!-- Misc -->
     <string name="app_placeholder">应用</string>
+    <string name="app_count_status_bar_hint">你已启用状态栏，建议最多放 5 个应用，这样看起来更好看 :)</string>
 
     <!-- Content descriptions -->
     <string name="content_desc_back">返回</string>

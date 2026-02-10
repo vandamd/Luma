@@ -56,6 +56,33 @@
     <string name="notifications_not_visible">не видимий</string>
     <string name="notifications_not_visible_permission_required">не видимий (потрібен дозвіл)</string>
 
+    <!-- Status bar -->
+    <string name="settings_status_bar">Рядок стану</string>
+    <string name="status_bar_enabled">Увімкнено</string>
+    <string name="status_bar_time">Час</string>
+    <string name="status_bar_time_enabled">Увімкнено</string>
+    <string name="status_bar_time_format">Формат часу</string>
+    <string name="status_bar_time_standard">12-годинний (AM/PM)</string>
+    <string name="status_bar_time_24h">24-годинний</string>
+    <string name="status_bar_show_seconds">Показувати секунди</string>
+    <string name="status_bar_leading_zero">Початковий нуль</string>
+    <string name="status_bar_connectivity">Зв’язок</string>
+    <string name="status_bar_cellular">Сигнал стільникової мережі</string>
+    <string name="status_bar_wifi">Wi-Fi</string>
+    <string name="status_bar_bluetooth">Bluetooth</string>
+    <string name="status_bar_notification_indicator">Індикатор сповіщень</string>
+    <string name="status_bar_on_press">При натисканні</string>
+    <string name="status_bar_notif_section">Розділ</string>
+    <string name="status_bar_notif_alignment">Вирівнювання</string>
+    <string name="status_bar_notif_section_cellular">Зв’язок</string>
+    <string name="status_bar_notif_section_time">Час</string>
+    <string name="status_bar_notif_section_battery">Акумулятор</string>
+    <string name="status_bar_notif_alignment_before">Перед</string>
+    <string name="status_bar_notif_alignment_after">Після</string>
+    <string name="status_bar_battery">Акумулятор</string>
+    <string name="status_bar_battery_percentage">Показувати відсоток</string>
+    <string name="status_bar_battery_icon">Показувати значок</string>
+
     <!-- App drawer -->
     <string name="app_drawer_title">Панель застосунків</string>
     <string name="app_drawer_select_rename">Вибрати застосунок</string>
@@ -95,6 +122,7 @@
     <string name="toast_added_to_app_drawer">Додано до панелі застосунків</string>
 
     <!-- Misc -->
+    <string name="app_count_status_bar_hint">У вас увімкнено рядок стану, рекомендую використовувати максимум 5 застосунків, щоб це виглядало добре :)</string>
     <string name="app_placeholder">Застосунок</string>
 
     <!-- Content descriptions -->
