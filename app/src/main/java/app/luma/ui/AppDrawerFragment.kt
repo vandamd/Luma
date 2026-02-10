@@ -24,7 +24,7 @@ import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.Prefs
 import app.luma.databinding.FragmentAppDrawerBinding
 import app.luma.helper.LumaNotificationListener
-import app.luma.helper.performHapticFeedback
+import app.luma.helper.performGestureActionHapticFeedback
 import app.luma.style.SettingsTheme
 import app.luma.style.isDarkTheme
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
@@ -216,7 +216,7 @@ class AppDrawerFragment : Fragment() {
                         }
                         if (committed && dx > dragThreshold) {
                             tracking = false
-                            performHapticFeedback(requireContext())
+                            performGestureActionHapticFeedback(requireContext())
                             if (flag == AppDrawerFlag.LaunchApp) {
                                 findNavController().popBackStack(R.id.mainFragment, false)
                             } else {

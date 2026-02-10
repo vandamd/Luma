@@ -53,6 +53,30 @@ fun performHapticFeedback(context: Context) {
     }
 }
 
+fun performAppTapHapticFeedback(context: Context) {
+    if (Prefs.getInstance(context).hapticsAppTapEnabled) {
+        performHapticFeedback(context)
+    }
+}
+
+fun performLongPressHapticFeedback(context: Context) {
+    if (Prefs.getInstance(context).hapticsLongPressEnabled) {
+        performHapticFeedback(context)
+    }
+}
+
+fun performGestureActionHapticFeedback(context: Context) {
+    if (Prefs.getInstance(context).hapticsGestureActionsEnabled) {
+        performHapticFeedback(context)
+    }
+}
+
+fun performStatusBarPressHapticFeedback(context: Context) {
+    if (Prefs.getInstance(context).hapticsStatusBarPressEnabled) {
+        performHapticFeedback(context)
+    }
+}
+
 fun showToast(
     context: Context,
     message: String,

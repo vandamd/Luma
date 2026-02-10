@@ -1006,26 +1006,18 @@ class HomeFragment :
     }
 
     private fun performAppTapHaptic() {
-        if (prefs.hapticsAppTapEnabled) {
-            performHapticFeedback(requireContext())
-        }
+        performAppTapHapticFeedback(requireContext())
     }
 
     private fun performLongPressHaptic() {
-        if (prefs.hapticsLongPressEnabled) {
-            performHapticFeedback(requireContext())
-        }
+        performLongPressHapticFeedback(requireContext())
     }
 
     private fun performGestureActionHaptic() {
-        if (prefs.hapticsGestureActionsEnabled) {
-            performHapticFeedback(requireContext())
-        }
+        performGestureActionHapticFeedback(requireContext())
     }
 
     private fun performStatusBarPressHaptic() {
-        if (prefs.hapticsStatusBarPressEnabled) {
-            performHapticFeedback(requireContext())
-        }
+        performStatusBarPressHapticFeedback(requireContext())
     }
 }

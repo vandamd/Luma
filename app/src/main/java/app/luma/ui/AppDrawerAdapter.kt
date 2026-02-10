@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import app.luma.data.AppModel
 import app.luma.data.Prefs
 import app.luma.databinding.AdapterAppDrawerBinding
-import app.luma.helper.performHapticFeedback
+import app.luma.helper.performAppTapHapticFeedback
+import app.luma.helper.performLongPressHapticFeedback
 import java.text.Normalizer
 
 data class AppDrawerConfig(
@@ -163,12 +164,12 @@ class AppDrawerAdapter(
         ) {
             binding.appTitleFrame.isHapticFeedbackEnabled = false
             binding.appTitleFrame.setOnClickListener {
-                performHapticFeedback(context)
+                performAppTapHapticFeedback(context)
                 listener(appModel)
             }
             if (appLongPressListener != null) {
                 binding.appTitleFrame.setOnLongClickListener {
-                    performHapticFeedback(context)
+                    performLongPressHapticFeedback(context)
                     appLongPressListener(appModel)
                     true
                 }

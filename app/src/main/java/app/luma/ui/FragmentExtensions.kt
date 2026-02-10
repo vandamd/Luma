@@ -21,7 +21,7 @@ import app.luma.R
 import app.luma.data.Constants
 import app.luma.data.Prefs
 import app.luma.data.StatusBarSectionType
-import app.luma.helper.performHapticFeedback
+import app.luma.helper.performGestureActionHapticFeedback
 import app.luma.style.SettingsTheme
 import app.luma.style.isDarkTheme
 import kotlin.math.abs
@@ -87,7 +87,7 @@ private fun SwipeBackContainer(
 
                             if (committed && totalX > dragThresholdPx) {
                                 triggered = true
-                                performHapticFeedback(context)
+                                performGestureActionHapticFeedback(context)
                                 currentOnSwipeBack.value()
                             }
                         }

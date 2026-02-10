@@ -43,7 +43,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import app.luma.R
 import app.luma.helper.LumaNotificationListener
-import app.luma.helper.performHapticFeedback
+import app.luma.helper.performAppTapHapticFeedback
 import app.luma.style.SettingsTheme
 import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.ContentContainer
@@ -224,7 +224,7 @@ class NotificationListFragment : Fragment() {
                     Modifier
                         .size(24.dp)
                         .noRippleClickable {
-                            performHapticFeedback(context)
+                            performAppTapHapticFeedback(context)
                             onDismiss()
                         },
                 colorFilter = ColorFilter.tint(SettingsTheme.typography.title.color),
@@ -235,7 +235,7 @@ class NotificationListFragment : Fragment() {
                     Modifier
                         .weight(1f)
                         .noRippleClickable {
-                            performHapticFeedback(context)
+                            performAppTapHapticFeedback(context)
                             onTap()
                         },
             ) {
