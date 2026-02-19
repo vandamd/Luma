@@ -7,7 +7,11 @@
 
     <!-- Settings screen -->
     <string name="settings_title">Luma Settings (%1$s)</string>
-    <string name="settings_invert_colours">Invert Colours</string>
+    <string name="settings_invert_colours">Theme</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_automatic">Automatic</string>
+    <string name="settings_auto_rotate">Auto-rotate</string>
     <string name="settings_pages">Pages</string>
     <string name="settings_gestures">Gestures</string>
     <string name="settings_haptics">Haptics</string>

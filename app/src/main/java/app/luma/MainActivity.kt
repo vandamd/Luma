@@ -39,10 +39,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         prefs = Prefs.getInstance(this)
         val themeMode =
-            if (prefs.invertColours) {
-                AppCompatDelegate.MODE_NIGHT_NO
-            } else {
-                AppCompatDelegate.MODE_NIGHT_YES
+            when (prefs.themeMode) {
+                Prefs.ThemeMode.Dark -> AppCompatDelegate.MODE_NIGHT_YES
+                Prefs.ThemeMode.Light -> AppCompatDelegate.MODE_NIGHT_NO
+                Prefs.ThemeMode.Automatic -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
             }
         AppCompatDelegate.setDefaultNightMode(themeMode)
 
@@ -108,6 +108,11 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SourceLockedOrientationActivity")
     private fun setupOrientation() {
+        if (prefs.autoRotateEnabled) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER
+            return
+        }
+
         // In Android 8.0, windowIsTranslucent cannot be used with screenOrientation=portrait
         if (Build.VERSION.SDK_INT != Build.VERSION_CODES.O) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT

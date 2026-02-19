@@ -9,7 +9,11 @@
 
     <!-- Settings screen -->
     <string name="settings_title">Nastavení Luma (%1$s)</string>
-    <string name="settings_invert_colours">Invertovat barvy</string>
+    <string name="settings_invert_colours">Motiv</string>
+    <string name="settings_theme_dark">Tmavý</string>
+    <string name="settings_theme_light">Světlý</string>
+    <string name="settings_theme_automatic">Automatický</string>
+    <string name="settings_auto_rotate">Automatické otáčení</string>
     <string name="settings_pages">Stránky</string>
     <string name="settings_gestures">Gesta</string>
     <string name="settings_notifications">Oznámení</string>

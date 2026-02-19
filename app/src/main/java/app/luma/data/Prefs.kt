@@ -14,6 +14,7 @@ private const val HOME_APPS_PER_PAGE = "HOME_APPS_PER_PAGE_"
 private const val HIDDEN_APPS = "HIDDEN_APPS"
 private const val HIDDEN_SHORTCUT_IDS = "HIDDEN_SHORTCUT_IDS"
 private const val INVERT_COLOURS = "INVERT_COLOURS"
+private const val THEME_MODE = "theme_mode"
 private const val PINNED_SHORTCUTS = "PINNED_SHORTCUTS"
 
 data class ShortcutEntry(
@@ -86,6 +87,7 @@ private const val HAPTICS_APP_TAP_ENABLED = "haptics_app_tap_enabled"
 private const val HAPTICS_LONG_PRESS_ENABLED = "haptics_long_press_enabled"
 private const val HAPTICS_GESTURE_ACTIONS_ENABLED = "haptics_gesture_actions_enabled"
 private const val HAPTICS_STATUS_BAR_PRESS_ENABLED = "haptics_status_bar_press_enabled"
+private const val AUTO_ROTATE_ENABLED = "auto_rotate_enabled"
 
 class Prefs(
     val context: Context,
@@ -100,6 +102,8 @@ class Prefs(
     }
 
     enum class TimeFormat { Standard, TwentyFourHour }
+
+    enum class ThemeMode { Dark, Light, Automatic }
 
     enum class PageIndicatorPosition { Left, Right, Hidden }
 
@@ -184,9 +188,20 @@ class Prefs(
         prefs.edit().putString(prefString, value.name).apply()
     }
 
+    var themeMode: ThemeMode
+        get() {
+            if (prefs.contains(THEME_MODE)) {
+                return enumPref(THEME_MODE, ThemeMode.Dark)
+            }
+            return if (prefs.getBoolean(INVERT_COLOURS, false)) ThemeMode.Light else ThemeMode.Dark
+        }
+        set(value) = prefs.edit().putString(THEME_MODE, value.name).apply()
+
     var invertColours: Boolean
-        get() = prefs.getBoolean(INVERT_COLOURS, false)
-        set(value) = prefs.edit().putBoolean(INVERT_COLOURS, value).apply()
+        get() = themeMode == ThemeMode.Light
+        set(value) {
+            themeMode = if (value) ThemeMode.Light else ThemeMode.Dark
+        }
 
     var hiddenApps: MutableSet<String>
         get() = prefs.getStringSet(HIDDEN_APPS, mutableSetOf())?.toMutableSet() ?: mutableSetOf()
@@ -395,6 +410,10 @@ class Prefs(
     var hapticsStatusBarPressEnabled: Boolean
         get() = prefs.getBoolean(HAPTICS_STATUS_BAR_PRESS_ENABLED, true)
         set(value) = prefs.edit().putBoolean(HAPTICS_STATUS_BAR_PRESS_ENABLED, value).apply()
+
+    var autoRotateEnabled: Boolean
+        get() = prefs.getBoolean(AUTO_ROTATE_ENABLED, false)
+        set(value) = prefs.edit().putBoolean(AUTO_ROTATE_ENABLED, value).apply()
 
     fun getHiddenAppKey(
         packageName: String,
