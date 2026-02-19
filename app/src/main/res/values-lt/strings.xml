@@ -9,7 +9,11 @@
 
     <!-- Settings screen -->
     <string name="settings_title">Luma nustatymai (%1$s)</string>
-    <string name="settings_invert_colours">Invertuoti spalvas</string>
+    <string name="settings_invert_colours">Tema</string>
+    <string name="settings_theme_dark">Tamsi</string>
+    <string name="settings_theme_light">Šviesi</string>
+    <string name="settings_theme_automatic">Automatinė</string>
+    <string name="settings_auto_rotate">Automatinis pasukimas</string>
     <string name="settings_pages">Puslapiai</string>
     <string name="settings_gestures">Gestai</string>
     <string name="settings_notifications">Pranešimai</string>
