@@ -14,6 +14,7 @@ private const val HOME_APPS_PER_PAGE = "HOME_APPS_PER_PAGE_"
 private const val HIDDEN_APPS = "HIDDEN_APPS"
 private const val HIDDEN_SHORTCUT_IDS = "HIDDEN_SHORTCUT_IDS"
 private const val INVERT_COLOURS = "INVERT_COLOURS"
+private const val THEME_MODE = "theme_mode"
 private const val PINNED_SHORTCUTS = "PINNED_SHORTCUTS"
 
 data class ShortcutEntry(
@@ -101,6 +102,8 @@ class Prefs(
 
     enum class TimeFormat { Standard, TwentyFourHour }
 
+    enum class ThemeMode { Dark, Light, Automatic }
+
     enum class PageIndicatorPosition { Left, Right, Hidden }
 
     enum class NotificationIndicatorSection { Connectivity, Time, Battery }
@@ -184,9 +187,20 @@ class Prefs(
         prefs.edit().putString(prefString, value.name).apply()
     }
 
+    var themeMode: ThemeMode
+        get() {
+            if (prefs.contains(THEME_MODE)) {
+                return enumPref(THEME_MODE, ThemeMode.Dark)
+            }
+            return if (prefs.getBoolean(INVERT_COLOURS, false)) ThemeMode.Light else ThemeMode.Dark
+        }
+        set(value) = prefs.edit().putString(THEME_MODE, value.name).apply()
+
     var invertColours: Boolean
-        get() = prefs.getBoolean(INVERT_COLOURS, false)
-        set(value) = prefs.edit().putBoolean(INVERT_COLOURS, value).apply()
+        get() = themeMode == ThemeMode.Light
+        set(value) {
+            themeMode = if (value) ThemeMode.Light else ThemeMode.Dark
+        }
 
     var hiddenApps: MutableSet<String>
         get() = prefs.getStringSet(HIDDEN_APPS, mutableSetOf())?.toMutableSet() ?: mutableSetOf()

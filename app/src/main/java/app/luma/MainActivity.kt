@@ -39,10 +39,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         prefs = Prefs.getInstance(this)
         val themeMode =
-            if (prefs.invertColours) {
-                AppCompatDelegate.MODE_NIGHT_NO
-            } else {
-                AppCompatDelegate.MODE_NIGHT_YES
+            when (prefs.themeMode) {
+                Prefs.ThemeMode.Dark -> AppCompatDelegate.MODE_NIGHT_YES
+                Prefs.ThemeMode.Light -> AppCompatDelegate.MODE_NIGHT_NO
+                Prefs.ThemeMode.Automatic -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
             }
         AppCompatDelegate.setDefaultNightMode(themeMode)
 

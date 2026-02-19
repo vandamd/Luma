@@ -9,8 +9,6 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
@@ -23,9 +21,9 @@ import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.Prefs
 import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.ContentContainer
+import app.luma.ui.compose.SettingsComposable.SelectorButton
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import app.luma.ui.compose.SettingsComposable.SimpleTextButton
-import app.luma.ui.compose.SettingsComposable.ToggleTextButton
 
 class SettingsFragment : Fragment() {
     private lateinit var prefs: Prefs
@@ -51,23 +49,18 @@ class SettingsFragment : Fragment() {
                 title = stringResource(R.string.settings_title, versionName),
                 onBack = ::goBack,
             )
-            val invertState = remember { mutableStateOf(prefs.invertColours) }
 
             ContentContainer {
                 CustomScrollView(verticalArrangement = Arrangement.spacedBy(33.5.dp)) {
-                    ToggleTextButton(
-                        title = stringResource(R.string.settings_invert_colours),
-                        checked = invertState.value,
-                        onCheckedChange = {
-                            invertState.value = it
-                            prefs.invertColours = it
-                            requireActivity().recreate()
-                        },
-                        onClick = {
-                            invertState.value = !invertState.value
-                            prefs.invertColours = invertState.value
-                            requireActivity().recreate()
-                        },
+                    SelectorButton(
+                        label = stringResource(R.string.settings_invert_colours),
+                        value =
+                            when (prefs.themeMode) {
+                                Prefs.ThemeMode.Dark -> stringResource(R.string.settings_theme_dark)
+                                Prefs.ThemeMode.Light -> stringResource(R.string.settings_theme_light)
+                                Prefs.ThemeMode.Automatic -> stringResource(R.string.settings_theme_automatic)
+                            },
+                        onClick = { findNavController().navigate(R.id.action_settingsFragment_to_themeModeFragment) },
                     )
                     SimpleTextButton(
                         stringResource(R.string.settings_pages),

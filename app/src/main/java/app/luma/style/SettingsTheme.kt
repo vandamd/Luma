@@ -1,5 +1,6 @@
 package app.luma.style
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material.MaterialTheme
@@ -25,7 +26,12 @@ import app.luma.style.textGray
 import app.luma.style.textLight
 
 @Composable
-fun isDarkTheme(prefs: Prefs): Boolean = !prefs.invertColours
+fun isDarkTheme(prefs: Prefs): Boolean =
+    when (prefs.themeMode) {
+        Prefs.ThemeMode.Dark -> true
+        Prefs.ThemeMode.Light -> false
+        Prefs.ThemeMode.Automatic -> isSystemInDarkTheme()
+    }
 
 @Immutable
 data class SettingsTypography(
