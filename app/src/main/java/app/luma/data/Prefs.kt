@@ -87,6 +87,7 @@ private const val HAPTICS_APP_TAP_ENABLED = "haptics_app_tap_enabled"
 private const val HAPTICS_LONG_PRESS_ENABLED = "haptics_long_press_enabled"
 private const val HAPTICS_GESTURE_ACTIONS_ENABLED = "haptics_gesture_actions_enabled"
 private const val HAPTICS_STATUS_BAR_PRESS_ENABLED = "haptics_status_bar_press_enabled"
+private const val AUTO_ROTATE_ENABLED = "auto_rotate_enabled"
 
 class Prefs(
     val context: Context,
@@ -409,6 +410,10 @@ class Prefs(
     var hapticsStatusBarPressEnabled: Boolean
         get() = prefs.getBoolean(HAPTICS_STATUS_BAR_PRESS_ENABLED, true)
         set(value) = prefs.edit().putBoolean(HAPTICS_STATUS_BAR_PRESS_ENABLED, value).apply()
+
+    var autoRotateEnabled: Boolean
+        get() = prefs.getBoolean(AUTO_ROTATE_ENABLED, false)
+        set(value) = prefs.edit().putBoolean(AUTO_ROTATE_ENABLED, value).apply()
 
     fun getHiddenAppKey(
         packageName: String,

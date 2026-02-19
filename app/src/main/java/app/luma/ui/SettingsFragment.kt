@@ -21,6 +21,7 @@ import app.luma.data.Constants.AppDrawerFlag
 import app.luma.data.Prefs
 import app.luma.ui.compose.CustomScrollView
 import app.luma.ui.compose.SettingsComposable.ContentContainer
+import app.luma.ui.compose.SettingsComposable.PrefsToggleTextButton
 import app.luma.ui.compose.SettingsComposable.SelectorButton
 import app.luma.ui.compose.SettingsComposable.SettingsHeader
 import app.luma.ui.compose.SettingsComposable.SimpleTextButton
@@ -52,6 +53,14 @@ class SettingsFragment : Fragment() {
 
             ContentContainer {
                 CustomScrollView(verticalArrangement = Arrangement.spacedBy(33.5.dp)) {
+                    PrefsToggleTextButton(
+                        title = stringResource(R.string.settings_auto_rotate),
+                        initialValue = prefs.autoRotateEnabled,
+                        onValueChange = {
+                            prefs.autoRotateEnabled = it
+                            requireActivity().recreate()
+                        },
+                    )
                     SelectorButton(
                         label = stringResource(R.string.settings_invert_colours),
                         value =
